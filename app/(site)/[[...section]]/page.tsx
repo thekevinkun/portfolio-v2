@@ -22,7 +22,7 @@ export default async function Page({ params }: PageProps) {
 
   // Placeholder until the Stage exists (P2)
   return (
-    <main className="flex min-h-dvh items-center justify-center">
+    <main className="flex h-full items-center justify-center">
       <h1 className="text-2xl font-bold">{current.label}</h1>
     </main>
   );
