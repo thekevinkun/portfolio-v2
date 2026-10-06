@@ -1,4 +1,7 @@
 import { notFound } from "next/navigation";
+import { PlaceholderPanel } from "@/components/panels";
+import { Stage } from "@/components/stage";
+import { getSectionIndex } from "@/lib/stage/section-index";
 import { SECTIONS } from "@/lib/stage/sections";
 
 interface PageProps {
@@ -16,14 +19,13 @@ export function generateStaticParams() {
 
 export default async function Page({ params }: PageProps) {
   const { section } = await params;
-  const path = "/" + (section?.join("/") ?? "");
-  const current = SECTIONS.find((s) => s.path === path);
-  if (!current) notFound();
+  if (getSectionIndex(section) === -1) notFound();
 
-  // Placeholder until the Stage exists (P2)
-  return (
-    <main className="flex h-full items-center justify-center">
-      <h1 className="text-2xl font-bold">{current.label}</h1>
-    </main>
-  );
+  // Placeholder panels until P3; the layout's provider knows the initial page
+  const panels = SECTIONS.map((s) => ({
+    id: s.id,
+    content: <PlaceholderPanel id={s.id} label={s.label} />,
+  }));
+
+  return <Stage panels={panels} />;
 }
