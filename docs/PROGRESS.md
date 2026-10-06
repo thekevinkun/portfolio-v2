@@ -2,22 +2,22 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** (date)
-**Current phase / step:** P2.1 (plan chat, no code)
+**Last updated:** 2026-10-06
+**Current phase / step:** P2.2 (Stage reducer and track)
 **Mode default:** Build
 
 ---
 
 ## Phase tracker
 
-| Phase | Name | Status | Notes |
-|---|---|---|---|
-| P1 | Setup, tokens & chrome | ✅ Done | |
-| P2 | Stage engine | ⬜ Not started | |
-| P3 | Five pages (static data) | ⬜ Not started | Need Experience + Get In Touch layouts (O3) |
-| P4 | Neon data → LAUNCH | ⬜ Not started | Launch gate |
-| P5 | Dashboard | ⬜ Not started | |
-| P6 | Polish & finish | ⬜ Not started | |
+| Phase | Name                     | Status         | Notes                                       |
+| ----- | ------------------------ | -------------- | ------------------------------------------- |
+| P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
+| P2    | Stage engine             | 🟦 in progress | Spec locked in P2.1 (CLAUDE.md §4.2.1)      |
+| P3    | Five pages (static data) | ⬜ Not started | Need Experience + Get In Touch layouts (O3) |
+| P4    | Neon data → LAUNCH       | ⬜ Not started | Launch gate                                 |
+| P5    | Dashboard                | ⬜ Not started |                                             |
+| P6    | Polish & finish          | ⬜ Not started |                                             |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
@@ -25,26 +25,21 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [x] P1.1 Skipped — defaults from CLAUDE.md §10 accepted
-- [x] P1.2 Scaffold
-- [x] P1.3 Neon + Drizzle, GitHub, Vercel deploy, docs into `docs/`
-- [x] P1.4 Tokens + fonts
-- [x] P1.5 Primitives + backgrounds
-- [x] P1.6 TopBar + StatusFooter
-- [x] P1.7 Dock + mobile tab bar
+- [x] P2.1 Plan chat (spec in CLAUDE.md §4.2.1)
+- [ ] P2.2 Reducer + track
+- [ ] P2.3 Wheel
+- [ ] P2.4 Keyboard, swipe, dock
+- [ ] P2.5 URL sync + SSR deep links
+- [ ] P2.6 Visuals
+- [ ] P2.7 Dock ring
+- [ ] P2.8 A11y
+- [ ] P2.9 Manual device pass
 
 ---
 
 ## Decisions since last update
 
-- D12 — Default branch is master; repo is portfolio-v2
-- D13 — Text tokens named fg-high/medium/low/faint; accent is one token pair (accent / on-accent); motion durations are CSS variables in :root
-- D14 — Pill = status capsule with optional dot; Chip = mono tag; ButtonLink handles anchors (next/link for internal, new tab for external); background layers are @utility classes in globals.css; hover/transition animates transform only, border and shadow switch instantly until the card spotlight in P3.8
-- D15 — Component convention: arrow functions, default export (named when a file holds several), `export function` for non-components, per-folder `index.ts` barrels (see CLAUDE.md §7)
-- D16 — Persistent chrome components live in `components/chrome/` (TopBar, StatusFooter, LiveClock, ProfileBadge; Dock joins in P1.7); placeholder profile data lives in `data/seed.ts`, typed by `types/profile.ts`, and is replaced by the DB in P4
-- D17 — Clock uses `useSyncExternalStore` and wakes once per minute (no per-second re-render, no hydration mismatch); footer shows only availability, hosting note, location and year; no status or latency claims; chrome uses no `backdrop-filter` (budget kept for the dock)
-- D18 — Dock and TabBar read `useActiveSection()` (URL-based now; P2.7 switches it to Stage state); active tile scales via transform (no layout shift); arrival ping plays once; no `backdrop-filter` in the chrome since nothing scrolls beneath it
-- D19 — On phones the bottom TabBar replaces the footer; availability and location are shown on the Get In Touch page instead
+- D20–D23 — see CLAUDE.md §10 (D12–D19 moved there).
 
 ## Open questions
 
@@ -82,5 +77,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-06 — P2.1 (plan chat)
+
+Done:
+
+- Locked Stage thresholds, transition spec, URL strategy, a11y spec
+- Split P2.2–P2.9 into commit-sized steps
+  Files created/changed:
+- docs/CLAUDE.md (status, §3, §4.2, §4.2.1, §10), docs/ROADMAP.md (P2.3), docs/PROGRESS.md
+  Decisions:
+- D20 custom input code, no @use-gesture · D21 CSS track transition on motion tokens · D22 replaceState, no back/forward input, real links · D23 gesture lock, discrete retarget
+  Verified (viewports / devices):
+- n/a (docs only)
+  Known issues:
+- Trackpad thresholds are estimates; tuned in P2.9
+  Next step (ID + one-line goal):
+- P2.2 — stage reducer, provider, track and placeholder panels
+  Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Phase: P2. Step: P2.2. Mode: Build. Goal: Stage reducer, provider and track with placeholder panels and a CSS transform transition.
 
 _Newest first. Keep the last 3 entries in full; collapse older ones to one line each._
