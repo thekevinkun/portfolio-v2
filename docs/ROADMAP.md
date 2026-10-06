@@ -39,7 +39,7 @@
 |---|---|
 | P2.1 | **Plan chat (no code):** confirm thresholds, transition spec, URL strategy, a11y behavior; update CLAUDE.md §4.2 if anything changes. |
 | P2.2 | Stage reducer/context (`idle / transitioning / cooldown`) and track + panels layout with `translate3d` transition; inactive panels `inert`. |
-| P2.3 | Wheel input via `@use-gesture/react` (or custom): axis rule, one-page-per-gesture lock, trackpad inertia handling, `data-stage-scroll` exemption. |
+| P2.3 | Custom wheel intent state machine: axis rule, one-page-per-gesture lock, notch vs trackpad stream handling, data-stage-scroll exemption. |
 | P2.4 | Keyboard (← → PageUp/Down Home/End 1–5), dock click, touch swipe. |
 | P2.5 | URL sync (`replaceState`), per-section title/canonical, SSR deep links via `[[...section]]`. |
 | P2.6 | Visuals: outgoing scale/dim, parallax layer, edge shadow, rubber-band at first/last page. |
