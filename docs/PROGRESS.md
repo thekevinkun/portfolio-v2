@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** (date)
-**Current phase / step:** P1.7
+**Current phase / step:** P2.1 (plan chat, no code)
 **Mode default:** Build
 
 ---
@@ -12,7 +12,7 @@
 
 | Phase | Name | Status | Notes |
 |---|---|---|---|
-| P1 | Setup, tokens & chrome | ⬜ Not started | |
+| P1 | Setup, tokens & chrome | ✅ Done | |
 | P2 | Stage engine | ⬜ Not started | |
 | P3 | Five pages (static data) | ⬜ Not started | Need Experience + Get In Touch layouts (O3) |
 | P4 | Neon data → LAUNCH | ⬜ Not started | Launch gate |
@@ -31,7 +31,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P1.4 Tokens + fonts
 - [x] P1.5 Primitives + backgrounds
 - [x] P1.6 TopBar + StatusFooter
-- [ ] P1.7 Dock + mobile tab bar
+- [x] P1.7 Dock + mobile tab bar
 
 ---
 
@@ -43,6 +43,8 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D15 — Component convention: arrow functions, default export (named when a file holds several), `export function` for non-components, per-folder `index.ts` barrels (see CLAUDE.md §7)
 - D16 — Persistent chrome components live in `components/chrome/` (TopBar, StatusFooter, LiveClock, ProfileBadge; Dock joins in P1.7); placeholder profile data lives in `data/seed.ts`, typed by `types/profile.ts`, and is replaced by the DB in P4
 - D17 — Clock uses `useSyncExternalStore` and wakes once per minute (no per-second re-render, no hydration mismatch); footer shows only availability, hosting note, location and year; no status or latency claims; chrome uses no `backdrop-filter` (budget kept for the dock)
+- D18 — Dock and TabBar read `useActiveSection()` (URL-based now; P2.7 switches it to Stage state); active tile scales via transform (no layout shift); arrival ping plays once; no `backdrop-filter` in the chrome since nothing scrolls beneath it
+- D19 — On phones the bottom TabBar replaces the footer; availability and location are shown on the Get In Touch page instead
 
 ## Open questions
 
