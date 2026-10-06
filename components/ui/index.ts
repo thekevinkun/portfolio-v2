@@ -4,3 +4,4 @@ export { default as Pill } from "./Pill";
 export { default as Chip } from "./Chip";
 export { Button } from "./Button";
 export { ButtonLink } from "./Button";
+export { default as SectionHeader } from "./SectionHeader";
