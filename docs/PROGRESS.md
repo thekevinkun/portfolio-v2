@@ -27,8 +27,8 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 - [x] P1.1 Skipped — defaults from CLAUDE.md §10 accepted
 - [x] P1.2 Scaffold
-- [ ] P1.3 Neon + Drizzle, GitHub, Vercel deploy, docs into `docs/`
-- [ ] P1.4 Tokens + fonts
+- [x] P1.3 Neon + Drizzle, GitHub, Vercel deploy, docs into `docs/`
+- [x] P1.4 Tokens + fonts
 - [ ] P1.5 Primitives + backgrounds
 - [ ] P1.6 TopBar + StatusFooter
 - [ ] P1.7 Dock + mobile tab bar
@@ -38,6 +38,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Decisions since last update
 
 D12 — Default branch is master; repo is portfolio-v2
+D13 — Text tokens named fg-high/medium/low/faint; accent is one token pair (accent / on-accent); motion durations are CSS variables in :root
 
 ## Open questions
 
