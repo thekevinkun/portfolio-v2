@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Fonts: next/font sets --font-inter and --font-jetbrains-mono on <html> */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  /* Backgrounds */
+  --color-canvas: #000000;
+  --color-obsidian: #050505;
+  --color-charcoal: #0c0c0c;
+
+  /* Glass surfaces and borders */
+  --color-glass-from: rgb(255 255 255 / 0.07);
+  --color-glass-to: rgb(255 255 255 / 0.02);
+  --color-glass-fill: rgb(255 255 255 / 0.05);
+  --color-glass-fill-hover: rgb(255 255 255 / 0.15);
+  --color-glass-active: rgb(255 255 255 / 0.16);
+  --color-glass-border: rgb(255 255 255 / 0.1);
+  --color-glass-border-hover: rgb(255 255 255 / 0.4);
+
+  /* Text: high / medium / low / faint */
+  --color-fg-high: #ffffff;
+  --color-fg-medium: #d4d4d4;
+  --color-fg-low: #a3a3a3;
+  --color-fg-faint: #525252;
+
+  /* Accent: white now. Swap these two lines to change the whole site (e.g. cyan) */
+  --color-accent: #ffffff;
+  --color-on-accent: #000000;
+
+  /* Radii */
+  --radius-card: 1rem; /* 16px */
+  --radius-tile: 1.375rem; /* 22px */
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-glass-card: 0 10px 30px 0 rgb(0 0 0 / 0.8), inset 0 1px 0 0 rgb(255 255 255 / 0.15);
+  --shadow-tile-active: 0 12px 32px -4px rgb(255 255 255 / 0.25), 0 0 0 2px var(--color-accent);
+  --shadow-glow-white: 0 0 25px -2px rgb(255 255 255 / 0.5);
+
+  /* Easing */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Motion durations (use as duration-(--duration-micro)) */
+:root {
+  --duration-micro: 200ms;
+  --duration-enter: 500ms;
+  --duration-page: 650ms;
+}
+
+html {
+  color-scheme: dark;
 }
