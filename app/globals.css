@@ -2,8 +2,10 @@
 
 /* Fonts: next/font sets --font-inter and --font-jetbrains-mono on <html> */
 @theme inline {
-  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans:
+    var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 @theme {
@@ -31,15 +33,26 @@
   --color-accent: #ffffff;
   --color-on-accent: #000000;
 
+  /* Backdrop gradient stops (from the reference's ps5-bg) */
+  --color-backdrop-1: #1a1a1a;
+  --color-backdrop-2: #101010;
+  --color-backdrop-3: #080808;
+  --color-backdrop-4: #020202;
+
   /* Radii */
   --radius-card: 1rem; /* 16px */
   --radius-tile: 1.375rem; /* 22px */
   --radius-pill: 9999px;
 
   /* Shadows */
-  --shadow-glass-card: 0 10px 30px 0 rgb(0 0 0 / 0.8), inset 0 1px 0 0 rgb(255 255 255 / 0.15);
-  --shadow-tile-active: 0 12px 32px -4px rgb(255 255 255 / 0.25), 0 0 0 2px var(--color-accent);
+  --shadow-glass-card:
+    0 10px 30px 0 rgb(0 0 0 / 0.8), inset 0 1px 0 0 rgb(255 255 255 / 0.15);
+  --shadow-tile-active:
+    0 12px 32px -4px rgb(255 255 255 / 0.25), 0 0 0 2px var(--color-accent);
   --shadow-glow-white: 0 0 25px -2px rgb(255 255 255 / 0.5);
+
+  /* Small glowing dot used by status pills */
+  --shadow-dot-glow: 0 0 6px var(--color-accent);
 
   /* Easing */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -54,4 +67,40 @@
 
 html {
   color-scheme: dark;
+}
+
+/* Background layers. The raw rgb() values live here only, never in components. */
+@utility bg-stage-base {
+  background: radial-gradient(
+    circle at 75% 32%,
+    var(--color-backdrop-1) 0%,
+    var(--color-backdrop-2) 38%,
+    var(--color-backdrop-3) 72%,
+    var(--color-backdrop-4) 100%
+  );
+}
+
+@utility bg-stage-glow {
+  background-image:
+    radial-gradient(
+      circle at 75% 45%,
+      rgb(255 255 255 / 0.08) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 25% 75%,
+      rgb(200 200 200 / 0.05) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      to right,
+      rgb(4 4 4 / 0.98) 12%,
+      rgb(5 5 5 / 0.6) 55%,
+      rgb(2 2 2 / 0.95) 100%
+    );
+}
+
+/* Static film grain: a tiny tiled SVG noise, no runtime cost */
+@utility bg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }

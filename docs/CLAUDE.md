@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **planning — no code written yet.** Philosophy: *it's just a portfolio — keep it minimal, build it fast.*
+> Status: **planning — no code written yet.** Philosophy: _it's just a portfolio — keep it minimal, build it fast._
 
 ---
 
@@ -24,17 +24,17 @@ A personal portfolio for Kevin Mahendra (Kun) that feels like a console UI (PS5-
 
 ## 2. Rules
 
-| # | Rule |
-|---|---|
-| R1 | **One screen per page** on desktop/tablet: fits `100dvh`, no page-level scroll. Designed to a density tier (5.3), not squeezed afterwards. |
-| R2 | **Scroll = turn the page.** Vertical wheel/swipe intent changes page. Horizontal input inside a component (carousel) belongs to that component. |
-| R3 | **Content from the database** after Phase 4. No hardcoded copy, projects, or links in components. |
-| R4 | **Honest content.** Every claim must survive an interview question. No fake metrics. A technology is "used" only if it shipped in a real project, else "learning". Projects show a status (`live` / `in-progress` / `planned`). |
-| R5 | **Fast and lean.** Lighthouse mobile ≥ 90. Page turn stays smooth with 4× CPU throttle. |
-| R6 | **Accessible basics.** Keyboard navigation, visible focus, `prefers-reduced-motion` respected, page changes announced. |
-| R7 | **Crawlable.** All five sections are server-rendered. |
-| R8 | **Ship early.** Public launch at the end of Phase 4, before the dashboard exists. |
-| R9 | **Stay minimal.** No new library or service without logging a decision in Section 10. |
+| #   | Rule                                                                                                                                                                                                                            |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| R1  | **One screen per page** on desktop/tablet: fits `100dvh`, no page-level scroll. Designed to a density tier (5.3), not squeezed afterwards.                                                                                      |
+| R2  | **Scroll = turn the page.** Vertical wheel/swipe intent changes page. Horizontal input inside a component (carousel) belongs to that component.                                                                                 |
+| R3  | **Content from the database** after Phase 4. No hardcoded copy, projects, or links in components.                                                                                                                               |
+| R4  | **Honest content.** Every claim must survive an interview question. No fake metrics. A technology is "used" only if it shipped in a real project, else "learning". Projects show a status (`live` / `in-progress` / `planned`). |
+| R5  | **Fast and lean.** Lighthouse mobile ≥ 90. Page turn stays smooth with 4× CPU throttle.                                                                                                                                         |
+| R6  | **Accessible basics.** Keyboard navigation, visible focus, `prefers-reduced-motion` respected, page changes announced.                                                                                                          |
+| R7  | **Crawlable.** All five sections are server-rendered.                                                                                                                                                                           |
+| R8  | **Ship early.** Public launch at the end of Phase 4, before the dashboard exists.                                                                                                                                               |
+| R9  | **Stay minimal.** No new library or service without logging a decision in Section 10.                                                                                                                                           |
 
 ---
 
@@ -42,30 +42,30 @@ A personal portfolio for Kevin Mahendra (Kun) that feels like a console UI (PS5-
 
 ### Decided
 
-| Area | Choice |
-|---|---|
-| Framework | Next.js (App Router), React, TypeScript strict (zero `any`) |
-| Styling | Tailwind CSS v4 (CSS-first `@theme` tokens). Port the reference HTML (Tailwind v3 CDN) — don't copy it. |
-| Animation | Motion (formerly Framer Motion) with `LazyMotion` + CSS for ambient/hover effects |
-| Database | Neon + Drizzle (`@neondatabase/serverless`) |
-| Validation | Zod (server-side, for dashboard writes) |
-| Dashboard UI | shadcn/ui (dashboard only), React 19 `useActionState` for forms |
-| Auth | Auth.js with GitHub login, allowlisted to Kun's account |
-| Images | Vercel Blob (save the URL in the field), `next/image` |
-| Hosting | Vercel (its build's typecheck is the safety net) |
+| Area         | Choice                                                                                                  |
+| ------------ | ------------------------------------------------------------------------------------------------------- |
+| Framework    | Next.js (App Router), React, TypeScript strict (zero `any`)                                             |
+| Styling      | Tailwind CSS v4 (CSS-first `@theme` tokens). Port the reference HTML (Tailwind v3 CDN) — don't copy it. |
+| Animation    | Motion (formerly Framer Motion) with `LazyMotion` + CSS for ambient/hover effects                       |
+| Database     | Neon + Drizzle (`@neondatabase/serverless`)                                                             |
+| Validation   | Zod (server-side, for dashboard writes)                                                                 |
+| Dashboard UI | shadcn/ui (dashboard only), React 19 `useActionState` for forms                                         |
+| Auth         | Auth.js with GitHub login, allowlisted to Kun's account                                                 |
+| Images       | Vercel Blob (save the URL in the field), `next/image`                                                   |
+| Hosting      | Vercel (its build's typecheck is the safety net)                                                        |
 
 ### Small libraries (each earns its place)
 
-| Library | Used for |
-|---|---|
-| `@use-gesture/react` | Wheel + swipe input and gesture-end detection for the page turn (mature, rarely updated — verify React 19 compatibility at install; fallback: ~50 lines of custom code) |
-| Embla Carousel (or keen-slider, or native scroll-snap) | Projects carousel |
-| `@formkit/auto-animate` | Filter-pill reflow, dashboard lists |
-| `@number-flow/react` (optional) | Rolling digits for the `01 / 04` counter and clock |
-| `clsx` + `tailwind-merge` | Class handling |
-| `sonner` | Dashboard toasts |
-| `react-icons` (Simple Icons set) + `lucide-react` | Tech logos + UI icons; a small key→icon map (~40 icons) |
-| `@vercel/analytics` (optional) | Visitor counts |
+| Library                                                | Used for                                                                                                                                                                |
+| ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `@use-gesture/react`                                   | Wheel + swipe input and gesture-end detection for the page turn (mature, rarely updated — verify React 19 compatibility at install; fallback: ~50 lines of custom code) |
+| Embla Carousel (or keen-slider, or native scroll-snap) | Projects carousel                                                                                                                                                       |
+| `@formkit/auto-animate`                                | Filter-pill reflow, dashboard lists                                                                                                                                     |
+| `@number-flow/react` (optional)                        | Rolling digits for the `01 / 04` counter and clock                                                                                                                      |
+| `clsx` + `tailwind-merge`                              | Class handling                                                                                                                                                          |
+| `sonner`                                               | Dashboard toasts                                                                                                                                                        |
+| `react-icons` (Simple Icons set) + `lucide-react`      | Tech logos + UI icons; a small key→icon map (~40 icons)                                                                                                                 |
+| `@vercel/analytics` (optional)                         | Visitor counts                                                                                                                                                          |
 
 ### Deliberately NOT used
 
@@ -111,12 +111,12 @@ Every dashboard mutation: **auth check → Zod validate → write → revalidate
 
 ### 4.4 Data model (4 tables)
 
-| Table | Contents |
-|---|---|
+| Table               | Contents                                                                                                                                                                                                               |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `profile` (one row) | name, headline, tagline/intro, role label, location label, timezone, email, availability text, avatar/portrait/resume URLs, socials (JSON array), SEO title/description, optional Tech Stack bottom-strip items (JSON) |
-| `skill_groups` | index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible |
-| `projects` | slug, title, kicker label, summary, filter type (`full-stack`, `frontend`, `game`, `web3`, `systems`), **status**, logo URL, tech tags (text array), **links** (JSON: kind, label, url), featured flag, sort, visible |
-| `experience_items` | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, bullets (text array), sort, visible |
+| `skill_groups`      | index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible                                                                    |
+| `projects`          | slug, title, kicker label, summary, filter type (`full-stack`, `frontend`, `game`, `web3`, `systems`), **status**, logo URL, tech tags (text array), **links** (JSON: kind, label, url), featured flag, sort, visible  |
+| `experience_items`  | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, bullets (text array), sort, visible                                                                            |
 
 Auth tables come from Auth.js.
 
@@ -124,13 +124,13 @@ Auth tables come from Auth.js.
 
 Private `/dashboard`, single admin.
 
-| Screen | Does |
-|---|---|
-| Overview | Links to each editor + "view site" |
-| Profile | Edit identity, intro, availability, socials, SEO; upload avatar/portrait/resume |
-| Tech Stack | Groups, items, highlights, strip; up/down reorder; icon picker |
-| Projects | Create/edit/delete, status, filter type, links, tags, featured + visible toggles, up/down reorder |
-| Experience | Timeline items CRUD + reorder |
+| Screen     | Does                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------- |
+| Overview   | Links to each editor + "view site"                                                                |
+| Profile    | Edit identity, intro, availability, socials, SEO; upload avatar/portrait/resume                   |
+| Tech Stack | Groups, items, highlights, strip; up/down reorder; icon picker                                    |
+| Projects   | Create/edit/delete, status, filter type, links, tags, featured + visible toggles, up/down reorder |
+| Experience | Timeline items CRUD + reorder                                                                     |
 
 Principles: confirm deletes, toasts for results, prefer hide (`visible=false`) over delete.
 
@@ -155,7 +155,7 @@ obsidian / charcoal backgrounds · glass surface + border · text high/medium/lo
 ### 5.3 Fit-to-screen (how R1 works)
 
 - `dvh`, `clamp()`, `min()` — no fixed pixel section heights.
-- **Density tiers** by viewport height: *spacious* (≥ ~900 px) full content · *regular* (~720–900) tighter · *compact* (< ~720) hide secondary details (e.g. Tech Stack check-lists).
+- **Density tiers** by viewport height: _spacious_ (≥ ~900 px) full content · _regular_ (~720–900) tighter · _compact_ (< ~720) hide secondary details (e.g. Tech Stack check-lists).
 - QA viewports: 1920×1080, 1440×900, 1366×768, 1280×720, 1024×768, 768×1024, 390×844, 360×640.
 - The reference screenshots are ~4:3 and leave dead vertical space; balance content for 16:9 / 16:10.
 - **Phones:** same swipe paging, dock becomes a bottom glass tab bar, pages designed compact. If a page still can't fit, its **inner content scrolls** (hidden scrollbar) with chrome fixed — the only allowed exception.
@@ -177,16 +177,16 @@ obsidian / charcoal backgrounds · glass surface + border · text high/medium/lo
 
 **Catalog**
 
-| ID | Effect |
-|---|---|
-| A | **Page turn** — slide + parallax + outgoing scale/dim + soft edge shadow |
-| B | **Dock ring** — active ring glides between tiles (shared-layout), ping dot on arrival, hover/focus lift 1.05× |
-| C | **Entrance choreography** — headline mask-reveal, subtext fade, chips/cards rise 12 px + fade with stagger, portrait eases 1.04 → 1 |
-| D | **Card spotlight** — cursor-following radial highlight (CSS vars), border sheen, 4 px lift |
-| E | **Projects** — carousel with arrows, rolling `01 / 04` counter, filter reflow via auto-animate |
-| F | **Live clock** — ticking clock in the top bar (real timezone) |
-| G | **Ambient background** — slow gradient drift (CSS) + static grain |
-| Optional | Boot intro (≤ 1.4 s, skippable, once per session) · portrait mouse-parallax (±6 px) |
+| ID       | Effect                                                                                                                              |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| A        | **Page turn** — slide + parallax + outgoing scale/dim + soft edge shadow                                                            |
+| B        | **Dock ring** — active ring glides between tiles (shared-layout), ping dot on arrival, hover/focus lift 1.05×                       |
+| C        | **Entrance choreography** — headline mask-reveal, subtext fade, chips/cards rise 12 px + fade with stagger, portrait eases 1.04 → 1 |
+| D        | **Card spotlight** — cursor-following radial highlight (CSS vars), border sheen, 4 px lift                                          |
+| E        | **Projects** — carousel with arrows, rolling `01 / 04` counter, filter reflow via auto-animate                                      |
+| F        | **Live clock** — ticking clock in the top bar (real timezone)                                                                       |
+| G        | **Ambient background** — slow gradient drift (CSS) + static grain                                                                   |
+| Optional | Boot intro (≤ 1.4 s, skippable, once per session) · portrait mouse-parallax (±6 px)                                                 |
 
 ---
 
@@ -207,6 +207,9 @@ portfolio/
 - TypeScript strict, zero `any`; shared types in `types/`.
 - Tailwind **tokens only** — no arbitrary hex values.
 - Server Components by default; `"use client"` only for Stage, Dock, carousel, dashboard forms.
+- **Components** are arrow functions with props typed in the parameter (no `React.FC`): `const GlassCard = ({ ... }: GlassCardProps) => { ... }`. One component per file uses `export default`; a file holding several related components (e.g. `Button` + `ButtonLink`) uses named exports.
+- **Everything that is not a component** (layouts, pages, helpers, config, server actions) uses `export function` / `export default function`.
+- **Barrels:** every folder under `components/` has an `index.ts` that re-exports its components; import through it (`@/components/ui`). Files inside the same folder import each other directly (avoids circular imports). Never create one barrel across folders, and never import `components/dashboard` from public code (keeps admin code out of public bundles, R5).
 - Server Actions for dashboard mutations.
 - Components ≲ 150 lines; Conventional Commits.
 - **Never:** vertical page scroll (except the phone exception), layout-property animations, a second UI kit in the public bundle, hardcoded content after Phase 4, fake metrics.
@@ -215,7 +218,7 @@ portfolio/
 
 ## 8. Working agreement with AI
 
-- **Modes** (set per chat; default **Build**): *Build* = complete files in one response · *Coach* = AI guides, Kun writes.
+- **Modes** (set per chat; default **Build**): _Build_ = complete files in one response · _Coach_ = AI guides, Kun writes.
 - **Plan before produce** for anything architectural.
 - **One phase (or a few steps) per chat**; state the step ID.
 - **Output:** complete files with full paths, one response, short logical code chunks with simple inline comments, exact commands, a short "how to verify" list.
@@ -249,30 +252,30 @@ Goal: <one sentence>
 
 ### Decided
 
-| ID | Decision |
-|---|---|
-| D1 | Next.js + TS strict + Tailwind v4 |
-| D2 | No Ant Design; shadcn/ui in the dashboard only |
-| D3 | Neon + Drizzle; 4 tables with JSON/array columns |
-| D4 | One Stage component serves all 5 URLs; SSR all sections; `replaceState` URL sync |
-| D5 | Persistent chrome; only content slides |
-| D6 | Monochrome palette from screenshots; single accent token |
-| D7 | Motion with `LazyMotion`; `@use-gesture/react` for wheel/swipe |
-| D8 | **No contact form** — Get In Touch is links only |
-| D9 | Auth.js + GitHub allowlist; Vercel Blob for images |
+| ID  | Decision                                                                             |
+| --- | ------------------------------------------------------------------------------------ |
+| D1  | Next.js + TS strict + Tailwind v4                                                    |
+| D2  | No Ant Design; shadcn/ui in the dashboard only                                       |
+| D3  | Neon + Drizzle; 4 tables with JSON/array columns                                     |
+| D4  | One Stage component serves all 5 URLs; SSR all sections; `replaceState` URL sync     |
+| D5  | Persistent chrome; only content slides                                               |
+| D6  | Monochrome palette from screenshots; single accent token                             |
+| D7  | Motion with `LazyMotion`; `@use-gesture/react` for wheel/swipe                       |
+| D8  | **No contact form** — Get In Touch is links only                                     |
+| D9  | Auth.js + GitHub allowlist; Vercel Blob for images                                   |
 | D10 | No automated test suite, Redis, Resend, Sentry/PostHog; manual QA checklists instead |
-| D11 | Public launch at the end of Phase 4 |
+| D11 | Public launch at the end of Phase 4                                                  |
 
 ### Open
 
-| ID | Question | Default |
-|---|---|---|
-| O1 | Phones: allow inner scroll when a page can't fit? | Yes, phones only |
-| O2 | What does the small toggle at the top-right of the Tech Stack header do? | Remove it |
-| O3 | Designs for **Experience** and **Get In Touch** (links-only) | Propose layouts in P3 in the same style |
-| O4 | Bilingual EN/ID? | English only for v1 |
-| O5 | Domain | Keep current Vercel subdomain until launch |
-| O6 | Footer location/timezone (mock shows Jakarta / UTC+7) | Use the real location and timezone |
+| ID  | Question                                                                 | Default                                    |
+| --- | ------------------------------------------------------------------------ | ------------------------------------------ |
+| O1  | Phones: allow inner scroll when a page can't fit?                        | Yes, phones only                           |
+| O2  | What does the small toggle at the top-right of the Tech Stack header do? | Remove it                                  |
+| O3  | Designs for **Experience** and **Get In Touch** (links-only)             | Propose layouts in P3 in the same style    |
+| O4  | Bilingual EN/ID?                                                         | English only for v1                        |
+| O5  | Domain                                                                   | Keep current Vercel subdomain until launch |
+| O6  | Footer location/timezone (mock shows Jakarta / UTC+7)                    | Use the real location and timezone         |
 
 ---
 

@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** (date)
-**Current phase / step:** P1 — P1.3 in progress
+**Current phase / step:** P1.6
 **Mode default:** Build
 
 ---
@@ -29,7 +29,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P1.2 Scaffold
 - [x] P1.3 Neon + Drizzle, GitHub, Vercel deploy, docs into `docs/`
 - [x] P1.4 Tokens + fonts
-- [ ] P1.5 Primitives + backgrounds
+- [x] P1.5 Primitives + backgrounds
 - [ ] P1.6 TopBar + StatusFooter
 - [ ] P1.7 Dock + mobile tab bar
 
@@ -37,8 +37,10 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Decisions since last update
 
-D12 — Default branch is master; repo is portfolio-v2
-D13 — Text tokens named fg-high/medium/low/faint; accent is one token pair (accent / on-accent); motion durations are CSS variables in :root
+- D12 — Default branch is master; repo is portfolio-v2
+- D13 — Text tokens named fg-high/medium/low/faint; accent is one token pair (accent / on-accent); motion durations are CSS variables in :root
+- D14 — Pill = status capsule with optional dot; Chip = mono tag; ButtonLink handles anchors (next/link for internal, new tab for external); background layers are @utility classes in globals.css; hover/transition animates transform only, border and shadow switch instantly until the card spotlight in P3.8
+- D15 — Component convention: arrow functions, default export (named when a file holds several), `export function` for non-components, per-folder `index.ts` barrels (see CLAUDE.md §7)
 
 ## Open questions
 
