@@ -1,0 +1,240 @@
+<!DOCTYPE html><html class="h-full" lang="en" style="width: 1280px; height: 950px; overflow: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Kevin Mahendra | Tech Stack | PS5 Portfolio Experience</title>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ps: {
+              surface: 'rgba(20, 20, 20, 0.75)',
+              surfaceActive: 'rgba(255, 255, 255, 0.16)',
+              border: 'rgba(255, 255, 255, 0.18)',
+              obsidian: '#050505',
+              charcoal: '#0c0c0c',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow-white': '0 0 25px -2px rgba(255, 255, 255, 0.5)',
+            'tile-active': '0 12px 32px -4px rgba(255, 255, 255, 0.25), 0 0 0 2px #ffffff',
+            'glass-card': '0 10px 30px 0 rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Typography & Global Display Styles -->
+<style data-purpose="typography">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+<!-- PS5 UI Visual FX & Monochrome Ambient Lighting -->
+<style data-purpose="ambient-fx">
+    .ps5-bg {
+      background: radial-gradient(circle at 75% 32%, #1a1a1a 0%, #101010 38%, #080808 72%, #020202 100%);
+    }
+
+    .ambient-particles {
+      background-image: 
+        radial-gradient(circle at 75% 45%, rgba(255, 255, 255, 0.08) 0%, transparent 55%),
+        radial-gradient(circle at 25% 75%, rgba(200, 200, 200, 0.05) 0%, transparent 50%),
+        linear-gradient(to right, rgba(4, 4, 4, 0.98) 12%, rgba(5, 5, 5, 0.6) 55%, rgba(2, 2, 2, 0.95) 100%);
+    }
+
+    /* Seamless character portrait mask fading organically into pure black PS5 backdrop */
+    .hero-avatar-fade {
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 35%, transparent 100%);
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 35%, transparent 100%);
+    }
+
+    /* Scrollbar suppression */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .glass-tile {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+  </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" data-snapdom="injected-import"></head>
+<body class="bg-black text-neutral-100 h-screen w-screen relative flex flex-col justify-between overflow-hidden selection:bg-white selection:text-black">
+<!-- Ambient Monochrome Backdrop Visual Layer -->
+<div class="fixed inset-0 ps5-bg pointer-events-none z-0"></div>
+<div class="fixed inset-0 ambient-particles pointer-events-none z-0"></div>
+<!-- BEGIN: TopBar (Identical to Homepage) -->
+<header class="relative z-30 w-full px-12 pt-6 pb-2 flex items-center justify-between" data-purpose="ps5-top-navigation">
+<!-- Left Side: Clean PlayStation Brand Indicator in Pure Monochrome -->
+<div class="flex items-center space-x-3 text-neutral-400 font-mono text-xs tracking-wider">
+<span class="inline-block w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#ffffff] animate-pulse"></span>
+<span class="text-white font-bold tracking-widest uppercase text-xs">KEVIN MAHENDRA</span>
+<span class="text-neutral-600 font-normal">/</span>
+<span class="text-neutral-400 tracking-widest uppercase text-[11px]">PORTFOLIO</span>
+</div>
+<!-- Quick System Telemetry & Profile Station -->
+<div class="flex items-center space-x-6" data-purpose="status-tray">
+<!-- Live Clock Display -->
+<div class="text-sm font-semibold tracking-wider text-neutral-300 font-mono" id="liveClock">6:32 AM</div>
+<!-- Gamer Profile Node: Kevin Mahendra with avatar preview -->
+<div class="flex items-center space-x-3 cursor-pointer group" data-purpose="user-avatar-badge">
+<div class="relative">
+<div class="w-10 h-10 rounded-full border-2 border-white/80 bg-neutral-900 flex items-center justify-center font-bold text-white shadow-[0_0_12px_rgba(255,255,255,0.25)] text-xs overflow-hidden transition-transform duration-200 group-hover:scale-105">
+<img alt="Kevin Mahendra" class="w-full h-full object-cover object-top scale-110 grayscale" src="https://lh3.googleusercontent.com/aida/AEtjO1Uhhi1dfZcIQzm98k1LmM7YICperGG-mHe4GZh1S8gMQeVxsAMT4VCZW_WwRVNyRHdhKUXCIyDzB8mA_6igbdH0B2pIwTMgFFJg7YbEwrXSg7lQAS2VMAW4FMnr0LKtg91lnLd_9n3HkLgd3LOITecwNh5Gzm0tJTa4Brqh_c8lKLB_6NWPXVunHgcHcOM74YYBbUac5vKROgzGwCRV9zhMY1B_irRPp4LW3fAkQL9Wxsw7wPjgiAddH30">
+</div>
+<!-- Monochrome Online Status Beacon -->
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-white border-2 border-black rounded-full shadow-[0_0_6px_#ffffff]"></span>
+</div>
+<div class="hidden sm:flex flex-col text-left">
+<span class="text-xs font-bold leading-tight tracking-wide text-white group-hover:text-neutral-300 transition-colors">kevinmahendra</span>
+<span class="text-[10px] text-neutral-400 font-mono tracking-tight flex items-center gap-1">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Ready to Ship
+        </span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: MainContent -->
+<main class="relative z-20 flex-1 flex flex-col justify-between px-12 pt-1 pb-3 max-w-[1920px] mx-auto w-full overflow-hidden" data-purpose="ps5-home-body">
+<!-- BEGIN: PrimaryHorizontalIconDock (Tech Stack Active) -->
+<section aria-label="Application &amp; Game Carousel Dock" class="w-full pt-1 pb-1 shrink-0">
+<div class="flex items-end space-x-5 overflow-x-auto no-scrollbar py-2">
+<!-- Tile 1: Overview -->
+<a aria-label="Overview" class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition-all duration-300" data-purpose="carousel-tile" href="#" role="button">
+<div class="w-[82px] h-[82px] rounded-2xl glass-tile border border-white/10 hover:border-white flex items-center justify-center transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/15 group-hover:border-white/30 text-neutral-300 group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="mt-2.5 text-[11px] font-medium text-neutral-400 group-hover:text-white transition-colors tracking-wide">Overview</span>
+</a>
+<!-- Tile 2: Tech Stack (ACTIVE SELECTION) -->
+<div aria-label="Tech Stack" class="flex flex-col items-center group cursor-pointer" data-purpose="carousel-tile-active" role="button" tabindex="0">
+<div class="relative w-[92px] h-[92px] rounded-2xl bg-gradient-to-b from-neutral-800 to-neutral-900 border-2 border-white shadow-tile-active flex items-center justify-center transition-all duration-300 transform scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="p-3 bg-white/15 rounded-xl text-white transition-transform duration-300 group-hover:scale-110">
+<svg class="w-9 h-9" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white rounded-full animate-ping opacity-75"></span>
+<span class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white rounded-full shadow-[0_0_8px_#ffffff]"></span>
+</div>
+<span class="mt-2.5 text-xs font-semibold text-white tracking-wider flex items-center gap-1.5 transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_#ffffff]"></span>
+          Tech Stack
+        </span>
+</div>
+<!-- Tile 3: Projects -->
+<a aria-label="Projects" class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition-all duration-300" data-purpose="carousel-tile" href="#" role="button">
+<div class="w-[82px] h-[82px] rounded-2xl glass-tile border border-white/10 hover:border-white flex items-center justify-center transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/15 group-hover:border-white/30 text-neutral-300 group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="mt-2.5 text-[11px] font-medium text-neutral-400 group-hover:text-white transition-colors tracking-wide">Projects</span>
+</a>
+<!-- Tile 4: Experience -->
+<a aria-label="Experience" class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition-all duration-300" data-purpose="carousel-tile" href="#" role="button">
+<div class="w-[82px] h-[82px] rounded-2xl glass-tile border border-white/10 hover:border-white flex items-center justify-center transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/15 group-hover:border-white/30 text-neutral-300 group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="mt-2.5 text-[11px] font-medium text-neutral-400 group-hover:text-white transition-colors tracking-wide">Experience</span>
+</a>
+<!-- Tile 5: Get In Touch -->
+<a aria-label="Get In Touch" class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition-all duration-300" data-purpose="carousel-tile" href="#" role="button">
+<div class="w-[82px] h-[82px] rounded-2xl glass-tile border border-white/10 hover:border-white flex items-center justify-center transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/15 group-hover:border-white/30 text-neutral-300 group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="mt-2.5 text-[11px] font-medium text-neutral-400 group-hover:text-white transition-colors tracking-wide">Get In Touch</span>
+</a>
+</div>
+</section>
+<!-- END: PrimaryHorizontalIconDock -->
+<!-- BEGIN: HeroShowcase (Asymmetric Split Matching Homepage Structure) -->
+<div class="flex-1 flex flex-col justify-between py-1 gap-2.5 z-20" data-purpose="armory-system-specs"><div class="flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-2"><div class="space-y-1"><h2 class="text-xl font-bold text-white tracking-tight leading-none"><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><span style="font-size: 1.25rem; letter-spacing: -0.025em;" class="">Production Engineering Stack</span></div></h2><p class="text-xs text-neutral-400 font-normal">Architected for high availability, zero-downtime rollouts, and resilient multi-tenant systems.</p></div><div class="flex items-center space-x-2 font-mono text-[11px]"><div class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-neutral-200 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_#ffffff] animate-pulse"></span></div></div></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 my-auto"><div class="group relative rounded-xl overflow-hidden glass-tile border border-white/10 hover:border-white/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.8)] flex flex-col justify-between bg-black/40"><div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-2"><span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>01 / CLIENT &amp; UI</span><span class="px-2 py-0.5 rounded bg-white text-black font-bold text-[9px] tracking-wider">INTERACTIVE</span></div><div class="space-y-3"><div><div class="flex items-center gap-2.5 mb-1"><div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0 group-hover:bg-white/15 transition-all"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="14" rx="2" ry="2" width="20" x="2" y="3"></rect><line x1="8" x2="16" y1="21" y2="21"></line><line x1="12" x2="12" y1="17" y2="21"></line></svg></div><div><h3 class="text-sm font-bold text-white tracking-tight">Frontend &amp; Client UI</h3><p class="text-[11px] text-neutral-400 font-mono">Interactive Layer</p></div></div></div><div class="grid grid-cols-2 gap-1.5"><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.88 18.23-6.52-9.42h-1.6v9.42H8.3V6.63h2.34l6.63 9.61V6.63h1.47v11.6h-.86z"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">Next.js 15</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2" fill="currentColor"></circle><ellipse cx="12" cy="12" rx="10" ry="4.2"></ellipse><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(60 12 12)"></ellipse><ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(120 12 12)"></ellipse></svg><span class="text-[10px] font-mono whitespace-nowrap">React 19</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-current" viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm4.5 5.5v2.2h2.2v6.8h2.6v-6.8h2.2V8.5H7.5zm8.5 4.8c.6.4 1.3.6 2.1.6.8 0 1.2-.3 1.2-.7 0-.4-.3-.6-1.1-.9-1.4-.5-2.5-1.1-2.5-2.5 0-1.4 1.1-2.4 2.8-2.4 1 0 1.9.3 2.6.8l-.7 1.8c-.6-.4-1.2-.6-1.8-.6-.6 0-1 .3-1 .6 0 .4.4.6 1.2.9 1.5.5 2.5 1.1 2.5 2.6 0 1.6-1.2 2.5-3 2.5-1.1 0-2.2-.4-2.9-1l.6-2.1z"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">TypeScript</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-current" viewBox="0 0 24 24"><path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.336 6.182 14.975 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.336 13.382 8.975 12 6.001 12z"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">Tailwind</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200 col-span-2"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 1 5 5v1a4 4 0 0 1 4 4v4a6 6 0 0 1-6 6H9a6 6 0 0 1-6-6v-4a4 4 0 0 1 4-4V7a5 5 0 0 1 5-5z"></path><circle cx="9" cy="13" r="1" fill="currentColor"></circle><circle cx="15" cy="13" r="1" fill="currentColor"></circle></svg><span class="text-[10px] font-mono whitespace-nowrap">Zustand State Engine</span></div></div><div class="space-y-1.5 pt-2 border-t border-white/5 text-[11px] text-neutral-300"><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Server Components &amp; Streaming SSR</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Optimistic UI &amp; Cache Revalidation</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Strict TypeScript Design Systems &amp; Micro-frontends</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Dynamic Asset &amp; Bundle Optimization</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Accessible Headless UI &amp; Kinetic Motion</span></div></div></div></div><div class="group relative rounded-xl overflow-hidden glass-tile border border-white/10 hover:border-white/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.8)] flex flex-col justify-between bg-black/40"><div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-2"><span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>02 / KERNEL &amp; RUNTIME</span><span class="px-2 py-0.5 rounded bg-white text-black font-bold text-[9px] tracking-wider">SERVICES</span></div><div class="space-y-3"><div><div class="flex items-center gap-2.5 mb-1"><div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0 group-hover:bg-white/15 transition-all"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="3"></rect><path d="M7 8l4 4-4 4m6 0h4" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><div><h3 class="text-sm font-bold text-white tracking-tight">Backend &amp; Runtime</h3><p class="text-[11px] text-neutral-400 font-mono">Distributed Services</p></div></div></div><div class="grid grid-cols-2 gap-1.5"><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"></path><circle cx="12" cy="12" r="2.5"></circle></svg><span class="text-[10px] font-mono whitespace-nowrap">Node.js</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-current" viewBox="0 0 24 24"><path d="M2 7h5v2H4v3h3v2H4v3h5v2H2V7zm8 0h3l2 4 2-4h3l-3.5 6L18 19h-3l-2-4-2 4H8l3.5-6L8 7z"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">Express</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l7.79 4.5v9L12 20l-7.79-4.5v-9L12 2z"></path><circle cx="12" cy="12" r="3"></circle></svg><span class="text-[10px] font-mono whitespace-nowrap">GraphQL</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">REST APIs</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200 col-span-2"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><rect height="6" rx="1" width="18" x="3" y="3"></rect><rect height="6" rx="1" width="18" x="3" y="11"></rect><path d="M7 19h10"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">BullMQ / Redis Queues</span></div></div><div class="space-y-1.5 pt-2 border-t border-white/5 text-[11px] text-neutral-300"><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Webhook Signature Verification</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Strict Idempotency Handlers (RFC 7396)</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Asynchronous Queue &amp; Event Processing</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Distributed Rate Limiting &amp; Throttling</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Secure JWT Refresh Token Rotation</span></div></div></div></div><div class="group relative rounded-xl overflow-hidden glass-tile border border-white/10 hover:border-white/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.8)] flex flex-col justify-between bg-black/40"><div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-2"><span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>03 / DATA &amp; STORAGE</span><span class="px-2 py-0.5 rounded bg-white text-black font-bold text-[9px] tracking-wider">PERSISTENCE</span></div><div class="space-y-3"><div><div class="flex items-center gap-2.5 mb-1"><div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0 group-hover:bg-white/15 transition-all"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg></div><div><h3 class="text-sm font-bold text-white tracking-tight">Data &amp; Persistence</h3><p class="text-[11px] text-neutral-400 font-mono">ACID &amp; Storage Engine</p></div></div></div><div class="grid grid-cols-2 gap-1.5"><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.28 2.7 7.93 6.5 9.31v-3.54c-.66.21-1.38.33-2.12.33-1.66 0-3-1.34-3-3s1.34-3 3-3c.4 0 .78.08 1.12.22V8.2c0-2.32 1.88-4.2 4.2-4.2s4.2 1.88 4.2 4.2v3.12c.34-.14.72-.22 1.12-.22 1.66 0 3 1.34 3 3s-1.34 3-3 3c-.74 0-1.46-.12-2.12-.33v3.54C19.3 19.93 22 16.28 22 12c0-5.52-4.48-10-10-10z"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">PostgreSQL</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-current" viewBox="0 0 24 24"><path d="M11.96 1L2 13.5h8.5L9 23l12.5-13.5H13l2.5-8.5h-3.54z"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">Supabase</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l9 5-9 5-9-5 9-5z"></path><path d="M3 12l9 5 9-5"></path><path d="M3 17l9 5 9-5"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">Redis</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3l8 14H4l8-14z"></path><path d="M12 9v4"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">Prisma</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200 col-span-2"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v8M8 12h8"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">pgvector &amp; Drizzle ORM</span></div></div><div class="space-y-1.5 pt-2 border-t border-white/5 text-[11px] text-neutral-300"><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Row Level Security (RLS) Multi-Tenant Isolation</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">ACID Compliance &amp; Declarative Migrations</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">In-Memory Redis Caching &amp; Lock Safety</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">High-Dimensional Vector Search (pgvector)</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Connection Pooling &amp; Query Performance Indexing</span></div></div></div></div><div class="group relative rounded-xl overflow-hidden glass-tile border border-white/10 hover:border-white/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.8)] flex flex-col justify-between bg-black/40"><div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-2"><span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>04 / CLOUD &amp; AI</span><span class="px-2 py-0.5 rounded bg-white text-black font-bold text-[9px] tracking-wider">ORCHESTRATION</span></div><div class="space-y-3"><div><div class="flex items-center gap-2.5 mb-1"><div class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0 group-hover:bg-white/15 transition-all"><svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><div><h3 class="text-sm font-bold text-white tracking-tight">AI &amp; Cloud DevOps</h3><p class="text-[11px] text-neutral-400 font-mono">Model Orchestration &amp; Ops</p></div></div></div><div class="grid grid-cols-2 gap-1.5"><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 1 9 9M12 21a9 9 0 0 1-9-9M12 7v10M7 12h10"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">OpenAI / Claude</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">LangChain</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="1.8" viewBox="0 0 24 24"><path d="M2 13h18c1 0 2-1 2-2.5 0-2-1.5-3.5-3.5-3.5-.8 0-1.5.3-2 .8C16 6 14.5 5 12.5 5c-2 0-3.6 1.2-4.2 3-.5-.3-1.1-.5-1.8-.5C4.5 7.5 3 9 3 11c0 .7.2 1.4.6 2H2z"></path><path d="M5 17a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">Docker</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-current" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2z"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">Vercel Edge</span></div><div class="flex items-center gap-1.5 px-2 py-1.5 rounded bg-white/5 border border-white/10 text-neutral-200 col-span-2"><svg class="w-3.5 h-3.5 text-white shrink-0 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg><span class="text-[10px] font-mono whitespace-nowrap">AWS ECS / S3 Infrastructure</span></div></div><div class="space-y-1.5 pt-2 border-t border-white/5 text-[11px] text-neutral-300"><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Domain-Specific RAG Pipelines &amp; Embeddings</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Low-Latency SSE Streaming Endpoints</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Zero-Downtime Rollouts &amp; Automated CI/CD</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Containerized Microservices with Docker</span></div><div class="flex items-center gap-1.5"><svg class="w-3 h-3 text-white shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="leading-tight">Multi-Region Edge Caching &amp; Fast Invalidation</span></div></div></div></div></div><div class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2 flex flex-wrap items-center justify-between text-[10px] font-mono text-neutral-300 gap-2 shrink-0"><div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white"></span><span class="font-semibold text-white tracking-wider">RELIABILITY:</span><span class="text-neutral-400">99.9% Uptime Architecture</span></div><div class="hidden sm:flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white"></span><span class="font-semibold text-white tracking-wider">SECURITY:</span><span class="text-neutral-400">Strict RBAC &amp; Token Invalidation</span></div><div class="hidden md:flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white"></span><span class="font-semibold text-white tracking-wider">ISOLATION:</span><span class="text-neutral-400">Multi-Tenant Data Separation</span></div><div class="hidden lg:flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-white"></span><span class="font-semibold text-white tracking-wider">STANDARDS:</span><span class="text-neutral-400">RFC 7396 Idempotent APIs</span></div></div></div>
+<!-- END: HeroShowcase -->
+<!-- BEGIN: Bottom 3 Console Cards (Matching Homepage Project Cards Tactile Architecture) -->
+
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: ConsoleFooterControlBar (Identical Telemetry) -->
+<footer class="relative z-30 w-full px-12 py-3.5 border-t border-white/10 bg-black/90 backdrop-blur-md flex flex-wrap items-center justify-between text-xs text-neutral-400 font-mono" data-purpose="console-control-hints">
+<!-- Left: System & Architecture Status -->
+<div class="flex items-center space-x-5">
+<div class="flex items-center space-x-2">
+<span class="w-2 h-2 rounded-full bg-white shadow-[0_0_6px_#ffffff] animate-pulse"></span>
+<span class="text-neutral-300 font-medium">Systems Operational</span>
+</div>
+<span class="text-neutral-600 hidden sm:inline">•</span>
+<div class="hidden sm:flex items-center space-x-2 text-neutral-400">
+<span class="">Latency: &lt;18ms</span>
+</div>
+</div>
+<!-- Center: Deployment Telemetry -->
+<div class="hidden lg:flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>
+<span class="text-neutral-300">Connected to Vercel Edge Network</span>
+</div>
+<!-- Right: Copyright & Location -->
+<div class="flex items-center space-x-3 text-neutral-400">
+<span class="">Jakarta, ID (UTC+7)</span>
+<span class="text-neutral-600">•</span>
+<span class="">© 2026 Kevin Mahendra</span>
+</div>
+</footer>
+<!-- END: ConsoleFooterControlBar -->
+<!-- Realtime Clock Script -->
+<script data-purpose="realtime-clock">
+  function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const timeStr = `${hours}:${minutes} ${ampm}`;
+    const clockElement = document.getElementById('liveClock');
+    if (clockElement) {
+      clockElement.textContent = timeStr;
+    }
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+
+
+</body></html>

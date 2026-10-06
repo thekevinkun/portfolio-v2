@@ -1,0 +1,405 @@
+<!DOCTYPE html><html class="h-full" lang="en" style="width: 1280px; height: 1024px; overflow: hidden; position: relative;"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Kevin Mahendra | Projects Portfolio Experience</title>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ps: {
+              surface: 'rgba(20, 20, 20, 0.75)',
+              surfaceActive: 'rgba(255, 255, 255, 0.16)',
+              border: 'rgba(255, 255, 255, 0.18)',
+              obsidian: '#050505',
+              charcoal: '#0c0c0c',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow-white': '0 0 25px -2px rgba(255, 255, 255, 0.5)',
+            'tile-active': '0 12px 32px -4px rgba(255, 255, 255, 0.25), 0 0 0 2px #ffffff',
+            'glass-card': '0 10px 30px 0 rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.15)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Typography & Global Display Styles -->
+<style data-purpose="typography">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+<!-- PS5 UI Visual FX & Monochrome Ambient Lighting -->
+<style data-purpose="ambient-fx">
+    .ps5-bg {
+      background: radial-gradient(circle at 75% 32%, #1a1a1a 0%, #101010 38%, #080808 72%, #020202 100%);
+    }
+
+    .ambient-particles {
+      background-image: 
+        radial-gradient(circle at 75% 45%, rgba(255, 255, 255, 0.08) 0%, transparent 55%),
+        radial-gradient(circle at 25% 75%, rgba(200, 200, 200, 0.05) 0%, transparent 50%),
+        linear-gradient(to right, rgba(4, 4, 4, 0.98) 12%, rgba(5, 5, 5, 0.6) 55%, rgba(2, 2, 2, 0.95) 100%);
+    }
+
+    /* Seamless character portrait mask fading organically into pure black PS5 backdrop */
+    .hero-avatar-fade {
+      -webkit-mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, black 45%, rgba(0,0,0,0.85) 68%, transparent 100%);
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 48%, black 45%, rgba(0,0,0,0.85) 68%, transparent 100%);
+    }
+
+    /* Scrollbar suppression */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .glass-tile {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+  </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" data-snapdom="injected-import"></head>
+<body class="bg-black text-neutral-100 h-screen w-screen relative flex flex-col justify-between overflow-hidden selection:bg-white selection:text-black">
+<!-- Ambient Monochrome Backdrop Visual Layer -->
+<div class="fixed inset-0 ps5-bg pointer-events-none z-0"></div>
+<div class="fixed inset-0 ambient-particles pointer-events-none z-0"></div>
+<!-- BEGIN: TopBar -->
+<header class="relative z-30 w-full px-12 pt-6 pb-2 flex items-center justify-between" data-purpose="ps5-top-navigation">
+<!-- Left Side: Clean PlayStation Brand Indicator in Pure Monochrome -->
+<div class="flex items-center space-x-3 text-neutral-400 font-mono text-xs tracking-wider"><span class="inline-block w-2 h-2 rounded-full bg-white shadow-[0_0_8px_#ffffff] animate-pulse"></span><span class="text-white font-bold tracking-widest uppercase text-xs">KEVIN MAHENDRA</span></div>
+<!-- Quick System Telemetry & Profile Station -->
+<div class="flex items-center space-x-6" data-purpose="status-tray">
+<!-- Settings Icon Button -->
+<!-- Live Clock Display -->
+<div class="text-sm font-semibold tracking-wider text-neutral-300 font-mono" id="liveClock">6:30 AM</div>
+<!-- Gamer Profile Node: Kevin Mahendra with avatar preview -->
+<div class="flex items-center space-x-3 cursor-pointer group" data-purpose="user-avatar-badge">
+<div class="relative">
+<div class="w-10 h-10 rounded-full border-2 border-white/80 bg-neutral-900 flex items-center justify-center font-bold text-white shadow-[0_0_12px_rgba(255,255,255,0.25)] text-xs overflow-hidden transition-transform duration-200 group-hover:scale-105">
+<img alt="Kevin Mahendra" class="w-full h-full object-cover object-top scale-110 grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCpVPJBYhhfDu5QS6L2KTioda-KZ_91hymMv5s5C1Andata9UJHY35cQi5sOcFK5Xbx1RaEbBbYuTJF-SMTt2ytNDmeVcqsylUrgDOIiGGbnCT4f35hGNgZDeXCNos_Xmtmdmwmvccs2-o14XRAdLhlRv5c8oMMaU_fIErlYJZzjrVUnT-0G-xtxoNT7f4LS2zvu-dzlyA76b_tDGpmmJukJwhfgAmDiH7EbGoj0Ikv1DJmDDv-2Z0">
+</div>
+<!-- Monochrome Online Status Beacon -->
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-white border-2 border-black rounded-full shadow-[0_0_6px_#ffffff]"></span>
+</div>
+<div class="hidden sm:flex flex-col text-left">
+<span class="text-xs font-bold leading-tight tracking-wide text-white group-hover:text-neutral-300 transition-colors">kevinmahendra</span>
+<span class="text-[10px] text-neutral-400 font-mono tracking-tight flex items-center gap-1">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span> Ready to Ship
+        </span>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: MainContent -->
+<main class="relative z-20 flex-1 flex flex-col px-12 py-2 max-w-[1920px] mx-auto w-full overflow-hidden justify-start" data-purpose="ps5-home-body">
+<!-- BEGIN: PrimaryHorizontalIconDock (Simplified 5 Modules - Monochrome) -->
+<section aria-label="Application &amp; Game Carousel Dock" class="w-full pt-1 pb-2">
+<div class="flex items-end space-x-5 overflow-x-auto no-scrollbar py-2"><!-- Tile 1: Overview -->
+<div aria-label="Overview" class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition-all duration-300" data-purpose="carousel-tile" role="button" tabindex="0">
+<div class="w-[82px] h-[82px] rounded-2xl glass-tile border border-white/10 hover:border-white flex items-center justify-center transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/15 group-hover:border-white/30 text-neutral-300 group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="mt-2.5 text-[11px] font-medium text-neutral-400 group-hover:text-white transition-colors tracking-wide">Overview</span>
+</div>
+<!-- Tile 2: Tech Stack -->
+<div aria-label="Tech Stack" class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition-all duration-300" data-purpose="carousel-tile" role="button" tabindex="0">
+<div class="w-[82px] h-[82px] rounded-2xl glass-tile border border-white/10 hover:border-white flex items-center justify-center transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/15 group-hover:border-white/30 text-neutral-300 group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="mt-2.5 text-[11px] font-medium text-neutral-400 group-hover:text-white transition-colors tracking-wide">Tech Stack</span>
+</div>
+<!-- Tile 3: Projects (ACTIVE SELECTION) -->
+<div aria-label="Projects" class="flex flex-col items-center group cursor-pointer" data-purpose="carousel-tile-active" role="button" tabindex="0">
+<div class="relative w-[92px] h-[92px] rounded-2xl bg-gradient-to-b from-neutral-800 to-neutral-900 border-2 border-white shadow-tile-active flex items-center justify-center transition-all duration-300 transform scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="p-3 bg-white/15 rounded-xl text-white transition-transform duration-300 group-hover:scale-110">
+<svg class="w-9 h-9" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<span class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white rounded-full animate-ping opacity-75"></span>
+<span class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-white rounded-full shadow-[0_0_8px_#ffffff]"></span>
+</div>
+<span class="mt-2.5 text-xs font-semibold text-white tracking-wider flex items-center gap-1.5 transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_#ffffff]"></span>
+    Projects
+  </span>
+</div>
+<!-- Tile 4: Experience -->
+<div aria-label="Experience" class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition-all duration-300" data-purpose="carousel-tile" role="button" tabindex="0">
+<div class="w-[82px] h-[82px] rounded-2xl glass-tile border border-white/10 hover:border-white flex items-center justify-center transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/15 group-hover:border-white/30 text-neutral-300 group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="mt-2.5 text-[11px] font-medium text-neutral-400 group-hover:text-white transition-colors tracking-wide">Experience</span>
+</div>
+<!-- Tile 5: Get In Touch -->
+<div aria-label="Get In Touch" class="flex flex-col items-center group cursor-pointer opacity-80 hover:opacity-100 transition-all duration-300" data-purpose="carousel-tile" role="button" tabindex="0">
+<div class="w-[82px] h-[82px] rounded-2xl glass-tile border border-white/10 hover:border-white flex items-center justify-center transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:shadow-[0_0_25px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white">
+<div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 group-hover:bg-white/15 group-hover:border-white/30 text-neutral-300 group-hover:text-white flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<span class="mt-2.5 text-[11px] font-medium text-neutral-400 group-hover:text-white transition-colors tracking-wide">Get In Touch</span>
+</div></div>
+</section>
+<!-- END: PrimaryHorizontalIconDock -->
+<!-- BEGIN: HeroShowcase (Monochrome PS5 Character Style Visual) -->
+<section class="w-full py-3 flex flex-col justify-center mt-auto space-y-3" data-purpose="ps5-projects-banner">
+<!-- Section Tag Eyebrow -->
+
+<!-- Main Headline -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div class="max-w-3xl"><h1 class="text-2xl md:text-3xl font-bold tracking-tight text-white">Featured Projects</h1><p class="text-xs md:text-sm text-neutral-400 font-normal leading-normal mt-1">Selected production web platforms, systems, and client architectures.</p></div>
+<!-- Carousel Navigation Controls -->
+
+</div>
+<!-- Category Filter Tabs -->
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<!-- Active: FULL STACK -->
+<button class="px-4 py-1.5 rounded-full bg-white text-black font-bold text-xs tracking-wide shadow-tile-active flex items-center gap-1.5 transition-transform duration-200 active:scale-95">
+<span class="w-1.5 h-1.5 rounded-full bg-black"></span>
+      FULL STACK
+    </button>
+<!-- Inactive tabs -->
+<button class="px-4 py-1.5 rounded-full glass-tile border border-white/10 hover:border-white/40 text-neutral-300 hover:text-white font-medium text-xs tracking-wide transition-colors duration-200">
+      FRONTEND
+    </button>
+<button class="px-4 py-1.5 rounded-full glass-tile border border-white/10 hover:border-white/40 text-neutral-300 hover:text-white font-medium text-xs tracking-wide transition-colors duration-200">
+      GAME
+    </button>
+<button class="px-4 py-1.5 rounded-full glass-tile border border-white/10 hover:border-white/40 text-neutral-300 hover:text-white font-medium text-xs tracking-wide transition-colors duration-200">
+      WEB3
+    </button>
+<button class="px-4 py-1.5 rounded-full glass-tile border border-white/10 hover:border-white/40 text-neutral-300 hover:text-white font-medium text-xs tracking-wide transition-colors duration-200">
+      C/C++
+    </button>
+</div>
+</section>
+<!-- END: HeroShowcase -->
+<!-- Spacer to ensure balanced proportions within the viewport -->
+<section aria-label="Activity Cards Showcase" class="w-full pt-1 pb-1 z-20 mb-auto pt-6" data-purpose="ps5-activity-cards"><div class="flex items-stretch gap-4 overflow-x-auto no-scrollbar pb-1"><!-- Card 1: Kundesk -->
+<div class="group relative rounded-xl overflow-hidden glass-tile border border-white/10 hover:border-white/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.8)] flex flex-col justify-between shrink-0" style="width: calc(28.5714% - 13.7143px);">
+<div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-2">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+        AI SAAS PLATFORM
+      </span>
+<div class="flex items-center gap-1.5">
+<a class="px-2 py-0.5 rounded bg-white text-black font-bold hover:bg-neutral-200 transition-colors text-[10px]" href="#live-demo">Live Demo ↗</a>
+<a class="px-2 py-0.5 rounded bg-white/10 text-neutral-300 hover:text-white border border-white/10 hover:border-white/30 transition-colors text-[10px]" href="#repo">Repo ↗</a>
+</div>
+</div>
+<div>
+<div class="flex items-start gap-3 mb-3">
+<img alt="Kundesk Icon" class="w-11 h-11 rounded-xl shrink-0 object-contain border border-white/10" src="https://lh3.googleusercontent.com/aida/AEtjO1WvCoBS0Qt5teSPadZO8Td41bNyWWyvOpD6naV0eanX4sG1gBMYYmKVDjkm0XhZfPa8u0gfnzQxR6hQ5NrnFF866tlQ4zvP8lC4XzEBnh43E-6fxcWMFCaF6vSM013L32De0L5q5WQdeP3ejHlZqto5YagMYQa6ZAtbVwmVrWGJf4KtgdQNr7wpPxLX8TH2516jV0Udzqwn5VAmshj4A_O0D7UNQDDFgcTmPRThOb1cEmokP6OMmID6i9M">
+<div>
+<h2 class="text-base font-bold text-white tracking-tight group-hover:text-white mb-0.5">Kundesk</h2>
+<p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">Multi-tenant AI customer service SaaS with knowledge-based AI assistants.</p>
+</div>
+</div>
+</div>
+<div class="flex items-center text-[10px] font-mono text-neutral-400 pt-2 border-t border-white/5">
+<span class="text-neutral-300">Next.js • TypeScript • Supabase • AI</span>
+</div>
+</div>
+<!-- Card 2: Padel Court Batu Alam Permai -->
+<div class="group relative rounded-xl overflow-hidden glass-tile border border-white/10 hover:border-white/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.8)] flex flex-col justify-between shrink-0" style="width: calc(28.5714% - 13.7143px);">
+<div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-2">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-neutral-400"></span>
+        BOOKING SYSTEM
+      </span>
+<div class="flex items-center gap-1.5">
+<a class="px-2 py-0.5 rounded bg-white text-black font-bold hover:bg-neutral-200 transition-colors text-[10px]" href="#live-demo">Live Demo ↗</a>
+<a class="px-2 py-0.5 rounded bg-white/10 text-neutral-300 hover:text-white border border-white/10 hover:border-white/30 transition-colors text-[10px]" href="#architecture">Architecture ↗</a>
+</div>
+</div>
+<div>
+<div class="flex items-start gap-3 mb-3">
+<img alt="Padel Court Icon" class="w-11 h-11 rounded-xl shrink-0 object-contain border border-white/10" src="https://lh3.googleusercontent.com/aida/AEtjO1VJ6a-xVYHV9GOcYSc3lG79W50_nHsxinqVG_le2_Q7PIw_AlCMXfy93t0KAMBGmNBGOxHzk470p8_6qtxYDOCXSLlMXvxiatIcuj6vA-qbeGFW-jy0Z5iH5NTlqHSmKBS_sUJfXJVtUQ9oSbln1NvTSrRt3RO3lqgi33K8emcDbvpFKqyyvkgfiz1wEeasxtdhXVz0-717Xvu25gMFWYCn4nPNuK3XJJqMikR1fJddRdiI3m1hHpSXuw">
+<div>
+<h2 class="text-base font-bold text-white tracking-tight group-hover:text-white mb-0.5">Padel Court Batu Alam Permai</h2>
+<p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">Real-time court booking platform with secure online payments &amp; instant reservation.</p>
+</div>
+</div>
+</div>
+<div class="flex items-center text-[10px] font-mono text-neutral-400 pt-2 border-t border-white/5">
+<span class="text-neutral-300">Next.js • TypeScript • Payment Gateway</span>
+</div>
+</div>
+<!-- Card 3: Kun Bookshop -->
+<div class="group relative rounded-xl overflow-hidden glass-tile border border-white/10 hover:border-white/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.8)] flex flex-col justify-between shrink-0" style="width: calc(28.5714% - 13.7143px);">
+<div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-2">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-neutral-400"></span>
+        E-COMMERCE &amp; READER
+      </span>
+<div class="flex items-center gap-1.5">
+<a class="px-2 py-0.5 rounded bg-white text-black font-bold hover:bg-neutral-200 transition-colors text-[10px]" href="#live-demo">Live Demo ↗</a>
+<a class="px-2 py-0.5 rounded bg-white/10 text-neutral-300 hover:text-white border border-white/10 hover:border-white/30 transition-colors text-[10px]" href="#repo">Repo ↗</a>
+</div>
+</div>
+<div>
+<div class="flex items-start gap-3 mb-3">
+<img alt="Kun Bookshop Icon" class="w-11 h-11 rounded-xl shrink-0 object-contain border border-white/10" src="https://lh3.googleusercontent.com/aida/AEtjO1XrFXcJVq0565PkTCcDhib7LDhq0ahWKFL-VZk-HE-bq1HhiUbfA2wAXb-Nfj6MsjhFaWFJndv-KVUBs7dS1LfwxnyZjUhi_WahBpCnm2CKkg2p6HVtPdoTkflFMCBGcYN2UzbYZ45aDAbwIVnZpmieKWRyxhMlRcp3GKt0XqyaC_7g4BL9UUItVnb6xyU-dv6jJK1PL3IZyVQOxZPTJumZYz7iDQnV3J3VKORFiM2It3HYbnR4YPEYnQk">
+<div>
+<h2 class="text-base font-bold text-white tracking-tight group-hover:text-white mb-0.5">Kun Bookshop</h2>
+<p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">Modern digital bookstore platform with MERN stack, in-browser reader &amp; AI assistant.</p>
+</div>
+</div>
+</div>
+<div class="flex items-center text-[10px] font-mono text-neutral-400 pt-2 border-t border-white/5">
+<span class="text-neutral-300">React • Express • Node.js • AI</span>
+</div>
+</div>
+<!-- Card 4 (Half-peeking card on the right): Kun Finance -->
+<div class="group relative rounded-xl overflow-hidden glass-tile border border-white/10 hover:border-white/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_25px_rgba(0,0,0,0.8)] flex flex-col justify-between shrink-0 opacity-90 hover:opacity-100" style="width: calc(28.5714% - 13.7143px);">
+<div class="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-neutral-400 mb-2">
+<span class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-neutral-400"></span>
+        FINTECH &amp; ANALYTICS
+      </span>
+<div class="flex items-center gap-1.5">
+<a class="px-2 py-0.5 rounded bg-white text-black font-bold hover:bg-neutral-200 transition-colors text-[10px]" href="#live-demo">Live Demo ↗</a>
+<a class="px-2 py-0.5 rounded bg-white/10 text-neutral-300 hover:text-white border border-white/10 hover:border-white/30 transition-colors text-[10px]" href="#repo">Repo ↗</a>
+</div>
+</div>
+<div>
+<div class="flex items-start gap-3 mb-3">
+<div class="w-11 h-11 rounded-xl shrink-0 bg-white/5 border border-white/10 flex items-center justify-center text-white">
+<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
+<path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div>
+<h2 class="text-base font-bold text-white tracking-tight group-hover:text-white mb-0.5">Kun Finance</h2>
+<p class="text-xs text-neutral-400 line-clamp-2 leading-relaxed">AI-powered cash flow forecasting system for Southeast Asia SMEs with automated risk runaways.</p>
+</div>
+</div>
+</div>
+<div class="flex items-center text-[10px] font-mono text-neutral-400 pt-2 border-t border-white/5">
+<span class="text-neutral-300">Next.js • TypeScript • PostgreSQL • AI</span>
+</div>
+</div></div><div class="flex items-center justify-end space-x-3 pt-4 pr-1"><span class="font-mono text-xs font-semibold text-neutral-300 tracking-wider">01 / 04</span><div class="flex items-center space-x-1.5"><button aria-label="Previous projects" class="w-9 h-9 rounded-full glass-tile border border-white/10 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><button aria-label="Next projects" class="w-9 h-9 rounded-full glass-tile border border-white/10 hover:border-white text-white flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-white"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></div></div></section>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: ConsoleFooterControlBar (Strict Monochrome) -->
+<footer class="relative z-30 w-full px-12 py-3.5 border-t border-white/10 bg-black/90 backdrop-blur-md flex flex-wrap items-center justify-between text-xs text-neutral-400 font-mono" data-purpose="console-control-hints"><!-- Left: System & Architecture Status -->
+<div class="flex items-center space-x-5">
+<div class="flex items-center space-x-2">
+<span class="w-2 h-2 rounded-full bg-white shadow-[0_0_6px_#ffffff] animate-pulse"></span>
+<span class="text-neutral-300 font-medium">Systems Operational</span>
+</div>
+<span class="text-neutral-600 hidden sm:inline">•</span>
+<div class="hidden sm:flex items-center space-x-2 text-neutral-400">
+<span class="">Latency: &lt;18ms</span>
+</div>
+</div>
+<!-- Center: Deployment Telemetry -->
+<div class="hidden lg:flex items-center space-x-2">
+<span class="w-1.5 h-1.5 rounded-full bg-white/70"></span>
+<span class="text-neutral-300">Connected to Vercel Edge Network</span>
+</div>
+<!-- Right: Copyright & Location -->
+<div class="flex items-center space-x-3 text-neutral-400">
+<span class="">Jakarta, ID (UTC+7)</span>
+<span class="text-neutral-600">•</span>
+<span class="">© 2026 Kevin Mahendra</span>
+</div></footer>
+<!-- END: ConsoleFooterControlBar -->
+<!-- Live Clock Script -->
+<script data-purpose="realtime-clock">
+  function updateClock() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const timeStr = `${hours}:${minutes} ${ampm}`;
+    const clockElement = document.getElementById('liveClock');
+    if (clockElement) {
+      clockElement.textContent = timeStr;
+    }
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+</script>
+<!-- Interactive Tile Carousel Switcher Script (Monochrome state toggles) -->
+<script data-purpose="tile-interaction">
+  document.addEventListener('DOMContentLoaded', () => {
+    const tiles = document.querySelectorAll('[data-purpose="carousel-tile"], [data-purpose="carousel-tile-active"]');
+    tiles.forEach(tile => {
+      tile.addEventListener('click', () => {
+        tiles.forEach(t => {
+          t.classList.remove('scale-105', 'opacity-100');
+          t.classList.add('opacity-80');
+          const box = t.firstElementChild;
+          if (box) {
+            box.classList.remove('border-white', 'shadow-tile-active', 'bg-gradient-to-b', 'from-neutral-800', 'to-neutral-900', 'border-2');
+            box.classList.add('glass-tile', 'border', 'border-white/10');
+            const glowDot = box.querySelectorAll('span');
+            glowDot.forEach(dot => dot.remove());
+          }
+        });
+        
+        tile.classList.remove('opacity-80');
+        tile.classList.add('scale-105', 'opacity-100');
+        const activeBox = tile.firstElementChild;
+        if (activeBox) {
+          activeBox.classList.remove('glass-tile', 'border-white/10');
+          activeBox.classList.add('border-2', 'border-white', 'shadow-tile-active', 'bg-gradient-to-b', 'from-neutral-800', 'to-neutral-900');
+          
+          if (!activeBox.querySelector('.animate-ping')) {
+            const pingDot = document.createElement('span');
+            pingDot.className = 'absolute -top-1.5 -right-1.5 w-3 h-3 bg-white rounded-full animate-ping opacity-75';
+            const solidDot = document.createElement('span');
+            solidDot.className = 'absolute -top-1.5 -right-1.5 w-3 h-3 bg-white rounded-full shadow-[0_0_8px_#ffffff]';
+            activeBox.appendChild(pingDot);
+            activeBox.appendChild(solidDot);
+          }
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+<div id="snapdom-sandbox" data-snapdom-sandbox="true" aria-hidden="true" style="position: absolute; left: -9999px; top: -9999px; width: 0px; height: 0px; overflow: hidden;"></div></body></html>
