@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** (date)
-**Current phase / step:** P1.6
+**Current phase / step:** P1.7
 **Mode default:** Build
 
 ---
@@ -30,7 +30,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P1.3 Neon + Drizzle, GitHub, Vercel deploy, docs into `docs/`
 - [x] P1.4 Tokens + fonts
 - [x] P1.5 Primitives + backgrounds
-- [ ] P1.6 TopBar + StatusFooter
+- [x] P1.6 TopBar + StatusFooter
 - [ ] P1.7 Dock + mobile tab bar
 
 ---
@@ -41,6 +41,8 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D13 — Text tokens named fg-high/medium/low/faint; accent is one token pair (accent / on-accent); motion durations are CSS variables in :root
 - D14 — Pill = status capsule with optional dot; Chip = mono tag; ButtonLink handles anchors (next/link for internal, new tab for external); background layers are @utility classes in globals.css; hover/transition animates transform only, border and shadow switch instantly until the card spotlight in P3.8
 - D15 — Component convention: arrow functions, default export (named when a file holds several), `export function` for non-components, per-folder `index.ts` barrels (see CLAUDE.md §7)
+- D16 — Persistent chrome components live in `components/chrome/` (TopBar, StatusFooter, LiveClock, ProfileBadge; Dock joins in P1.7); placeholder profile data lives in `data/seed.ts`, typed by `types/profile.ts`, and is replaced by the DB in P4
+- D17 — Clock uses `useSyncExternalStore` and wakes once per minute (no per-second re-render, no hydration mismatch); footer shows only availability, hosting note, location and year; no status or latency claims; chrome uses no `backdrop-filter` (budget kept for the dock)
 
 ## Open questions
 

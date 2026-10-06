@@ -197,7 +197,7 @@ portfolio/
 ├── app/
 │   ├── (site)/[[...section]]/page.tsx   ← Stage entry for all public URLs
 │   └── dashboard/                       ← admin
-├── components/  stage/ · panels/ · ui/ · dashboard/
+├── components/  stage/ · panels/ · ui/ · chrome/ · dashboard/
 ├── lib/         db/ (schema, queries) · auth/ · stage/ · env.ts
 ├── types/       ← all shared types (never inline)
 ├── validators/  ← Zod schemas
