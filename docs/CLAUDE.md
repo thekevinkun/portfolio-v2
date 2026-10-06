@@ -3,6 +3,8 @@
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
 > Status: **planning — no code written yet.** Philosophy: _it's just a portfolio — keep it minimal, build it fast._
+>
+> Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
 ---
 
