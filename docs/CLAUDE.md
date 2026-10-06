@@ -246,6 +246,7 @@ obsidian / charcoal backgrounds · glass surface + border · text high/medium/lo
 ```
 portfolio/
 ├── app/
+│   ├── (site)/[[...section]]/layout.tsx ← chrome + StageProvider (initial index from the URL)
 │   ├── (site)/[[...section]]/page.tsx   ← Stage entry for all public URLs
 │   └── dashboard/                       ← admin
 ├── components/  stage/ · panels/ · ui/ · chrome/ · dashboard/
@@ -328,6 +329,7 @@ Goal: <one sentence>
 | D21 | Page-turn track uses a CSS transform transition driven by the motion tokens, with `transitionend` advancing the phase; Motion is reserved for the dock ring and entrances                                                                                                                                       |
 | D22 | URL sync is `replaceState` at transition start; browser back/forward is not a Stage input; dock and tab-bar items are real `<a href>` links                                                                                                                                                                     |
 | D23 | Gesture inputs lock during a transition; keyboard and dock inputs retarget mid-flight                                                                                                                                                                                                                           |
+| D24 | `StageProvider` lives in `app/(site)/[[...section]]/layout.tsx`, so chrome and panels share Stage state and the server knows the initial index from the route param (no `usePathname`) |
 
 ### Open
 

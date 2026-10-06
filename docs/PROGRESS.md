@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-06
-**Current phase / step:** P2.2 (Stage reducer and track)
+**Last updated:** 2026-10-07
+**Current phase / step:** P2.3 (wheel input)
 **Mode default:** Build
 
 ---
@@ -26,7 +26,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Current phase checklist
 
 - [x] P2.1 Plan chat (spec in CLAUDE.md §4.2.1)
-- [ ] P2.2 Reducer + track
+- [x] P2.2 Reducer + track
 - [ ] P2.3 Wheel
 - [ ] P2.4 Keyboard, swipe, dock
 - [ ] P2.5 URL sync + SSR deep links
@@ -40,6 +40,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Decisions since last update
 
 - D20–D23 — see CLAUDE.md §10 (D12–D19 moved there).
+- D24 — see CLAUDE.md §10.
 
 ## Open questions
 
@@ -52,7 +53,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Known issues
 
-_None yet._
+- Placeholder panels use <h2>; the heading structure (one h1 vs five) is settled in P3.3.
 
 ---
 
@@ -77,6 +78,22 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-07 — P2.2
+Done:
+- Stage types, config, reducer (phases, gesture lock), provider + useStage, track/panels with CSS transform transition, inert handling, placeholder panels
+Files created/changed:
+- types/stage.ts; lib/stage/{config,motion,section-index,reducer,stage-context}.ts; components/stage/*; components/panels/*; app/(site)/[[...section]]/{layout,page}.tsx (layout moved from app/(site)/)
+Decisions:
+- D24 provider in the section layout
+Verified (viewports / devices):
+- 1440×900 and 390×844 via temporary buttons (not committed); 4× throttle; direct load of /projects
+Known issues:
+- Dock still URL-based until P2.7
+Next step (ID + one-line goal):
+- P2.3 — custom wheel intent machine, one page per gesture
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Phase: P2. Step: P2.3. Mode: Build. Goal: Wheel intent state machine, scroll guard and useStageWheel hook driving the Stage.
 
 ### Handoff — 2026-10-06 — P2.1 (plan chat)
 
