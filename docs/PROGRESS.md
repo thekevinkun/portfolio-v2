@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-07
-**Current phase / step:** P2.9 (manual device pass)
+**Current phase / step:** P3.1 (design chat, no code)
 **Mode default:** Build
 
 ---
@@ -13,7 +13,7 @@
 | Phase | Name                     | Status         | Notes                                       |
 | ----- | ------------------------ | -------------- | ------------------------------------------- |
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
-| P2    | Stage engine             | 🟦 in progress | Spec locked in P2.1 (CLAUDE.md §4.2.1)      |
+| P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ⬜ Not started | Need Experience + Get In Touch layouts (O3) |
 | P4    | Neon data → LAUNCH       | ⬜ Not started | Launch gate                                 |
 | P5    | Dashboard                | ⬜ Not started |                                             |
@@ -33,7 +33,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P2.6 Visuals
 - [x] P2.7 Dock ring
 - [x] P2.8 A11y
-- [ ] P2.9 Manual device pass
+- [x] P2.9 Manual device pass
 
 ---
 
@@ -47,6 +47,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D32–D33: see CLAUDE.md §10.
 - D34–D35: see CLAUDE.md §10.
 - D36–D38: see CLAUDE.md §10.
+- D39: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -59,8 +60,12 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Known issues
 
-- Placeholder panels use <h2>; the heading structure (one h1 vs five) is settled in P3.3.
-- Every real panel (P3) must give its heading the id heading-<section id> (D37).
+- P3 contract from the Stage: every panel's heading must have the id `heading-<section id>` (D37); inner scrollers get `data-stage-scroll`, and the carousel gets `data-stage-swipe-ignore` (R2)
+- Retargeting back to a page that was mid-leave replays its parallax/shadow (small pop)
+- A hover lift in progress when the dock ring starts to glide can pop the ring by ~4px
+- TabBar indicator does not glide (static)
+- Heading focus and the live region can both speak (double announce); full screen-reader pass in P6.3
+- Canonical, sitemap and descriptions wait for P4.5 (domain, O5)
 
 ---
 
@@ -85,6 +90,23 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-07 — P2.9 (P2 closed)
+Done:
+- Manual device pass: mouse wheel, Mac trackpad, Windows precision touchpad, phone swipe + inner scroll, keyboard-only, direct load, reduced motion, inner scrollable wheel, 4× throttle — all passed
+- No tuning changes; P2 (Stage engine) complete
+Files created/changed:
+- docs only (ROADMAP checklist ticked, CLAUDE.md status + D39, PROGRESS.md)
+Decisions:
+- D39 Stage tuning values kept as shipped
+Verified (viewports / devices):
+- Real devices per the ROADMAP Stage checklist (all nine items)
+Known issues:
+- See the Known issues section above (all low-severity polish items)
+Next step (ID + one-line goal):
+- P3.1 — design chat (no code): Experience + Get In Touch layouts, settle O1–O3 and O6, define density tiers
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P3 — Five pages. Step: P3.1. Mode: Build. Goal: Design the Experience and Get In Touch layouts (links-only) in the existing style, settle O1–O3 and O6, and define density tiers per page. Also attach the three docs/reference HTML files.
 
 ### Handoff — 2026-10-07 — P2.8
 Done:
@@ -123,22 +145,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.8. Mode: Build. Goal: Polite live region, focus management after a page turn, and the reduced-motion crossfade (shorter duration token + fade-in).
 
 ### Handoff — 2026-10-07 — P2.6
-Done:
-- Panel state attributes, outgoing scale/dim, incoming parallax + edge shadow, rubber-band at the first/last page (new bouncing phase)
-Files created/changed:
-- types/stage.ts; lib/stage/{config,motion,reducer}.ts; components/stage/{Stage,StagePanel,StageProvider,StageTrack}.tsx; app/globals.css
-Decisions:
-- D32 CSS-only visuals keyed off data attributes · D33 bounce as a phase, token-driven duration
-Verified (viewports / devices):
-- <fill in: 1440×900 + 390×844, all inputs, edge bounce with wheel/keys/swipe, reduced-motion emulation, 4× throttle>
-Known issues:
-- Retargeting back to a page that was mid-leave replays its parallax/shadow (small pop)
-- Effects are off under reduced motion; the crossfade replacement lands in P2.8
-- Visual numbers (scale, dim, parallax, shadow, bounce) are tokens in :root; final taste tuning in P2.9
-Next step (ID + one-line goal):
-- P2.7 — dock ring glide synced to the Stage (the active tile already follows since P2.5)
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.7. Mode: Build. Goal: Dock ring that glides between tiles (Motion LazyMotion shared layout), synced to the Stage.
+- P2.6: implemented CSS-only page-turn visuals, panel state attributes, incoming parallax, edge shadow, outgoing scale/dim, and edge rubber-band bounce; D32 and D33 established.
 
 ### Handoff — 2026-10-07 — P2.5
 - P2.5: implemented `replaceState` URL/title sync and Stage-driven active tiles; D29 URL/title sync, D30 canonical deferral to P4.5, and D31 `useActiveSection` pulled forward.
