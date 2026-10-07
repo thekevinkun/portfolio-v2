@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { MouseEventHandler } from "react";
 import { cn } from "@/lib/cn";
 import type { Section } from "@/types/stage";
 import { DOCK_ICONS } from "./dock-icons";
@@ -6,15 +7,18 @@ import { DOCK_ICONS } from "./dock-icons";
 interface DockTileProps {
   section: Section;
   active: boolean;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
 }
 
 // All tiles share one size; the active one scales up (transform only, no layout shift)
-const DockTile = ({ section, active }: DockTileProps) => {
+const DockTile = ({ section, active, onClick }: DockTileProps) => {
   const Icon = DOCK_ICONS[section.id];
 
   return (
     <Link
       href={section.path}
+      prefetch={false}
+      onClick={onClick}
       aria-current={active ? "page" : undefined}
       className="group flex flex-col items-center rounded-tile focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
     >
