@@ -8,10 +8,30 @@ import {
   type ReactNode,
 } from "react";
 import { COOLDOWN_MS, FALLBACK_PADDING_MS } from "@/lib/stage/config";
-import { readPageDurationMs } from "@/lib/stage/motion";
+import { readBounceDurationMs, readPageDurationMs } from "@/lib/stage/motion";
 import { createInitialState, stageReducer } from "@/lib/stage/reducer";
 import { StageContext } from "@/lib/stage/stage-context";
-import type { StageSource } from "@/types/stage";
+import type { StageAction, StagePhase, StageSource } from "@/types/stage";
+
+// What ends each busy phase, and when. A transition normally ends on transitionend,
+// so its timer is only the fallback; a bounce has no DOM event, so its timer is the end.
+function getPhaseTimer(
+  phase: StagePhase,
+): { delay: number; action: StageAction } | null {
+  switch (phase) {
+    case "transitioning":
+      return {
+        delay: readPageDurationMs() + FALLBACK_PADDING_MS,
+        action: { type: "TRANSITION_END" },
+      };
+    case "bouncing":
+      return { delay: readBounceDurationMs(), action: { type: "BOUNCE_END" } };
+    case "cooldown":
+      return { delay: COOLDOWN_MS, action: { type: "COOLDOWN_END" } };
+    case "idle":
+      return null;
+  }
+}
 
 interface StageProviderProps {
   initialIndex: number;
@@ -40,19 +60,11 @@ const StageProvider = ({ initialIndex, children }: StageProviderProps) => {
     [],
   );
 
-  // Cooldown always needs a timer. The transition timer is only a fallback for
-  // when transitionend never fires (hidden tab). Re-arms on retarget (index change).
+  // Re-arms on retarget (index change) as well as on every phase change
   useEffect(() => {
-    if (state.phase === "idle") return;
-    const isTransition = state.phase === "transitioning";
-    const delay = isTransition
-      ? readPageDurationMs() + FALLBACK_PADDING_MS
-      : COOLDOWN_MS;
-    const id = window.setTimeout(
-      () =>
-        dispatch({ type: isTransition ? "TRANSITION_END" : "COOLDOWN_END" }),
-      delay,
-    );
+    const timer = getPhaseTimer(state.phase);
+    if (!timer) return;
+    const id = window.setTimeout(() => dispatch(timer.action), timer.delay);
     return () => window.clearTimeout(id);
   }, [state.phase, state.index]);
 

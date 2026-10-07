@@ -77,6 +77,16 @@
   --duration-micro: 200ms;
   --duration-enter: 500ms;
   --duration-page: 650ms;
+
+  /* Stage page-turn visuals (P2.6) */
+  --stage-outgoing-scale: 0.96;
+  --stage-outgoing-opacity: 0.55;
+  --stage-parallax: 6%;
+  --stage-shadow-opacity: 0.5;
+
+  /* Edge bounce: 140ms out + 280ms back (the keyframe split below) */
+  --duration-bounce: 420ms;
+  --stage-bounce: 20px;
 }
 
 html {
@@ -123,4 +133,86 @@ body {
 /* Static film grain: a tiny tiled SVG noise, no runtime cost */
 @utility bg-grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Stage page turn: the page being left shrinks and dims while it slides away.
+   Motion-safe only; the reduced-motion crossfade comes in P2.8. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-stage-panel] {
+    transition:
+      transform var(--duration-page) var(--ease-out-expo),
+      opacity var(--duration-page) var(--ease-out-expo);
+  }
+
+  [data-stage-panel][data-state="outgoing"] {
+    transform: scale(var(--stage-outgoing-scale));
+    opacity: var(--stage-outgoing-opacity);
+  }
+}
+
+/* Incoming page: its content settles in from slightly behind, and a soft shadow
+   fades off its leading edge. Plays only after the first move (data-animate). */
+@media (prefers-reduced-motion: no-preference) {
+  [data-stage-panel][data-side="after"] {
+    --stage-parallax-from: var(--stage-parallax);
+  }
+  [data-stage-panel][data-side="before"] {
+    --stage-parallax-from: calc(var(--stage-parallax) * -1);
+  }
+
+  [data-stage-panel][data-state="active"][data-animate] [data-stage-layer] {
+    animation: stage-parallax-in var(--duration-page) var(--ease-out-expo)
+      backwards;
+  }
+
+  [data-stage-panel][data-state="active"][data-animate] [data-stage-shadow] {
+    animation: stage-shadow-out var(--duration-page) var(--ease-out-expo)
+      backwards;
+  }
+}
+
+@keyframes stage-parallax-in {
+  from {
+    transform: translate3d(var(--stage-parallax-from), 0, 0);
+  }
+}
+
+@keyframes stage-shadow-out {
+  from {
+    opacity: var(--stage-shadow-opacity);
+  }
+}
+
+/* Edge bounce: pushing past the first or last page springs back */
+@media (prefers-reduced-motion: no-preference) {
+  [data-stage-track][data-bounce] {
+    animation: stage-bounce var(--duration-bounce) linear;
+  }
+  [data-stage-track][data-bounce="next"] {
+    --stage-bounce-x: calc(var(--stage-bounce) * -1);
+  }
+  [data-stage-track][data-bounce="prev"] {
+    --stage-bounce-x: var(--stage-bounce);
+  }
+}
+
+/* No motion, no wait: the stage frees up at once */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-bounce: 0ms;
+  }
+}
+
+@keyframes stage-bounce {
+  0% {
+    translate: 0 0;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  33.333% {
+    translate: var(--stage-bounce-x) 0;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  100% {
+    translate: 0 0;
+  }
 }

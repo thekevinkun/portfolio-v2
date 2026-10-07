@@ -109,21 +109,21 @@ All numbers live in `lib/stage/config.ts`. Durations and easing come from the CS
 
 ### §4.2.1 Wheel
 
-| Rule | Value |
-| --- | --- |
-| Axis | Act only when `\|dy\| > \|dx\|`; horizontal wheel belongs to carousels |
-| Normalize | `deltaMode` 1 (lines) × 16; 2 (pages) × viewport height |
-| Noise floor | Ignore `\|dy\| < 2` |
-| Accumulator | Sum `dy` per gesture; reset after 100 ms with no events |
-| Trigger | Accumulated `\|dy\| ≥ 40` fires one next/prev and locks the gesture |
-| Notch vs stream | The first event of a gesture with `\|dy\| ≥ 80`, or any line/page `deltaMode` event, is a mouse notch; anything else is a trackpad stream |
-| Notch unlock | When the stage is idle again (transition end + 120 ms cooldown) |
-| Stream unlock | After transition end: 120 ms of quiet, or a new gesture (delta ≥ 1.3× previous and ≥ 30, or direction flip with `\|dy\| ≥ 30`) |
-| Safety cap | Force unlock 2000 ms after the trigger |
-| Inner scroll | Decided once at the start of each gesture (after 120 ms of quiet): if the target (or a scrollable ancestor, or `data-stage-scroll`) can scroll in that direction, the whole gesture is ignored |
-| Browser gestures | `overscroll-behavior: none` on `html`/`body` |
+| Rule             | Value                                                                                                                                                                                          |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Axis             | Act only when `\|dy\| > \|dx\|`; horizontal wheel belongs to carousels                                                                                                                         |
+| Normalize        | `deltaMode` 1 (lines) × 16; 2 (pages) × viewport height                                                                                                                                        |
+| Noise floor      | Ignore `\|dy\| < 2`                                                                                                                                                                            |
+| Accumulator      | Sum `dy` per gesture; reset after 100 ms with no events                                                                                                                                        |
+| Trigger          | Accumulated `\|dy\| ≥ 40` fires one next/prev and locks the gesture                                                                                                                            |
+| Notch vs stream  | The first event of a gesture with `\|dy\| ≥ 80`, or any line/page `deltaMode` event, is a mouse notch; anything else is a trackpad stream                                                      |
+| Notch unlock     | When the stage is idle again (transition end + 120 ms cooldown)                                                                                                                                |
+| Stream unlock    | After transition end: 120 ms of quiet, or a new gesture (delta ≥ 1.3× previous and ≥ 30, or direction flip with `\|dy\| ≥ 30`)                                                                 |
+| Safety cap       | Force unlock 2000 ms after the trigger                                                                                                                                                         |
+| Inner scroll     | Decided once at the start of each gesture (after 120 ms of quiet): if the target (or a scrollable ancestor, or `data-stage-scroll`) can scroll in that direction, the whole gesture is ignored |
+| Browser gestures | `overscroll-behavior: none` on `html`/`body`                                                                                                                                                   |
 
-The wheel listener is on `window` (chrome included); `ctrl`+wheel (zoom) is ignored.                                                                                    |
+The wheel listener is on `window` (chrome included); `ctrl`+wheel (zoom) is ignored. |
 
 **Touch:** pointer events, `touch` only; `touch-action: pan-y` on the stage (inner vertical scroll on phones, O1). Axis lock after 10 px. Commit on release at |dx| ≥ 60 px, or at velocity ≥ 0.4 px/ms when it travelled at least 24 px; left swipe = next. No finger-following in v1. Swipes starting inside `data-stage-swipe-ignore` (carousel) belong to that element. Swipes are scoped to [data-stage-viewport]; the Stage sets touch-action: pan-y.
 
@@ -133,23 +133,23 @@ The wheel listener is on `window` (chrome included); `ctrl`+wheel (zoom) is igno
 
 **Locking:** gesture inputs (wheel, swipe) are ignored unless phase is `idle`. Discrete inputs (keyboard, dock) are accepted in any phase and retarget mid-flight.
 
-**Edges:** first page + up / last page + down = rubber-band (20 px out in 140 ms, back in 280 ms), no navigation, 300 ms cooldown.
+**Edges:** a step past the first or last page (any input, only from `idle`) runs a rubber-band instead of moving: 20 px out in 140 ms, back in 280 ms (`--duration-bounce` 420 ms, 0 under reduced motion), no navigation, no URL change. The stage is busy for the bounce, then the normal 120 ms cooldown.
 
 **Transition**
 
-| Item              | Value                                                                                                                                     |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------------------------------------------------- |
-| Mechanism         | Track `translate3d(-index*100%,0,0)` with a CSS transition; phase advances on `transitionend` with a `duration + 100 ms` timeout fallback |
-| Duration / easing | `--duration-page` (650 ms) / out-expo style, for every move                                                                               |
-| Outgoing panel    | scale 1 → 0.96, opacity 1 → 0.55                                                                                                          |
-| Parallax          | Inner layer of the incoming panel starts offset 6% of panel width in the travel direction, settles to 0                                   |
-| Edge shadow       | Leading edge of incoming panel, 0.5 → 0 opacity                                                                                           |
-| Cooldown          | 120 ms minimum after the transition before the next gesture                                                                               |
-| `will-change`     | On the track during transition only                                                                                                       |
-| State             | `{ index (target), from, direction, phase, source }`; phases `idle → transitioning → cooldown → idle`                                     |
-| Panel attributes  | `data-state="active                                                                                                                       | outgoing | idle"`+`data-direction`; all visuals key off these |
-| Inactive panels   | `inert` + animations paused; `inert` removed from the incoming panel at transition start, applied to the outgoing one at transition end   |
-| Reduced motion    | Duration token overridden to 150 ms; track jumps, incoming panel fades in; no parallax/scale/shadow                                       |
+| Item | Value |
+| --- | --- |
+| Mechanism | Track `translate3d(-index*100%,0,0)` with a CSS transition; phase advances on `transitionend` with a `duration + 100 ms` timeout fallback |
+| Duration / easing | `--duration-page` (650 ms) / out-expo style, for every move |
+| Outgoing panel | scale 1 → 0.96, opacity 1 → 0.55 |
+| Parallax | Inner layer of the incoming panel starts offset 6% of panel width in the travel direction, settles to 0 |
+| Edge shadow | Leading edge of incoming panel, 0.5 → 0 opacity |
+| Cooldown | 120 ms minimum after the transition before the next gesture |
+| `will-change` | On the track during transition only |
+| State | `{ index (target), from, direction, phase, source, bounce }`; phases `idle → transitioning → cooldown → idle` and `idle → bouncing → cooldown → idle` |
+| Panel attributes | `data-state="active\|outgoing\|idle"`, `data-side="before\|after"` (the side a page arrives from), `data-direction="next\|prev\|none"`, `data-animate` (present after the first move). Inner `data-stage-layer` (parallax) and `data-stage-shadow`. All visuals key off these in `globals.css`, inside `prefers-reduced-motion: no-preference`. |
+| Inactive panels | `inert` + animations paused; `inert` removed from the incoming panel at transition start, applied to the outgoing one at transition end |
+| Reduced motion | Duration token overridden to 150 ms; track jumps, incoming panel fades in; no parallax/scale/shadow |
 
 **URL:** one route `app/(site)/[[...section]]/page.tsx`; valid slugs `tech-stack`, `projects`, `experience`, `contact` (empty = Overview); anything else `notFound()`; `generateStaticParams` + `generateMetadata` per section (title via `getSectionTitle`; placeholder until P4.5). The server derives the initial index so the track renders already positioned (no flash). Client: `useStageUrl` calls `history.replaceState` + sets `document.title` whenever the Stage target changes (any input), except for the initial render. It reads Stage state, never `usePathname()`. Browser back/forward is not a Stage input (Back leaves the site). The Dock/TabBar active tile reads Stage state (`useActiveSection`).
 
@@ -310,46 +310,41 @@ Goal: <one sentence>
 
 ### Decided
 
-| ID  | Decision                                                                                                                                                                                                                                                                                                        |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| D1  | Next.js + TS strict + Tailwind v4                                                                                                                                                                                                                                                                               |
-| D2  | No Ant Design; shadcn/ui in the dashboard only                                                                                                                                                                                                                                                                  |
-| D3  | Neon + Drizzle; 4 tables with JSON/array columns                                                                                                                                                                                                                                                                |
-| D4  | One Stage component serves all 5 URLs; SSR all sections; `replaceState` URL sync                                                                                                                                                                                                                                |
-| D5  | Persistent chrome; only content slides                                                                                                                                                                                                                                                                          |
-| D6  | Monochrome palette from screenshots; single accent token                                                                                                                                                                                                                                                        |
-| D7  | Motion with LazyMotion for the dock ring and entrances (see D20, D21)                                                                                                                                                                                                                                           |
-| D8  | **No contact form** — Get In Touch is links only                                                                                                                                                                                                                                                                |
-| D9  | Auth.js + GitHub allowlist; Vercel Blob for images                                                                                                                                                                                                                                                              |
-| D10 | No automated test suite, Redis, Resend, Sentry/PostHog; manual QA checklists instead                                                                                                                                                                                                                            |
-| D11 | Public launch at the end of Phase 4                                                                                                                                                                                                                                                                             |
-| D12 | Default branch is `master`; repo is `portfolio-v2`                                                                                                                                                                                                                                                              |
-| D13 | Text tokens named `fg-high`/`medium`/`low`/`faint`; accent is one token pair (`accent` / `on-accent`); motion durations are CSS variables in `:root`                                                                                                                                                            |
+| ID | Decision |
+| --- | --- |
+| D1 | Next.js + TS strict + Tailwind v4 |
+| D2 | No Ant Design; shadcn/ui in the dashboard only |
+| D3 | Neon + Drizzle; 4 tables with JSON/array columns |
+| D4 | One Stage component serves all 5 URLs; SSR all sections; `replaceState` URL sync |
+| D5 | Persistent chrome; only content slides |
+| D6 | Monochrome palette from screenshots; single accent token |
+| D7 | Motion with LazyMotion for the dock ring and entrances (see D20, D21) |
+| D8 | **No contact form** — Get In Touch is links only |
+| D9 | Auth.js + GitHub allowlist; Vercel Blob for images |
+| D10 | No automated test suite, Redis, Resend, Sentry/PostHog; manual QA checklists instead |
+| D11 | Public launch at the end of Phase 4 |
+| D12 | Default branch is `master`; repo is `portfolio-v2` |
+| D13 | Text tokens named `fg-high`/`medium`/`low`/`faint`; accent is one token pair (`accent` / `on-accent`); motion durations are CSS variables in `:root` |
 | D14 | Pill = status capsule with optional dot; Chip = mono tag; ButtonLink handles anchors (`next/link` for internal, new tab for external); background layers are `@utility` classes in `globals.css`; hover/transition animates transform only, border and shadow switch instantly until the card spotlight in P3.8 |
-| D15 | Component convention: arrow functions, default export (named when a file holds several), `export function` for non-components, per-folder `index.ts` barrels (see §7)                                                                                                                                           |
-| D16 | Persistent chrome lives in `components/chrome/` (TopBar, StatusFooter, LiveClock, ProfileBadge, Dock); placeholder profile data in `data/seed.ts`, typed by `types/profile.ts`, replaced by the DB in P4                                                                                                        |
-| D17 | Clock uses `useSyncExternalStore` and wakes once per minute; footer shows only availability, hosting note, location and year; no status or latency claims; chrome uses no `backdrop-filter`                                                                                                                     |
-| D18 | Dock and TabBar read `useActiveSection()` (URL-based now; P2.7 switches it to Stage state); active tile scales via `transform`; arrival ping plays once; no `backdrop-filter` in the chrome                                                                                                                     |
-| D19 | On phones the bottom TabBar replaces the footer; availability and location are shown on the Get In Touch page                                                                                                                                                                                                   |
-| D20 | Wheel, swipe and keyboard are custom code; `@use-gesture/react` dropped (inertia logic is custom regardless; fewer deps, R9)                                                                                                                                                                                    |
-| D21 | Page-turn track uses a CSS transform transition driven by the motion tokens, with `transitionend` advancing the phase; Motion is reserved for the dock ring and entrances                                                                                                                                       |
-| D22 | URL sync is `replaceState` at transition start; browser back/forward is not a Stage input; dock and tab-bar items are real `<a href>` links                                                                                                                                                                     |
-| D23 | Gesture inputs lock during a transition; keyboard and dock inputs retarget mid-flight                                                                                                                                                                                                                           |
+| D15 | Component convention: arrow functions, default export (named when a file holds several), `export function` for non-components, per-folder `index.ts` barrels (see §7) |
+| D16 | Persistent chrome lives in `components/chrome/` (TopBar, StatusFooter, LiveClock, ProfileBadge, Dock); placeholder profile data in `data/seed.ts`, typed by `types/profile.ts`, replaced by the DB in P4 |
+| D17 | Clock uses `useSyncExternalStore` and wakes once per minute; footer shows only availability, hosting note, location and year; no status or latency claims; chrome uses no `backdrop-filter` |
+| D18 | Dock and TabBar read `useActiveSection()` (URL-based now; P2.7 switches it to Stage state); active tile scales via `transform`; arrival ping plays once; no `backdrop-filter` in the chrome |
+| D19 | On phones the bottom TabBar replaces the footer; availability and location are shown on the Get In Touch page |
+| D20 | Wheel, swipe and keyboard are custom code; `@use-gesture/react` dropped (inertia logic is custom regardless; fewer deps, R9) |
+| D21 | Page-turn track uses a CSS transform transition driven by the motion tokens, with `transitionend` advancing the phase; Motion is reserved for the dock ring and entrances |
+| D22 | URL sync is `replaceState` at transition start; browser back/forward is not a Stage input; dock and tab-bar items are real `<a href>` links |
+| D23 | Gesture inputs lock during a transition; keyboard and dock inputs retarget mid-flight |
 | D24 | `StageProvider` lives in `app/(site)/[[...section]]/layout.tsx`, so chrome and panels share Stage state and the server knows the initial index from the route param (no `usePathname`) |
-
-| D25 | The wheel listener is on window (chrome included), mounted through StageInputs inside the provider; the inner-scroll exemption is decided once per gesture; ctrl+wheel is ignored |
-
-| D26 | Hook files are camelCase (useStageWheel.ts), matching useActiveSection.ts |
-
-| D27 | Dock and TabBar keep real hrefs; a plain click is intercepted by useStageNav and calls goTo(index, "dock") (a router navigation would remount the layout and reset Stage state); links use prefetch={false} |
-
-| D28 | Keyboard ignores key repeat; Page/Home/End defer to a focused inner scroller; swipes are scoped to [data-stage-viewport], and a flick needs at least 24 px of travel |
-
-| D29 | useStageUrl syncs the URL (replaceState) and document.title from Stage state at the start of every move, for every input source; it skips the initial render and swallows history rate-limit errors |
-
+| D25 | The wheel listener is on `window` (chrome included), mounted through `StageInputs` inside the provider; the inner-scroll exemption is decided once per gesture; `ctrl`+wheel is ignored |
+| D26 | Hook files are camelCase (`useStageWheel.ts`), matching `useActiveSection.ts` |
+| D27 | Dock and TabBar keep real hrefs; a plain click is intercepted by `useStageNav` and calls `goTo(index, "dock")` (router navigation would remount the layout and reset Stage state); links use `prefetch={false}` |
+| D28 | Keyboard ignores key repeat; Page/Home/End defer to a focused inner scroller; swipes are scoped to `[data-stage-viewport]`, and a flick needs at least 24 px of travel |
+| D29 | `useStageUrl` syncs the URL (`replaceState`) and `document.title` from Stage state at the start of every move, for every input source; it skips the initial render and swallows history rate-limit errors |
 | D30 | Canonical moves from P2.5 to P4.5 (needs the domain, O5); no client-side canonical sync, since each URL's canonical comes from its own server-rendered head; server metadata is title only until P4.5 |
-
-| D31 | useActiveSection reads Stage state (pulled forward from P2.7); P2.7 keeps only the ring glide |
+| D31 | `useActiveSection` reads Stage state (pulled forward from P2.7); P2.7 keeps only the ring glide |
+| D32 | Page-turn visuals (outgoing scale/dim, incoming parallax, edge shadow) are CSS-only, keyed off panel data attributes, with tokens in `:root`, wrapped in `prefers-reduced-motion: no-preference`; they play only after the first move (`data-animate`) |
+| D33 | Edge bounce is a bouncing phase entered by stepping past an edge when idle (any input source); it animates the track's separate `translate` property via a CSS keyframe; its duration is the `--duration-bounce` token, which the provider timer reads |
 
 ### Open
 
