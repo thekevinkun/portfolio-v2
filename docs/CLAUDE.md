@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3 (five pages) next.**
+> Status: **P1–P2 done; P3.1 design settled; P3.2 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -171,7 +171,7 @@ Every dashboard mutation: **auth check → Zod validate → write → revalidate
 | `profile` (one row) | name, headline, tagline/intro, role label, location label, timezone, email, availability text, avatar/portrait/resume URLs, socials (JSON array), SEO title/description, optional Tech Stack bottom-strip items (JSON) |
 | `skill_groups`      | index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible                                                                    |
 | `projects`          | slug, title, kicker label, summary, filter type (`full-stack`, `frontend`, `game`, `web3`, `systems`), **status**, logo URL, tech tags (text array), **links** (JSON: kind, label, url), featured flag, sort, visible  |
-| `experience_items`  | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, bullets (text array), sort, visible                                                                            |
+| `experience_items`  | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, bullets (text array), , optional tags (text array), sort, visible                                                                            |
 
 Auth tables come from Auth.js.
 
@@ -351,23 +351,23 @@ Goal: <one sentence>
 | D37 | useStageFocus focuses #heading-<section id> when a transition ends if the source was keyboard/dock or focus was inside a panel when the move began (retargets keep the pending flag); panels must expose that heading id; the Stage sets tabindex="-1" itself |
 | D38 | Reduced motion = shorter duration token + no track transition (jump) + CSS fade-in of the active panel; the provider's fallback timer ends the move |
 | D39 | Stage tuning values (wheel thresholds, swipe thresholds, durations, visual tokens, ring spring) stay as shipped after the P2.9 device pass; revisit only if a real device or a P3 page shows a problem |
+| D40 | Experience page: Work + Learning cards, no milestones; experience_items gains optional tags text[]; no logo images or color fields in v1 |
+| D41 | Get In Touch: statement left; right = email / LinkedIn / GitHub link cards + info row with live Samarinda time; buttons email (primary) + resume (secondary); no phone number |
+| D42 | Density tiers key off panel container height (container-type: size), thresholds in lib/stage/config.ts (provisional 640 / 500, tuned in P3.9); columns follow width (≥ 1024 px) |
+| D43 | Phones may inner-scroll (O1 yes); Tech Stack header toggle removed (O2); location is Samarinda, Asia/Makassar WITA UTC+8 (O6) |
 
 ### Open
 
 | ID  | Question                                                                 | Default                                    |
 | --- | ------------------------------------------------------------------------ | ------------------------------------------ |
-| O1  | Phones: allow inner scroll when a page can't fit?                        | Yes, phones only                           |
-| O2  | What does the small toggle at the top-right of the Tech Stack header do? | Remove it                                  |
-| O3  | Designs for **Experience** and **Get In Touch** (links-only)             | Propose layouts in P3 in the same style    |
-| O4  | Bilingual EN/ID?                                                         | English only for v1                        |
-| O5  | Domain                                                                   | Keep current Vercel subdomain until launch |
-| O6  | Footer location/timezone (mock shows Jakarta / UTC+7)                    | Use the real location and timezone         |
+| O7 | Show a phone number on the site? | No |
+| O8 | Certificates for CS50 / freeCodeCamp to link? | No certificate links |
 
 ---
 
 ## 11. Content notes from design review
 
-- Replace "Jakarta, UTC+7" with the real location/timezone.
+- Footer and Get In Touch use Samarinda, ID (UTC+8, Asia/Makassar).
 - Remove or make true: "99.9% uptime", "Latency <18ms", "Multi-Region Edge Caching", and any stack items not actually used (e.g. AWS ECS, BullMQ, LangChain).
 - Verify versions (mock says Next.js 15).
 - Unfinished projects show an honest status badge.
