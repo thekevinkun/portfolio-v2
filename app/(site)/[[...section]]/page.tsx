@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PlaceholderPanel } from "@/components/panels";
 import { Stage } from "@/components/stage";
 import { getSectionIndex } from "@/lib/stage/section-index";
+import { getSectionTitle } from "@/lib/stage/section-title";
 import { SECTIONS } from "@/lib/stage/sections";
 
 interface PageProps {
@@ -15,6 +17,15 @@ export function generateStaticParams() {
   return SECTIONS.map((s) => ({
     section: s.path === "/" ? [] : [s.id],
   }));
+}
+
+// Each URL gets its own title in the server-rendered HTML
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { section } = await params;
+  const current = SECTIONS[getSectionIndex(section)];
+  return current ? { title: getSectionTitle(current) } : {};
 }
 
 export default async function Page({ params }: PageProps) {
