@@ -199,10 +199,27 @@ body {
   }
 }
 
-/* No motion, no wait: the stage frees up at once */
+/* Reduced motion: the track jumps and the new page fades in (150ms), with no
+   shrink, parallax, shadow or bounce. The move ends from the provider's
+   fallback timer, since a jump never fires transitionend. */
 @media (prefers-reduced-motion: reduce) {
   :root {
+    --duration-page: 150ms;
     --duration-bounce: 0ms;
+  }
+
+  [data-stage-track] {
+    transition: none;
+  }
+
+  [data-stage-panel][data-state="active"][data-animate] {
+    animation: stage-fade-in var(--duration-page) linear backwards;
+  }
+}
+
+@keyframes stage-fade-in {
+  from {
+    opacity: 0;
   }
 }
 
@@ -218,4 +235,10 @@ body {
   100% {
     translate: 0 0;
   }
+}
+
+/* A heading the Stage focuses after a page turn is a programmatic target only,
+   not a control, so it gets no focus ring. Real controls keep theirs. */
+[data-stage-panel] [tabindex="-1"]:focus {
+  outline: none;
 }

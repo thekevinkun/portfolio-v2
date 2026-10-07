@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-07
-**Current phase / step:** P2.8 (a11y: live region, focus, reduced motion)
+**Current phase / step:** P2.9 (manual device pass)
 **Mode default:** Build
 
 ---
@@ -32,7 +32,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P2.5 URL sync + SSR deep links
 - [x] P2.6 Visuals
 - [x] P2.7 Dock ring
-- [ ] P2.8 A11y
+- [x] P2.8 A11y
 - [ ] P2.9 Manual device pass
 
 ---
@@ -46,6 +46,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D29–D31: see CLAUDE.md §10.
 - D32–D33: see CLAUDE.md §10.
 - D34–D35: see CLAUDE.md §10.
+- D36–D38: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -59,6 +60,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Known issues
 
 - Placeholder panels use <h2>; the heading structure (one h1 vs five) is settled in P3.3.
+- Every real panel (P3) must give its heading the id heading-<section id> (D37).
 
 ---
 
@@ -83,6 +85,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-07 — P2.8
+Done:
+- Polite live region for page turns, focus moves to the new page heading, reduced-motion crossfade (jump + 150ms fade-in)
+Files created/changed:
+- lib/stage/{config,section-title,useStageFocus}.ts; components/stage/{StageLiveRegion,StageFocus,index}; app/(site)/[[...section]]/layout.tsx; app/globals.css
+Decisions:
+- D36 live region · D37 focus management + heading id contract · D38 reduced-motion crossfade
+Verified (viewports / devices):
+- <fill in: 1440×900 keyboard-only run, console activeElement checks, reduced-motion emulation, 4× throttle, screen reader if available>
+Known issues:
+- Heading focus + live region can both speak (double announce); evaluate in P2.9
+- Dock Enter moves focus to the page heading (follows spec); refine in P2.9 if it feels wrong
+- Real panels must expose heading id heading-<section id> (P3)
+Next step (ID + one-line goal):
+- P2.9 — manual device pass, tune config values, final fixes
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.9. Mode: Build. Goal: Run the Stage manual checklist on real devices and fix what it finds; I will paste the findings.
 
 ### Handoff — 2026-10-07 — P2.7
 Done:
@@ -121,20 +141,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.7. Mode: Build. Goal: Dock ring that glides between tiles (Motion LazyMotion shared layout), synced to the Stage.
 
 ### Handoff — 2026-10-07 — P2.5
-Done:
-- Per-section titles in server metadata, useStageUrl (replaceState + document.title on every move, any input), Dock/TabBar active tile reads Stage state
-Files created/changed:
-- lib/stage/{section-title,useStageUrl,useActiveSection}.ts; components/stage/{StageUrlSync,index}; app/(site)/[[...section]]/{layout,page}.tsx
-Decisions:
-- D29 URL + title sync from Stage state · D30 canonical moved to P4.5 · D31 useActiveSection pulled forward from P2.7
-Verified (viewports / devices):
-- <fill in: 1440×900 all five URLs + all input sources, 390×844, Back-button test, Network tab shows no RSC fetch on turns, 4× throttle>
-Known issues:
-- No edge bounce until P2.6. Canonical, sitemap and descriptions wait for P4.5 (domain, O5).
-Next step (ID + one-line goal):
-- P2.6 — outgoing scale/dim, parallax layer, edge shadow, rubber-band at the edges
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.6. Mode: Build. Goal: Panel state attributes, outgoing scale and dim, parallax layer, edge shadow and rubber-band at the edges.
+- P2.5: implemented `replaceState` URL/title sync and Stage-driven active tiles; D29 URL/title sync, D30 canonical deferral to P4.5, and D31 `useActiveSection` pulled forward.
 
 ### Handoff — 2026-10-07 — P2.4
 - P2.4: implemented keyboard paging, touch swipe, and Dock/TabBar Stage navigation via `useStageNav`; D27 real href interception and D28 input behavior established.

@@ -1,6 +1,12 @@
 import type { ReactNode } from "react";
 import { Dock, StatusFooter, TabBar, TopBar } from "@/components/chrome";
-import { StageInputs, StageProvider, StageUrlSync } from "@/components/stage";
+import {
+  StageFocus,
+  StageInputs,
+  StageLiveRegion,
+  StageProvider,
+  StageUrlSync,
+} from "@/components/stage";
 import { StageBackground } from "@/components/ui";
 import { profile } from "@/data/seed";
 import { getSectionIndex } from "@/lib/stage/section-index";
@@ -23,6 +29,8 @@ export default async function SiteLayout({
     <StageProvider initialIndex={initialIndex}>
       <StageInputs />
       <StageUrlSync />
+      <StageFocus />
+      <StageLiveRegion />
       <StageBackground />
       <div className="flex h-dvh flex-col overflow-hidden">
         <TopBar profile={profile} />

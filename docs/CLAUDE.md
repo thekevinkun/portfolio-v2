@@ -149,11 +149,11 @@ The wheel listener is on `window` (chrome included); `ctrl`+wheel (zoom) is igno
 | State | `{ index (target), from, direction, phase, source, bounce }`; phases `idle → transitioning → cooldown → idle` and `idle → bouncing → cooldown → idle` |
 | Panel attributes | `data-state="active\|outgoing\|idle"`, `data-side="before\|after"` (the side a page arrives from), `data-direction="next\|prev\|none"`, `data-animate` (present after the first move). Inner `data-stage-layer` (parallax) and `data-stage-shadow`. All visuals key off these in `globals.css`, inside `prefers-reduced-motion: no-preference`. |
 | Inactive panels | `inert` + animations paused; `inert` removed from the incoming panel at transition start, applied to the outgoing one at transition end |
-| Reduced motion | Duration token overridden to 150 ms; track jumps, incoming panel fades in; no parallax/scale/shadow |
+| Reduced motion | --duration-page becomes 150 ms and --duration-bounce 0 ms. The track has no transition (it jumps), the incoming page fades in over --duration-page, and parallax, shadow, outgoing scale/dim and the bounce are off. The move ends from the provider's fallback timer (duration + 100 ms). The Dock ring jumps (MotionConfig reducedMotion="user"). |
 
 **URL:** one route `app/(site)/[[...section]]/page.tsx`; valid slugs `tech-stack`, `projects`, `experience`, `contact` (empty = Overview); anything else `notFound()`; `generateStaticParams` + `generateMetadata` per section (title via `getSectionTitle`; placeholder until P4.5). The server derives the initial index so the track renders already positioned (no flash). Client: `useStageUrl` calls `history.replaceState` + sets `document.title` whenever the Stage target changes (any input), except for the initial render. It reads Stage state, never `usePathname()`. Browser back/forward is not a Stage input (Back leaves the site). The Dock/TabBar active tile reads Stage state (`useActiveSection`).
 
-**A11y:** each panel is `<section aria-labelledby>`; `aria-current="page"` on the active dock tile; one polite live region ("Projects, page 3 of 5") updated at transition start, debounced 150 ms; after the transition, focus moves to the incoming panel heading (`tabindex="-1"`, `preventScroll`) when the source was keyboard/dock or focus was inside the outgoing panel; wheel/swipe never steal focus.
+**A11y:** each panel is `<section aria-labelledby>` and its heading must have the id `heading-<section id>`; `aria-current="page"` on the active dock tile; one polite live region (`StageLiveRegion`, empty until the first move) speaks "Projects, page 3 of 5" 150 ms (debounced) after a move starts, never on first load or on an edge bounce. After the transition ends, `useStageFocus` moves focus to the incoming panel heading (`tabindex="-1"` set at runtime, `preventScroll`, no focus ring) when the source was keyboard/dock, or when focus was inside a page when the move began; wheel and swipe otherwise never steal focus.
 
 ### 4.3 Content flow
 
@@ -347,6 +347,9 @@ Goal: <one sentence>
 | D33 | Edge bounce is a bouncing phase entered by stepping past an edge when idle (any input source); it animates the track's separate `translate` property via a CSS keyframe; its duration is the `--duration-bounce` token, which the provider timer reads |
 | D34 | The dock ring is its own element (m.span layoutId="dock-ring") inside an unscaled wrapper in the active tile, so it glides between tiles with a spring (DOCK_RING_SPRING in config.ts); tiles only scale their icon; the hover lift lives on the wrapper; the arrival ping and glow dot ride on the ring with a --dock-ring-ping-delay token; reduced motion jumps (MotionConfig reducedMotion="user"); the TabBar indicator stays static |
 | D35 | motion installed (approved by D7); LazyMotion loads domMax asynchronously (layout animations need it) via lib/motion-features.ts; components use m from motion/react-m with strict |
+| D36 | StageLiveRegion is a single role="status" element mounted in the section layout; it announces getSectionAnnouncement (label, page n of N) debounced by ANNOUNCE_DEBOUNCE_MS, skipping the initial render and edge bounces |
+| D37 | useStageFocus focuses #heading-<section id> when a transition ends if the source was keyboard/dock or focus was inside a panel when the move began (retargets keep the pending flag); panels must expose that heading id; the Stage sets tabindex="-1" itself |
+| D38 | Reduced motion = shorter duration token + no track transition (jump) + CSS fade-in of the active panel; the provider's fallback timer ends the move |
 
 ### Open
 
