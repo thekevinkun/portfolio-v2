@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1 done; P2 (Stage engine) in progress.**
+> Status: **P1–P2 done; P3 (five pages) next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -350,6 +350,7 @@ Goal: <one sentence>
 | D36 | StageLiveRegion is a single role="status" element mounted in the section layout; it announces getSectionAnnouncement (label, page n of N) debounced by ANNOUNCE_DEBOUNCE_MS, skipping the initial render and edge bounces |
 | D37 | useStageFocus focuses #heading-<section id> when a transition ends if the source was keyboard/dock or focus was inside a panel when the move began (retargets keep the pending flag); panels must expose that heading id; the Stage sets tabindex="-1" itself |
 | D38 | Reduced motion = shorter duration token + no track transition (jump) + CSS fade-in of the active panel; the provider's fallback timer ends the move |
+| D39 | Stage tuning values (wheel thresholds, swipe thresholds, durations, visual tokens, ring spring) stay as shipped after the P2.9 device pass; revisit only if a real device or a P3 page shows a problem |
 
 ### Open
 

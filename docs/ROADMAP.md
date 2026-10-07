@@ -48,15 +48,15 @@
 | P2.9 | **Manual device pass** (checklist below). |
 
 **Stage manual checklist**
-- [ ] Mouse wheel: one notch-burst = one page
-- [ ] Mac trackpad: a hard flick = exactly one page (no double skip)
-- [ ] Windows precision touchpad: same
-- [ ] Phone: swipe left/right pages; vertical inner scroll still works where allowed
-- [ ] Keyboard only: all five pages reachable, focus visible
-- [ ] Direct load of `/projects` shows the right page with no flash
-- [ ] Reduced motion on: crossfade only
-- [ ] Wheel over an inner scrollable area scrolls it instead of turning the page
-- [ ] Page turn smooth with 4× CPU throttle
+- [x] Mouse wheel: one notch-burst = one page
+- [x] Mac trackpad: a hard flick = exactly one page (no double skip)
+- [x] Windows precision touchpad: same
+- [x] Phone: swipe left/right pages; vertical inner scroll still works where allowed
+- [x] Keyboard only: all five pages reachable, focus visible
+- [x] Direct load of `/projects` shows the right page with no flash
+- [x] Reduced motion on: crossfade only
+- [x] Wheel over an inner scrollable area scrolls it instead of turning the page
+- [x] Page turn smooth with 4× CPU throttle
 
 ---
 
