@@ -107,19 +107,23 @@ All numbers live in `lib/stage/config.ts`. Durations and easing come from the CS
 
 **Wheel**
 
-| Rule             | Value                                                                                                                          |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| Axis             | Act only when `\|dy\| > \|dx\|`; horizontal wheel belongs to carousels                                                         |
-| Normalize        | `deltaMode` 1 (lines) × 16; 2 (pages) × viewport height                                                                        |
-| Noise floor      | Ignore `\|dy\| < 2`                                                                                                            |
-| Accumulator      | Sum `dy` per gesture; reset after 100 ms with no events                                                                        |
-| Trigger          | Accumulated `\|dy\| ≥ 40` fires one next/prev and locks the gesture                                                            |
-| Notch vs stream  | A single event ≥ 80 after ≥ 150 ms of quiet is a mouse notch; anything else is a trackpad stream                               |
-| Notch unlock     | Transition end + 100 ms (no quiet period needed)                                                                               |
-| Stream unlock    | After transition end: 120 ms of quiet, or a new gesture (delta ≥ 1.3× previous and ≥ 30, or direction flip with `\|dy\| ≥ 30`) |
-| Safety cap       | Force unlock 2000 ms after the trigger                                                                                         |
-| Inner scroll     | If the target (or a scrollable ancestor, or `data-stage-scroll`) can scroll in that direction, ignore the whole gesture        |
-| Browser gestures | `overscroll-behavior: none` on html/body                                                                                       |
+### §4.2.1 Wheel
+
+| Rule | Value |
+| --- | --- |
+| Axis | Act only when `\|dy\| > \|dx\|`; horizontal wheel belongs to carousels |
+| Normalize | `deltaMode` 1 (lines) × 16; 2 (pages) × viewport height |
+| Noise floor | Ignore `\|dy\| < 2` |
+| Accumulator | Sum `dy` per gesture; reset after 100 ms with no events |
+| Trigger | Accumulated `\|dy\| ≥ 40` fires one next/prev and locks the gesture |
+| Notch vs stream | The first event of a gesture with `\|dy\| ≥ 80`, or any line/page `deltaMode` event, is a mouse notch; anything else is a trackpad stream |
+| Notch unlock | When the stage is idle again (transition end + 120 ms cooldown) |
+| Stream unlock | After transition end: 120 ms of quiet, or a new gesture (delta ≥ 1.3× previous and ≥ 30, or direction flip with `\|dy\| ≥ 30`) |
+| Safety cap | Force unlock 2000 ms after the trigger |
+| Inner scroll | Decided once at the start of each gesture (after 120 ms of quiet): if the target (or a scrollable ancestor, or `data-stage-scroll`) can scroll in that direction, the whole gesture is ignored |
+| Browser gestures | `overscroll-behavior: none` on `html`/`body` |
+
+The wheel listener is on `window` (chrome included); `ctrl`+wheel (zoom) is ignored.                                                                                    |
 
 **Touch:** pointer events, `touch` only; `touch-action: pan-y` on the stage (inner vertical scroll on phones, O1). Axis lock after 10 px. Commit on release at `|dx| ≥ 60 px` or velocity ≥ 0.4 px/ms; left swipe = next. No finger-following in v1. Swipes starting inside `data-stage-swipe-ignore` (carousel) belong to that element.
 
@@ -284,7 +288,7 @@ portfolio/
 ```
 Attached: CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
-Phase: P2 — Stage engine. Step: P2.3.
+Phase: P2 — Stage engine. Step: P2.4.
 Mode: Build.
 Goal: <one sentence>
 ```
@@ -332,6 +336,10 @@ Goal: <one sentence>
 | D22 | URL sync is `replaceState` at transition start; browser back/forward is not a Stage input; dock and tab-bar items are real `<a href>` links                                                                                                                                                                     |
 | D23 | Gesture inputs lock during a transition; keyboard and dock inputs retarget mid-flight                                                                                                                                                                                                                           |
 | D24 | `StageProvider` lives in `app/(site)/[[...section]]/layout.tsx`, so chrome and panels share Stage state and the server knows the initial index from the route param (no `usePathname`) |
+
+| D25 | The wheel listener is on window (chrome included), mounted through StageInputs inside the provider; the inner-scroll exemption is decided once per gesture; ctrl+wheel is ignored |
+
+| D26 | Hook files are camelCase (useStageWheel.ts), matching useActiveSection.ts |
 
 ### Open
 

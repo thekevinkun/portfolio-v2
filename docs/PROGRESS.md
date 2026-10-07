@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-07
-**Current phase / step:** P2.3 (wheel input)
+**Current phase / step:** P2.4 (keyboard, swipe, dock)
 **Mode default:** Build
 
 ---
@@ -27,7 +27,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 - [x] P2.1 Plan chat (spec in CLAUDE.md §4.2.1)
 - [x] P2.2 Reducer + track
-- [ ] P2.3 Wheel
+- [x] P2.3 Wheel
 - [ ] P2.4 Keyboard, swipe, dock
 - [ ] P2.5 URL sync + SSR deep links
 - [ ] P2.6 Visuals
@@ -41,6 +41,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 - D20–D23 — see CLAUDE.md §10 (D12–D19 moved there).
 - D24 — see CLAUDE.md §10.
+- D25–D26 — see CLAUDE.md §10.
 
 ## Open questions
 
@@ -78,6 +79,22 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-07 — P2.3
+Done:
+- Pure wheel intent machine (notch vs stream, accumulator, locks, new-gesture detection), scroll guard, useStageWheel on window, StageInputs mounted in the section layout, overscroll-behavior none
+Files created/changed:
+- lib/stage/{config,wheel-intent,scroll-guard,useStageWheel}.ts; components/stage/{StageInputs,index}; app/(site)/[[...section]]/layout.tsx; app/globals.css
+Decisions:
+- D25 wheel on window + per-gesture exemption · D26 camelCase hook files
+Verified (viewports / devices):
+- <fill in: mouse, Mac trackpad, Windows touchpad, 1440×900, 390×844, 4× throttle>
+Known issues:
+- Thresholds are still estimates; final tuning in P2.9. No edge bounce until P2.6.
+Next step (ID + one-line goal):
+- P2.4 — keyboard, touch swipe, dock and tab bar drive the stage
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.4. Mode: Build. Goal: Keyboard navigation, touch swipe, and Dock/TabBar links driving the Stage. (Also paste components/chrome/Dock.tsx, DockTile.tsx, TabBar.tsx and lib/stage/useActiveSection.ts.)
 
 ### Handoff — 2026-10-07 — P2.2
 Done:
