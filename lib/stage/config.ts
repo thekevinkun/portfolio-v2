@@ -43,3 +43,10 @@ export const SWIPE_DISTANCE_PX = 60;
 export const SWIPE_VELOCITY = 0.4;
 // ...as long as it travelled at least this far, so tiny twitches don't count
 export const SWIPE_FLICK_MIN_PX = 24;
+
+// --- Dock ring (P2.7): spring for the shared-layout glide between tiles ---
+export const DOCK_RING_SPRING = {
+  type: "spring",
+  stiffness: 420,
+  damping: 34,
+} as const;

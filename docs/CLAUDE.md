@@ -345,6 +345,8 @@ Goal: <one sentence>
 | D31 | `useActiveSection` reads Stage state (pulled forward from P2.7); P2.7 keeps only the ring glide |
 | D32 | Page-turn visuals (outgoing scale/dim, incoming parallax, edge shadow) are CSS-only, keyed off panel data attributes, with tokens in `:root`, wrapped in `prefers-reduced-motion: no-preference`; they play only after the first move (`data-animate`) |
 | D33 | Edge bounce is a bouncing phase entered by stepping past an edge when idle (any input source); it animates the track's separate `translate` property via a CSS keyframe; its duration is the `--duration-bounce` token, which the provider timer reads |
+| D34 | The dock ring is its own element (m.span layoutId="dock-ring") inside an unscaled wrapper in the active tile, so it glides between tiles with a spring (DOCK_RING_SPRING in config.ts); tiles only scale their icon; the hover lift lives on the wrapper; the arrival ping and glow dot ride on the ring with a --dock-ring-ping-delay token; reduced motion jumps (MotionConfig reducedMotion="user"); the TabBar indicator stays static |
+| D35 | motion installed (approved by D7); LazyMotion loads domMax asynchronously (layout animations need it) via lib/motion-features.ts; components use m from motion/react-m with strict |
 
 ### Open
 

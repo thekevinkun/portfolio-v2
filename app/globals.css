@@ -87,6 +87,9 @@
   /* Edge bounce: 140ms out + 280ms back (the keyframe split below) */
   --duration-bounce: 420ms;
   --stage-bounce: 20px;
+
+  /* Dock ring: the arrival ping waits for the glide to land */
+  --dock-ring-ping-delay: 200ms;
 }
 
 html {

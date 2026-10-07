@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-07
-**Current phase / step:** P2.7 (dock ring)
+**Current phase / step:** P2.8 (a11y: live region, focus, reduced motion)
 **Mode default:** Build
 
 ---
@@ -31,7 +31,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P2.4 Keyboard, swipe, dock
 - [x] P2.5 URL sync + SSR deep links
 - [x] P2.6 Visuals
-- [ ] P2.7 Dock ring
+- [x] P2.7 Dock ring
 - [ ] P2.8 A11y
 - [ ] P2.9 Manual device pass
 
@@ -45,6 +45,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D27–D28: see CLAUDE.md §10.
 - D29–D31: see CLAUDE.md §10.
 - D32–D33: see CLAUDE.md §10.
+- D34–D35: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -83,6 +84,24 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-07 — P2.7
+Done:
+- Dock ring glides between tiles (shared layoutId + spring), ring carries the ping/glow dot with an arrival delay, motion added with async domMax
+Files created/changed:
+- package.json + lockfile; lib/motion-features.ts; lib/stage/config.ts; components/chrome/{Dock,DockTile}.tsx; app/globals.css
+Decisions:
+- D34 ring as its own shared-layout element, unscaled wrapper · D35 motion dependency, async domMax, m from motion/react-m
+Verified (viewports / devices):
+- <fill in: 1440×900 all inputs, retarget mid-flight, reduced-motion emulation, 4× throttle, motion chunk loads after first render>
+Known issues:
+- TabBar indicator does not glide (static)
+- A hover lift in progress when a glide starts can pop the ring by ~4px
+- Spring numbers are estimates; taste tuning in P2.9
+Next step (ID + one-line goal):
+- P2.8 — live region, focus management, reduced-motion crossfade
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.8. Mode: Build. Goal: Polite live region, focus management after a page turn, and the reduced-motion crossfade (shorter duration token + fade-in).
+
 ### Handoff — 2026-10-07 — P2.6
 Done:
 - Panel state attributes, outgoing scale/dim, incoming parallax + edge shadow, rubber-band at the first/last page (new bouncing phase)
@@ -118,20 +137,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.6. Mode: Build. Goal: Panel state attributes, outgoing scale and dim, parallax layer, edge shadow and rubber-band at the edges.
 
 ### Handoff — 2026-10-07 — P2.4
-Done:
-- Keyboard paging (arrows, Page keys, Home/End, 1–5), touch swipe (axis lock, distance/flick commit), Dock and TabBar tiles drive the Stage via useStageNav
-Files created/changed:
-- lib/stage/{useStageKeys,useStageSwipe,useStageNav,config}.ts; components/stage/{StageInputs,Stage}.tsx; components/chrome/{Dock,DockTile,TabBar}.tsx
-Decisions:
-- D27 link click intercepted, real hrefs, prefetch off · D28 key repeat ignored, page keys defer to inner scroller, swipes scoped to the stage viewport
-Verified (viewports / devices):
-- <fill in: 1440×900 keyboard + dock, 390×844 touch emulation, real phone if available, 4× throttle>
-Known issues:
-- Dock/TabBar active tile and the URL still follow the URL only, not the Stage (P2.5, P2.7). No edge bounce until P2.6. Safari's screen-edge back swipe can't be blocked.
-Next step (ID + one-line goal):
-- P2.5 — replaceState URL sync, per-section metadata, title and canonical
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.5. Mode: Build. Goal: URL sync with replaceState, per-section metadata, document title and canonical.
+- P2.4: implemented keyboard paging, touch swipe, and Dock/TabBar Stage navigation via `useStageNav`; D27 real href interception and D28 input behavior established.
 
 ### Handoff — 2026-10-07 — P2.3
 - P2.3: implemented custom wheel intent machine, scroll guard, `useStageWheel` on `window`, and `overscroll-behavior: none`; D25 wheel handling and D26 camelCase hook naming established.
