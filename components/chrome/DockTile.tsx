@@ -38,7 +38,7 @@ const DockTile = ({ section, active, onClick }: DockTileProps) => {
           >
             <span
               aria-hidden="true"
-              className="absolute -top-2 -right-2 size-3 animate-arrive rounded-full bg-accent motion-reduce:animate-none"
+              className="absolute -top-2 -right-2 size-3 animate-arrive rounded-full bg-accent [animation-delay:var(--dock-ring-ping-delay)] motion-reduce:animate-none"
             />
             <span
               aria-hidden="true"
