@@ -125,11 +125,11 @@ All numbers live in `lib/stage/config.ts`. Durations and easing come from the CS
 
 The wheel listener is on `window` (chrome included); `ctrl`+wheel (zoom) is ignored.                                                                                    |
 
-**Touch:** pointer events, `touch` only; `touch-action: pan-y` on the stage (inner vertical scroll on phones, O1). Axis lock after 10 px. Commit on release at `|dx| ≥ 60 px` or velocity ≥ 0.4 px/ms; left swipe = next. No finger-following in v1. Swipes starting inside `data-stage-swipe-ignore` (carousel) belong to that element.
+**Touch:** pointer events, `touch` only; `touch-action: pan-y` on the stage (inner vertical scroll on phones, O1). Axis lock after 10 px. Commit on release at |dx| ≥ 60 px, or at velocity ≥ 0.4 px/ms when it travelled at least 24 px; left swipe = next. No finger-following in v1. Swipes starting inside `data-stage-swipe-ignore` (carousel) belong to that element. Swipes are scoped to [data-stage-viewport]; the Stage sets touch-action: pan-y.
 
-**Keyboard:** ← → PageUp PageDown Home End 1–5. Ignored in input/textarea/select/contenteditable or with Ctrl/Meta/Alt. ↑/↓ are not bound.
+**Keyboard:** ← → PageUp PageDown Home End 1–5. Ignored in input/textarea/select/contenteditable or with Ctrl/Meta/Alt. ↑/↓ are not bound. Key repeat is ignored (one page per press). PageUp/PageDown/Home/End defer to a focused inner scroller (same guard as the wheel) before turning the page.
 
-**Dock / TabBar:** real `<a href>` links; `onClick` → `preventDefault()` + `goTo(i)` (except modified clicks).
+**Dock / TabBar:** real `<a href>` links; `onClick` → `preventDefault()` + `goTo(i)` (except modified clicks). Both use useStageNav; modified clicks and middle-click fall through to the browser; links set prefetch={false}; source is dock for both.
 
 **Locking:** gesture inputs (wheel, swipe) are ignored unless phase is `idle`. Discrete inputs (keyboard, dock) are accepted in any phase and retarget mid-flight.
 
@@ -340,6 +340,10 @@ Goal: <one sentence>
 | D25 | The wheel listener is on window (chrome included), mounted through StageInputs inside the provider; the inner-scroll exemption is decided once per gesture; ctrl+wheel is ignored |
 
 | D26 | Hook files are camelCase (useStageWheel.ts), matching useActiveSection.ts |
+
+| D27 | Dock and TabBar keep real hrefs; a plain click is intercepted by useStageNav and calls goTo(index, "dock") (a router navigation would remount the layout and reset Stage state); links use prefetch={false} |
+
+| D28 | Keyboard ignores key repeat; Page/Home/End defer to a focused inner scroller; swipes are scoped to [data-stage-viewport], and a flick needs at least 24 px of travel |
 
 ### Open
 

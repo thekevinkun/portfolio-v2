@@ -1,6 +1,6 @@
 import { SECTIONS } from "./sections";
 
-// Every Stage number lives here. Swipe thresholds join in P2.4.
+// Every Stage number lives here.
 export const SECTION_COUNT = SECTIONS.length;
 
 // Minimum quiet time after a transition before the next gesture (spec §4.2.1)
@@ -30,3 +30,13 @@ export const WHEEL_NEW_GESTURE_MIN = 30;
 export const WHEEL_NEW_GESTURE_RATIO = 1.3;
 // A lock never outlives this, even if the stream never goes quiet
 export const WHEEL_LOCK_CAP_MS = 2000;
+
+// --- Touch swipe (spec §4.2.1) ---
+// Finger travel before the gesture is called horizontal or vertical
+export const SWIPE_AXIS_LOCK_PX = 10;
+// A slow drag commits at this horizontal distance...
+export const SWIPE_DISTANCE_PX = 60;
+// ...or a fast flick at this speed (px per ms)...
+export const SWIPE_VELOCITY = 0.4;
+// ...as long as it travelled at least this far, so tiny twitches don't count
+export const SWIPE_FLICK_MIN_PX = 24;

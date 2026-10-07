@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-07
-**Current phase / step:** P2.4 (keyboard, swipe, dock)
+**Current phase / step:** P2.5 (URL sync and SSR deep links)
 **Mode default:** Build
 
 ---
@@ -28,7 +28,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P2.1 Plan chat (spec in CLAUDE.md §4.2.1)
 - [x] P2.2 Reducer + track
 - [x] P2.3 Wheel
-- [ ] P2.4 Keyboard, swipe, dock
+- [x] P2.4 Keyboard, swipe, dock
 - [ ] P2.5 URL sync + SSR deep links
 - [ ] P2.6 Visuals
 - [ ] P2.7 Dock ring
@@ -42,6 +42,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D20–D23 — see CLAUDE.md §10 (D12–D19 moved there).
 - D24 — see CLAUDE.md §10.
 - D25–D26 — see CLAUDE.md §10.
+- D27–D28: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -80,6 +81,22 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-07 — P2.4
+Done:
+- Keyboard paging (arrows, Page keys, Home/End, 1–5), touch swipe (axis lock, distance/flick commit), Dock and TabBar tiles drive the Stage via useStageNav
+Files created/changed:
+- lib/stage/{useStageKeys,useStageSwipe,useStageNav,config}.ts; components/stage/{StageInputs,Stage}.tsx; components/chrome/{Dock,DockTile,TabBar}.tsx
+Decisions:
+- D27 link click intercepted, real hrefs, prefetch off · D28 key repeat ignored, page keys defer to inner scroller, swipes scoped to the stage viewport
+Verified (viewports / devices):
+- <fill in: 1440×900 keyboard + dock, 390×844 touch emulation, real phone if available, 4× throttle>
+Known issues:
+- Dock/TabBar active tile and the URL still follow the URL only, not the Stage (P2.5, P2.7). No edge bounce until P2.6. Safari's screen-edge back swipe can't be blocked.
+Next step (ID + one-line goal):
+- P2.5 — replaceState URL sync, per-section metadata, title and canonical
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.5. Mode: Build. Goal: URL sync with replaceState, per-section metadata, document title and canonical.
+
 ### Handoff — 2026-10-07 — P2.3
 Done:
 - Pure wheel intent machine (notch vs stream, accumulator, locks, new-gesture detection), scroll guard, useStageWheel on window, StageInputs mounted in the section layout, overscroll-behavior none
@@ -110,25 +127,9 @@ Known issues:
 Next step (ID + one-line goal):
 - P2.3 — custom wheel intent machine, one page per gesture
 Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Phase: P2. Step: P2.3. Mode: Build. Goal: Wheel intent state machine, scroll guard and useStageWheel hook driving the Stage.
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.3. Mode: Build. Goal: Wheel intent state machine, scroll guard and useStageWheel hook driving the Stage.
 
 ### Handoff — 2026-10-06 — P2.1 (plan chat)
-
-Done:
-
-- Locked Stage thresholds, transition spec, URL strategy, a11y spec
-- Split P2.2–P2.9 into commit-sized steps
-  Files created/changed:
-- docs/CLAUDE.md (status, §3, §4.2, §4.2.1, §10), docs/ROADMAP.md (P2.3), docs/PROGRESS.md
-  Decisions:
-- D20 custom input code, no @use-gesture · D21 CSS track transition on motion tokens · D22 replaceState, no back/forward input, real links · D23 gesture lock, discrete retarget
-  Verified (viewports / devices):
-- n/a (docs only)
-  Known issues:
-- Trackpad thresholds are estimates; tuned in P2.9
-  Next step (ID + one-line goal):
-- P2.2 — stage reducer, provider, track and placeholder panels
-  Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Phase: P2. Step: P2.2. Mode: Build. Goal: Stage reducer, provider and track with placeholder panels and a CSS transform transition.
+- P2.1 plan: locked Stage thresholds, transition spec, URL strategy, a11y spec; split P2.2–P2.9 into commit-sized steps. See prior handoff for full details.
 
 _Newest first. Keep the last 3 entries in full; collapse older ones to one line each._
