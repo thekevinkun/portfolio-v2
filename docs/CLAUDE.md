@@ -356,7 +356,7 @@ Goal: <one sentence>
 | D42 | Density tiers key off panel container height (container-type: size), thresholds in lib/stage/config.ts (provisional 640 / 500, tuned in P3.9); columns follow width (≥ 1024 px) |
 | D43 | Phones may inner-scroll (O1 yes); Tech Stack header toggle removed (O2); location is Samarinda, Asia/Makassar WITA UTC+8 (O6) |
 | D44 | Project status adds `completed` (finished, repo-only) beside `live` / `in-progress` / `planned`; `systems` filter type covers C/C++ |
-| D45 | Static data lives in `data/skill-groups.ts`, `data/projects.ts`, `data/experience.ts`, re-exported from `data/seed.ts`; dates are `"YYYY-MM"` with `endDate: null` = present; only Kundesk, Padel Court and Kun Bookshop are `featured`; `logoUrl` is null until P5 uploads; `techStrip` is exported from skill-groups until the profile row is extended |
+| D45 | Static data lives in `data/skill-groups.ts`, `data/projects.ts`, `data/experience.ts`, re-exported from `data/seed.ts`; dates are `"YYYY-MM"` with `endDate: null` = present; only Kundesk, Padel Court and Kun Bookshop are `featured`; `logoUrl` is null until P5 uploads; `techStrip` is exported from skill-groups until the profile row is extended. The placeholder profile stays in data/seed.ts with the real location (Samarinda), timezone (Asia/Makassar) and availability. |
 | D46 | Education bullets are one-line strings starting with the course name; no phone number on the site (O7) and no certificate links (O8) |
 
 ### Open

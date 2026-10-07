@@ -96,7 +96,7 @@ Prompt for the next chat:
 Done:
 - Types for projects, skill groups, experience; seed data from the real portfolio data (15 projects, 4 skill groups + strip, work + education); top 3 featured
 Files created/changed:
-- types/{projects,skills,experience}.ts; data/{projects,skill-groups,experience}.ts; data/seed.ts (3 re-export lines); docs
+- types/{projects,skills,experience}.ts; data/{projects,skill-groups,experience}.ts; data/seed.ts (3 re-export lines; real location, timezone, availability in profile); docs
 Decisions:
 - D44 status `completed` · D45 data layout and conventions · D46 education bullets, no phone, no certificates
 Verified (viewports / devices):
