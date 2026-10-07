@@ -1,12 +1,14 @@
 "use client";
 
 import { useStageKeys } from "@/lib/stage/useStageKeys";
+import { useStageSwipe } from "@/lib/stage/useStageSwipe";
 import { useStageWheel } from "@/lib/stage/useStageWheel";
 
-// Mounts every Stage input hook in one place; swipe joins in the next commit.
+// Mounts every Stage input hook in one place.
 const StageInputs = () => {
   useStageWheel();
   useStageKeys();
+  useStageSwipe();
   return null;
 };
 
