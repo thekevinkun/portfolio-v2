@@ -81,6 +81,8 @@
   /* Stage page-turn visuals (P2.6) */
   --stage-outgoing-scale: 0.96;
   --stage-outgoing-opacity: 0.55;
+  --stage-parallax: 6%;
+  --stage-shadow-opacity: 0.5;
 }
 
 html {
@@ -141,5 +143,38 @@ body {
   [data-stage-panel][data-state="outgoing"] {
     transform: scale(var(--stage-outgoing-scale));
     opacity: var(--stage-outgoing-opacity);
+  }
+}
+
+/* Incoming page: its content settles in from slightly behind, and a soft shadow
+   fades off its leading edge. Plays only after the first move (data-animate). */
+@media (prefers-reduced-motion: no-preference) {
+  [data-stage-panel][data-side="after"] {
+    --stage-parallax-from: var(--stage-parallax);
+  }
+  [data-stage-panel][data-side="before"] {
+    --stage-parallax-from: calc(var(--stage-parallax) * -1);
+  }
+
+  [data-stage-panel][data-state="active"][data-animate] [data-stage-layer] {
+    animation: stage-parallax-in var(--duration-page) var(--ease-out-expo)
+      backwards;
+  }
+
+  [data-stage-panel][data-state="active"][data-animate] [data-stage-shadow] {
+    animation: stage-shadow-out var(--duration-page) var(--ease-out-expo)
+      backwards;
+  }
+}
+
+@keyframes stage-parallax-in {
+  from {
+    transform: translate3d(var(--stage-parallax-from), 0, 0);
+  }
+}
+
+@keyframes stage-shadow-out {
+  from {
+    opacity: var(--stage-shadow-opacity);
   }
 }
