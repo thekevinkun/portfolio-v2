@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Dock, StatusFooter, TabBar, TopBar } from "@/components/chrome";
 import {
+  StageFocus,
   StageInputs,
   StageLiveRegion,
   StageProvider,
@@ -28,6 +29,7 @@ export default async function SiteLayout({
     <StageProvider initialIndex={initialIndex}>
       <StageInputs />
       <StageUrlSync />
+      <StageFocus />
       <StageLiveRegion />
       <StageBackground />
       <div className="flex h-dvh flex-col overflow-hidden">

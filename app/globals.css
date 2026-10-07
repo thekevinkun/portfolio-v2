@@ -219,3 +219,9 @@ body {
     translate: 0 0;
   }
 }
+
+/* A heading the Stage focuses after a page turn is a programmatic target only,
+   not a control, so it gets no focus ring. Real controls keep theirs. */
+[data-stage-panel] [tabindex="-1"]:focus {
+  outline: none;
+}
