@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-07
-**Current phase / step:** P3.1 (design chat, no code)
+**Current phase / step:** P3.2
 **Mode default:** Build
 
 ---
@@ -14,7 +14,7 @@
 | ----- | ------------------------ | -------------- | ------------------------------------------- |
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
-| P3    | Five pages (static data) | ⬜ Not started | Need Experience + Get In Touch layouts (O3) |
+| P3    | Five pages (static data) | 🟦 in progress | Need Experience + Get In Touch layouts (O3) |
 | P4    | Neon data → LAUNCH       | ⬜ Not started | Launch gate                                 |
 | P5    | Dashboard                | ⬜ Not started |                                             |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
@@ -25,15 +25,15 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [x] P2.1 Plan chat (spec in CLAUDE.md §4.2.1)
-- [x] P2.2 Reducer + track
-- [x] P2.3 Wheel
-- [x] P2.4 Keyboard, swipe, dock
-- [x] P2.5 URL sync + SSR deep links
-- [x] P2.6 Visuals
-- [x] P2.7 Dock ring
-- [x] P2.8 A11y
-- [x] P2.9 Manual device pass
+- [x] P3.1 Design chat: Experience + Get In Touch layouts, settle O1–O3 and O6, density tiers
+- [ ] P3.2 Typed static data + data/seed.ts for the 4 tables
+- [ ] P3.3 Overview
+- [ ] P3.4 Tech Stack
+- [ ] P3.5 Projects
+- [ ] P3.6 Experience
+- [ ] P3.7 Get In Touch
+- [ ] P3.8 Entrance choreography + card spotlight
+- [ ] P3.9 Fit QA at all 8 viewports
 
 ---
 
@@ -48,15 +48,14 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D34–D35: see CLAUDE.md §10.
 - D36–D38: see CLAUDE.md §10.
 - D39: see CLAUDE.md §10.
+- D40–D43: see CLAUDE.md §10.
 
 ## Open questions
 
-- O1 Phones: inner scroll allowed?
-- O2 Tech Stack top-right toggle
-- O3 Experience + Get In Touch layouts
 - O4 Bilingual EN/ID
 - O5 Domain
-- O6 Real location/timezone in footer
+- O7 Show a phone number on the site? (default: no)
+- O8 Certificates for CS50 / freeCodeCamp to link? (default: no certificate links)
 
 ## Known issues
 
@@ -90,6 +89,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-07 — P3.1 (design chat)
+Done:
+- Experience layout (Work + Learning cards, timeline rail), Get In Touch layout (statement + 3 link cards + live-time info row), density tiers per page, tier mechanics via container height
+- Content audit findings: invalid phone prefix, "degree" wording, highlights need project mapping
+Files created/changed:
+- docs only (CLAUDE.md §4.4, §10, §11; PROGRESS.md)
+Decisions:
+- D40–D43; O1, O2, O3, O6 resolved; O7, O8 opened
+Verified (viewports / devices):
+- n/a (no code)
+Known issues:
+- Tier thresholds are estimates until chrome heights are measured in P3.2
+- Highlight → project mapping must be confirmed before seeding (audit #4)
+Next step (ID + one-line goal):
+- P3.2 — typed static data in types/ and data/seed.ts for the 4 tables
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P3. Step: P3.2. Mode: Build. Goal: Add typed static data and data/seed.ts mirroring the 4 tables, using the confirmed Experience and contact content.
 
 ### Handoff — 2026-10-07 — P2.9 (P2 closed)
 Done:
@@ -127,22 +144,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.9. Mode: Build. Goal: Run the Stage manual checklist on real devices and fix what it finds; I will paste the findings.
 
 ### Handoff — 2026-10-07 — P2.7
-Done:
-- Dock ring glides between tiles (shared layoutId + spring), ring carries the ping/glow dot with an arrival delay, motion added with async domMax
-Files created/changed:
-- package.json + lockfile; lib/motion-features.ts; lib/stage/config.ts; components/chrome/{Dock,DockTile}.tsx; app/globals.css
-Decisions:
-- D34 ring as its own shared-layout element, unscaled wrapper · D35 motion dependency, async domMax, m from motion/react-m
-Verified (viewports / devices):
-- <fill in: 1440×900 all inputs, retarget mid-flight, reduced-motion emulation, 4× throttle, motion chunk loads after first render>
-Known issues:
-- TabBar indicator does not glide (static)
-- A hover lift in progress when a glide starts can pop the ring by ~4px
-- Spring numbers are estimates; taste tuning in P2.9
-Next step (ID + one-line goal):
-- P2.8 — live region, focus management, reduced-motion crossfade
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.8. Mode: Build. Goal: Polite live region, focus management after a page turn, and the reduced-motion crossfade (shorter duration token + fade-in).
+- P2.7: implemented the Dock ring glide with shared layout and spring motion, including the arrival ping/glow; D34 and D35 established.
 
 ### Handoff — 2026-10-07 — P2.6
 - P2.6: implemented CSS-only page-turn visuals, panel state attributes, incoming parallax, edge shadow, outgoing scale/dim, and edge rubber-band bounce; D32 and D33 established.
