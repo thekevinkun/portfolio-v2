@@ -41,9 +41,9 @@
 | P2.2 | Stage reducer/context (`idle / transitioning / cooldown`) and track + panels layout with `translate3d` transition; inactive panels `inert`. |
 | P2.3 | Custom wheel intent state machine: axis rule, one-page-per-gesture lock, notch vs trackpad stream handling, data-stage-scroll exemption. |
 | P2.4 | Keyboard (← → PageUp/Down Home/End 1–5), dock click, touch swipe. |
-| P2.5 | URL sync (`replaceState`), per-section title/canonical, SSR deep links via `[[...section]]`. |
+| P2.5 | URL sync (replaceState) driven by Stage state, per-section title, SSR deep links via [[...section]]; Dock/TabBar active tile reads Stage state. |
 | P2.6 | Visuals: outgoing scale/dim, parallax layer, edge shadow, rubber-band at first/last page. |
-| P2.7 | Dock ring glide synced to Stage state. |
+| P2.7 | Dock ring glide synced to Stage state (the active tile already follows the Stage since P2.5). |
 | P2.8 | A11y: live region, focus management, reduced-motion crossfade. |
 | P2.9 | **Manual device pass** (checklist below). |
 
