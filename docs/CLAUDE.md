@@ -274,6 +274,7 @@ portfolio/
 - **Plan before produce** for anything architectural.
 - **One phase (or a few steps) per chat**; state the step ID.
 - **Output:** complete files with full paths, one response, short logical code chunks with simple inline comments, exact commands, a short "how to verify" list.
+- **Tree first:** before creating or overwriting a file, check the pasted file list. Never label a file "new" without seeing the tree; if a file may already exist, ask.
 - Respect Sections 2 and 7. If a request conflicts, say so and ask before breaking it.
 - Anything undecided goes to Section 10, not silently into code.
 - **End of chat:** produce the `PROGRESS.md` handoff.
@@ -282,6 +283,7 @@ portfolio/
 
 ```
 Attached: CLAUDE.md, PROGRESS.md.
+Repo files: <paste output of: git ls-files | grep -v lock>
 Phase: P2 — Stage engine. Step: P2.3.
 Mode: Build.
 Goal: <one sentence>

@@ -111,6 +111,7 @@ Conventional Commits: `type(scope): imperative summary`, 72 characters or fewer,
 
 ```
 Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
+Repo files: <paste output of: git ls-files | grep -v lock>
 Phase: <id> — Step: <id>.
 Mode: Build.
 Goal: <one sentence>.
