@@ -50,3 +50,7 @@ export const DOCK_RING_SPRING = {
   stiffness: 420,
   damping: 34,
 } as const;
+
+// --- A11y (P2.8) ---
+// Wait this long before announcing a page, so a burst of key presses speaks once
+export const ANNOUNCE_DEBOUNCE_MS = 150;
