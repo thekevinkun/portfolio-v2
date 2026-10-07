@@ -77,6 +77,10 @@
   --duration-micro: 200ms;
   --duration-enter: 500ms;
   --duration-page: 650ms;
+
+  /* Stage page-turn visuals (P2.6) */
+  --stage-outgoing-scale: 0.96;
+  --stage-outgoing-opacity: 0.55;
 }
 
 html {
@@ -123,4 +127,19 @@ body {
 /* Static film grain: a tiny tiled SVG noise, no runtime cost */
 @utility bg-grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Stage page turn: the page being left shrinks and dims while it slides away.
+   Motion-safe only; the reduced-motion crossfade comes in P2.8. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-stage-panel] {
+    transition:
+      transform var(--duration-page) var(--ease-out-expo),
+      opacity var(--duration-page) var(--ease-out-expo);
+  }
+
+  [data-stage-panel][data-state="outgoing"] {
+    transform: scale(var(--stage-outgoing-scale));
+    opacity: var(--stage-outgoing-opacity);
+  }
 }
