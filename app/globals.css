@@ -83,6 +83,12 @@ html {
   color-scheme: dark;
 }
 
+/* The Stage owns the wheel: no bounce, no browser back/forward swipe */
+html,
+body {
+  overscroll-behavior: none;
+}
+
 /* Background layers. The raw rgb() values live here only, never in components. */
 @utility bg-stage-base {
   background: radial-gradient(
