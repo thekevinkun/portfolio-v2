@@ -83,6 +83,10 @@
   --stage-outgoing-opacity: 0.55;
   --stage-parallax: 6%;
   --stage-shadow-opacity: 0.5;
+
+  /* Edge bounce: 140ms out + 280ms back (the keyframe split below) */
+  --duration-bounce: 420ms;
+  --stage-bounce: 20px;
 }
 
 html {
@@ -176,5 +180,39 @@ body {
 @keyframes stage-shadow-out {
   from {
     opacity: var(--stage-shadow-opacity);
+  }
+}
+
+/* Edge bounce: pushing past the first or last page springs back */
+@media (prefers-reduced-motion: no-preference) {
+  [data-stage-track][data-bounce] {
+    animation: stage-bounce var(--duration-bounce) linear;
+  }
+  [data-stage-track][data-bounce="next"] {
+    --stage-bounce-x: calc(var(--stage-bounce) * -1);
+  }
+  [data-stage-track][data-bounce="prev"] {
+    --stage-bounce-x: var(--stage-bounce);
+  }
+}
+
+/* No motion, no wait: the stage frees up at once */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-bounce: 0ms;
+  }
+}
+
+@keyframes stage-bounce {
+  0% {
+    translate: 0 0;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  33.333% {
+    translate: var(--stage-bounce-x) 0;
+    animation-timing-function: var(--ease-out-expo);
+  }
+  100% {
+    translate: 0 0;
   }
 }

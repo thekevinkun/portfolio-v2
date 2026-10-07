@@ -12,6 +12,9 @@ export const FALLBACK_PADDING_MS = 100;
 // Used only when --duration-page cannot be read
 export const DEFAULT_PAGE_DURATION_MS = 650;
 
+// Used only when --duration-bounce cannot be read (CSS owns the real value)
+export const DEFAULT_BOUNCE_DURATION_MS = 420;
+
 // --- Wheel (spec §4.2.1) ---
 // deltaMode "lines" are converted to pixels with this factor
 export const WHEEL_LINE_PX = 16;

@@ -8,6 +8,8 @@ interface StageTrackProps {
 }
 
 // Five panels side by side; a page change is one translate3d on this element.
+// The edge bounce animates the separate `translate` property (see globals.css),
+// so it never fights the page-turn transition.
 const StageTrack = ({ children }: StageTrackProps) => {
   const { state, endTransition } = useStage();
 
@@ -18,9 +20,18 @@ const StageTrack = ({ children }: StageTrackProps) => {
     }
   };
 
+  const bounce =
+    state.phase === "bouncing"
+      ? state.bounce === 1
+        ? "next"
+        : "prev"
+      : undefined;
+
   return (
     <div
+      data-stage-track
       data-phase={state.phase}
+      data-bounce={bounce}
       className="flex h-full w-full transition-transform duration-(--duration-page) ease-out-expo data-[phase=transitioning]:will-change-transform"
       style={{ transform: `translate3d(${-state.index * 100}%, 0, 0)` }}
       onTransitionEnd={handleTransitionEnd}

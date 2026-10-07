@@ -1,4 +1,4 @@
-import { DEFAULT_PAGE_DURATION_MS } from "./config";
+import { DEFAULT_BOUNCE_DURATION_MS, DEFAULT_PAGE_DURATION_MS } from "./config";
 
 // "650ms" -> 650, "0.65s" -> 650
 const toMs = (value: string): number => {
@@ -8,12 +8,18 @@ const toMs = (value: string): number => {
   return Number.NaN;
 };
 
-// The CSS token is the single source of truth (reduced motion overrides it in P2.8)
-export function readPageDurationMs(): number {
-  if (typeof window === "undefined") return DEFAULT_PAGE_DURATION_MS;
-  const raw = getComputedStyle(document.documentElement).getPropertyValue(
-    "--duration-page",
-  );
+// The CSS tokens are the single source of truth (reduced motion overrides them)
+function readDurationMs(name: string, fallback: number): number {
+  if (typeof window === "undefined") return fallback;
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name);
   const ms = toMs(raw);
-  return Number.isFinite(ms) ? ms : DEFAULT_PAGE_DURATION_MS;
+  return Number.isFinite(ms) ? ms : fallback;
+}
+
+export function readPageDurationMs(): number {
+  return readDurationMs("--duration-page", DEFAULT_PAGE_DURATION_MS);
+}
+
+export function readBounceDurationMs(): number {
+  return readDurationMs("--duration-bounce", DEFAULT_BOUNCE_DURATION_MS);
 }
