@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-07
-**Current phase / step:** P3.2
+**Current phase / step:** P3.3
 **Mode default:** Build
 
 ---
@@ -26,7 +26,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Current phase checklist
 
 - [x] P3.1 Design chat: Experience + Get In Touch layouts, settle O1–O3 and O6, density tiers
-- [ ] P3.2 Typed static data + data/seed.ts for the 4 tables
+- [x] P3.2 Typed static data + data/seed.ts for the 4 tables
 - [ ] P3.3 Overview
 - [ ] P3.4 Tech Stack
 - [ ] P3.5 Projects
@@ -49,13 +49,12 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D36–D38: see CLAUDE.md §10.
 - D39: see CLAUDE.md §10.
 - D40–D43: see CLAUDE.md §10.
+- D44–D46: see CLAUDE.md §10.
 
 ## Open questions
 
 - O4 Bilingual EN/ID
 - O5 Domain
-- O7 Show a phone number on the site? (default: no)
-- O8 Certificates for CS50 / freeCodeCamp to link? (default: no certificate links)
 
 ## Known issues
 
@@ -65,6 +64,9 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - TabBar indicator does not glide (static)
 - Heading focus and the live region can both speak (double announce); full screen-reader pass in P6.3
 - Canonical, sitemap and descriptions wait for P4.5 (domain, O5)
+- Profile row (headline, availability, socials, resume URL, SEO) and `techStrip` are not in the typed seed yet; extend `types/profile.ts` in P3.3
+- Chainkuns / DarkMint marked `live`: confirm testnet vs mainnet before launch (R4)
+- Tech Stack header copy and bottom strip in the reference HTML contain unsupported claims; rewrite in P3.4
 
 ---
 
@@ -89,6 +91,22 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-07 — P3.2
+Done:
+- Types for projects, skill groups, experience; seed data from the real portfolio data (15 projects, 4 skill groups + strip, work + education); top 3 featured
+Files created/changed:
+- types/{projects,skills,experience}.ts; data/{projects,skill-groups,experience}.ts; data/seed.ts (3 re-export lines); docs
+Decisions:
+- D44 status `completed` · D45 data layout and conventions · D46 education bullets, no phone, no certificates
+Verified (viewports / devices):
+- n/a (no UI); typecheck, lint, build
+Known issues:
+- Profile row not seeded yet (needs types/profile.ts and data/seed.ts content)
+Next step (ID + one-line goal):
+- P3.3 — Overview, including extending the profile type and seed
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also paste types/profile.ts and data/seed.ts. Phase: P3. Step: P3.3. Mode: Build. Goal: Build the Overview page and extend the profile type and seed with headline, tagline, availability, socials and resume URL.
 
 ### Handoff — 2026-10-07 — P3.1 (design chat)
 Done:
@@ -126,22 +144,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P3 — Five pages. Step: P3.1. Mode: Build. Goal: Design the Experience and Get In Touch layouts (links-only) in the existing style, settle O1–O3 and O6, and define density tiers per page. Also attach the three docs/reference HTML files.
 
 ### Handoff — 2026-10-07 — P2.8
-Done:
-- Polite live region for page turns, focus moves to the new page heading, reduced-motion crossfade (jump + 150ms fade-in)
-Files created/changed:
-- lib/stage/{config,section-title,useStageFocus}.ts; components/stage/{StageLiveRegion,StageFocus,index}; app/(site)/[[...section]]/layout.tsx; app/globals.css
-Decisions:
-- D36 live region · D37 focus management + heading id contract · D38 reduced-motion crossfade
-Verified (viewports / devices):
-- <fill in: 1440×900 keyboard-only run, console activeElement checks, reduced-motion emulation, 4× throttle, screen reader if available>
-Known issues:
-- Heading focus + live region can both speak (double announce); evaluate in P2.9
-- Dock Enter moves focus to the page heading (follows spec); refine in P2.9 if it feels wrong
-- Real panels must expose heading id heading-<section id> (P3)
-Next step (ID + one-line goal):
-- P2.9 — manual device pass, tune config values, final fixes
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.9. Mode: Build. Goal: Run the Stage manual checklist on real devices and fix what it finds; I will paste the findings.
+- P2.8: implemented the polite live region, post-turn focus management, and reduced-motion crossfade; completed the final Stage accessibility and motion behavior.
 
 ### Handoff — 2026-10-07 — P2.7
 - P2.7: implemented the Dock ring glide with shared layout and spring motion, including the arrival ping/glow; D34 and D35 established.

@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3.1 design settled; P3.2 next.**
+> Status: **P1–P2 done; P3.2 done except the profile row; P3.3 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -31,7 +31,7 @@ A personal portfolio for Kevin Mahendra (Kun) that feels like a console UI (PS5-
 | R1  | **One screen per page** on desktop/tablet: fits `100dvh`, no page-level scroll. Designed to a density tier (5.3), not squeezed afterwards.                                                                                      |
 | R2  | **Scroll = turn the page.** Vertical wheel/swipe intent changes page. Horizontal input inside a component (carousel) belongs to that component.                                                                                 |
 | R3  | **Content from the database** after Phase 4. No hardcoded copy, projects, or links in components.                                                                                                                               |
-| R4  | **Honest content.** Every claim must survive an interview question. No fake metrics. A technology is "used" only if it shipped in a real project, else "learning". Projects show a status (`live` / `in-progress` / `planned`). |
+| R4  | **Honest content.** Every claim must survive an interview question. No fake metrics. A technology is "used" only if it shipped in a real project, else "learning". Projects show a status (`live`/`in-progress`/`planned`/`completed`). |
 | R5  | **Fast and lean.** Lighthouse mobile ≥ 90. Page turn stays smooth with 4× CPU throttle.                                                                                                                                         |
 | R6  | **Accessible basics.** Keyboard navigation, visible focus, `prefers-reduced-motion` respected, page changes announced.                                                                                                          |
 | R7  | **Crawlable.** All five sections are server-rendered.                                                                                                                                                                           |
@@ -170,7 +170,7 @@ Every dashboard mutation: **auth check → Zod validate → write → revalidate
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `profile` (one row) | name, headline, tagline/intro, role label, location label, timezone, email, availability text, avatar/portrait/resume URLs, socials (JSON array), SEO title/description, optional Tech Stack bottom-strip items (JSON) |
 | `skill_groups`      | index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible                                                                    |
-| `projects`          | slug, title, kicker label, summary, filter type (`full-stack`, `frontend`, `game`, `web3`, `systems`), **status**, logo URL, tech tags (text array), **links** (JSON: kind, label, url), featured flag, sort, visible  |
+| `projects`          | slug, title, kicker label, summary, filter type (`full-stack`, `frontend`, `game`, `web3`, `systems`), **status** (live, in-progress, planned, completed), logo URL, tech tags (text array), **links** (JSON: kind, label, url), featured flag, sort, visible  |
 | `experience_items`  | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, bullets (text array), , optional tags (text array), sort, visible                                                                            |
 
 Auth tables come from Auth.js.
@@ -355,13 +355,14 @@ Goal: <one sentence>
 | D41 | Get In Touch: statement left; right = email / LinkedIn / GitHub link cards + info row with live Samarinda time; buttons email (primary) + resume (secondary); no phone number |
 | D42 | Density tiers key off panel container height (container-type: size), thresholds in lib/stage/config.ts (provisional 640 / 500, tuned in P3.9); columns follow width (≥ 1024 px) |
 | D43 | Phones may inner-scroll (O1 yes); Tech Stack header toggle removed (O2); location is Samarinda, Asia/Makassar WITA UTC+8 (O6) |
+| D44 | Project status adds `completed` (finished, repo-only) beside `live` / `in-progress` / `planned`; `systems` filter type covers C/C++ |
+| D45 | Static data lives in `data/skill-groups.ts`, `data/projects.ts`, `data/experience.ts`, re-exported from `data/seed.ts`; dates are `"YYYY-MM"` with `endDate: null` = present; only Kundesk, Padel Court and Kun Bookshop are `featured`; `logoUrl` is null until P5 uploads; `techStrip` is exported from skill-groups until the profile row is extended |
+| D46 | Education bullets are one-line strings starting with the course name; no phone number on the site (O7) and no certificate links (O8) |
 
 ### Open
 
 | ID  | Question                                                                 | Default                                    |
 | --- | ------------------------------------------------------------------------ | ------------------------------------------ |
-| O7 | Show a phone number on the site? | No |
-| O8 | Certificates for CS50 / freeCodeCamp to link? | No certificate links |
 
 ---
 
