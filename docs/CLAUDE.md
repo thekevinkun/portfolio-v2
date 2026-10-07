@@ -96,7 +96,7 @@ After load, moving between pages is client-side with no remount; only the URL ch
   - Exactly **one page per gesture** for both mouse wheels and trackpads (trackpad inertia must not skip a page): lock until the transition ends and the wheel stream pauses or a clearly new gesture begins.
   - Don't hijack the wheel over an element marked `data-stage-scroll` (or a scrollable ancestor).
 - **Edges:** first page + up / last page + down → small rubber-band bounce, no navigation.
-- **URL:** `history.replaceState` (Back leaves the site). Update `document.title` and canonical per section.
+- **URL:** history.replaceStateat the start of each move (Back leaves the site). Updatedocument.title per section. The canonical link is emitted server-side per URL in P4.5 (needs the domain, O5).
 - **State:** small React reducer/context: `index`, `direction`, `phase` (`idle | transitioning | cooldown`).
 - **Reduced motion:** 150 ms crossfade, no parallax/choreography.
 - **A11y:** labelled `<section>` per panel, `aria-current="page"` on the dock tile, polite live region ("Projects, page 3 of 5"), focus moves to the page heading after a change.
@@ -151,7 +151,7 @@ The wheel listener is on `window` (chrome included); `ctrl`+wheel (zoom) is igno
 | Inactive panels   | `inert` + animations paused; `inert` removed from the incoming panel at transition start, applied to the outgoing one at transition end   |
 | Reduced motion    | Duration token overridden to 150 ms; track jumps, incoming panel fades in; no parallax/scale/shadow                                       |
 
-**URL:** one route `app/(site)/[[...section]]/page.tsx`; valid slugs `tech-stack`, `projects`, `experience`, `contact` (empty = Overview); anything else `notFound()`; `generateStaticParams` + `generateMetadata` per section. Server derives the initial index so the track renders already positioned (no flash). Client: `history.replaceState` at transition start + `document.title` + canonical. The Stage does not read `usePathname()`. Browser back/forward is not a Stage input (Back leaves the site).
+**URL:** one route `app/(site)/[[...section]]/page.tsx`; valid slugs `tech-stack`, `projects`, `experience`, `contact` (empty = Overview); anything else `notFound()`; `generateStaticParams` + `generateMetadata` per section (title via `getSectionTitle`; placeholder until P4.5). The server derives the initial index so the track renders already positioned (no flash). Client: `useStageUrl` calls `history.replaceState` + sets `document.title` whenever the Stage target changes (any input), except for the initial render. It reads Stage state, never `usePathname()`. Browser back/forward is not a Stage input (Back leaves the site). The Dock/TabBar active tile reads Stage state (`useActiveSection`).
 
 **A11y:** each panel is `<section aria-labelledby>`; `aria-current="page"` on the active dock tile; one polite live region ("Projects, page 3 of 5") updated at transition start, debounced 150 ms; after the transition, focus moves to the incoming panel heading (`tabindex="-1"`, `preventScroll`) when the source was keyboard/dock or focus was inside the outgoing panel; wheel/swipe never steal focus.
 
@@ -344,6 +344,12 @@ Goal: <one sentence>
 | D27 | Dock and TabBar keep real hrefs; a plain click is intercepted by useStageNav and calls goTo(index, "dock") (a router navigation would remount the layout and reset Stage state); links use prefetch={false} |
 
 | D28 | Keyboard ignores key repeat; Page/Home/End defer to a focused inner scroller; swipes are scoped to [data-stage-viewport], and a flick needs at least 24 px of travel |
+
+| D29 | useStageUrl syncs the URL (replaceState) and document.title from Stage state at the start of every move, for every input source; it skips the initial render and swallows history rate-limit errors |
+
+| D30 | Canonical moves from P2.5 to P4.5 (needs the domain, O5); no client-side canonical sync, since each URL's canonical comes from its own server-rendered head; server metadata is title only until P4.5 |
+
+| D31 | useActiveSection reads Stage state (pulled forward from P2.7); P2.7 keeps only the ring glide |
 
 ### Open
 

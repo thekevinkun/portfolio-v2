@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-07
-**Current phase / step:** P2.5 (URL sync and SSR deep links)
+**Current phase / step:** P2.6 (stage visuals)
 **Mode default:** Build
 
 ---
@@ -29,7 +29,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P2.2 Reducer + track
 - [x] P2.3 Wheel
 - [x] P2.4 Keyboard, swipe, dock
-- [ ] P2.5 URL sync + SSR deep links
+- [x] P2.5 URL sync + SSR deep links
 - [ ] P2.6 Visuals
 - [ ] P2.7 Dock ring
 - [ ] P2.8 A11y
@@ -43,6 +43,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D24 — see CLAUDE.md §10.
 - D25–D26 — see CLAUDE.md §10.
 - D27–D28: see CLAUDE.md §10.
+- D29–D31: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -81,6 +82,22 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-07 — P2.5
+Done:
+- Per-section titles in server metadata, useStageUrl (replaceState + document.title on every move, any input), Dock/TabBar active tile reads Stage state
+Files created/changed:
+- lib/stage/{section-title,useStageUrl,useActiveSection}.ts; components/stage/{StageUrlSync,index}; app/(site)/[[...section]]/{layout,page}.tsx
+Decisions:
+- D29 URL + title sync from Stage state · D30 canonical moved to P4.5 · D31 useActiveSection pulled forward from P2.7
+Verified (viewports / devices):
+- <fill in: 1440×900 all five URLs + all input sources, 390×844, Back-button test, Network tab shows no RSC fetch on turns, 4× throttle>
+Known issues:
+- No edge bounce until P2.6. Canonical, sitemap and descriptions wait for P4.5 (domain, O5).
+Next step (ID + one-line goal):
+- P2.6 — outgoing scale/dim, parallax layer, edge shadow, rubber-band at the edges
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.6. Mode: Build. Goal: Panel state attributes, outgoing scale and dim, parallax layer, edge shadow and rubber-band at the edges.
+
 ### Handoff — 2026-10-07 — P2.4
 Done:
 - Keyboard paging (arrows, Page keys, Home/End, 1–5), touch swipe (axis lock, distance/flick commit), Dock and TabBar tiles drive the Stage via useStageNav
@@ -114,20 +131,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.4. Mode: Build. Goal: Keyboard navigation, touch swipe, and Dock/TabBar links driving the Stage. (Also paste components/chrome/Dock.tsx, DockTile.tsx, TabBar.tsx and lib/stage/useActiveSection.ts.)
 
 ### Handoff — 2026-10-07 — P2.2
-Done:
-- Stage types, config, reducer (phases, gesture lock), provider + useStage, track/panels with CSS transform transition, inert handling, placeholder panels
-Files created/changed:
-- types/stage.ts; lib/stage/{config,motion,section-index,reducer,stage-context}.ts; components/stage/*; components/panels/*; app/(site)/[[...section]]/{layout,page}.tsx (layout moved from app/(site)/)
-Decisions:
-- D24 provider in the section layout
-Verified (viewports / devices):
-- 1440×900 and 390×844 via temporary buttons (not committed); 4× throttle; direct load of /projects
-Known issues:
-- Dock still URL-based until P2.7
-Next step (ID + one-line goal):
-- P2.3 — custom wheel intent machine, one page per gesture
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P2. Step: P2.3. Mode: Build. Goal: Wheel intent state machine, scroll guard and useStageWheel hook driving the Stage.
+- P2.2: implemented Stage reducer/provider, CSS track transition, placeholder panels and inert handling; D24 established StageProvider in the section layout.
 
 ### Handoff — 2026-10-06 — P2.1 (plan chat)
 - P2.1 plan: locked Stage thresholds, transition spec, URL strategy, a11y spec; split P2.2–P2.9 into commit-sized steps. See prior handoff for full details.
