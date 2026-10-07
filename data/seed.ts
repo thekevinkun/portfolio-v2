@@ -10,3 +10,7 @@ export const profile: Profile = {
   availability: "Open to opportunities",
   avatarUrl: "/placeholder/avatar.svg",
 };
+
+export { projects } from "./projects";
+export { skillGroups, techStrip } from "./skill-groups";
+export { experienceItems } from "./experience";
