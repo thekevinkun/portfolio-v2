@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3.2 done except the profile row; P3.3 next.**
+> Status: **P1–P2 done; P3.1–P3.3 done; P3.4 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -168,7 +168,7 @@ Every dashboard mutation: **auth check → Zod validate → write → revalidate
 
 | Table               | Contents                                                                                                                                                                                                               |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `profile` (one row) | name, headline, tagline/intro, role label, location label, timezone, email, availability text, avatar/portrait/resume URLs, socials (JSON array), SEO title/description, optional Tech Stack bottom-strip items (JSON) |
+| `profile` (one row) | name, headline, tagline/intro, role label, location label, timezone, email, availability text, avatar/portrait/resume URLs, socials (JSON array), SEO title/description, optional Tech Stack bottom-strip items (JSON), Overview chips (text array), focus areas (text array) |
 | `skill_groups`      | index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible                                                                    |
 | `projects`          | slug, title, kicker label, summary, filter type (`full-stack`, `frontend`, `game`, `web3`, `systems`), **status** (live, in-progress, planned, completed), logo URL, tech tags (text array), **links** (JSON: kind, label, url), featured flag, sort, visible  |
 | `experience_items`  | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, bullets (text array), , optional tags (text array), sort, visible                                                                            |
@@ -213,7 +213,7 @@ obsidian / charcoal backgrounds · glass surface + border · text high/medium/lo
 - **Density tiers** by viewport height: _spacious_ (≥ ~900 px) full content · _regular_ (~720–900) tighter · _compact_ (< ~720) hide secondary details (e.g. Tech Stack check-lists).
 - QA viewports: 1920×1080, 1440×900, 1366×768, 1280×720, 1024×768, 768×1024, 390×844, 360×640.
 - The reference screenshots are ~4:3 and leave dead vertical space; balance content for 16:9 / 16:10.
-- **Phones:** same swipe paging, dock becomes a bottom glass tab bar, pages designed compact. If a page still can't fit, its **inner content scrolls** (hidden scrollbar) with chrome fixed — the only allowed exception.
+- **Phones:** same swipe paging, dock becomes a bottom glass tab bar, pages designed compact. Prefer hiding secondary content so every page fits. Only if a page still can't fit does its **inner content scroll** (hidden scrollbar, with a scroll hint), and only as a last resort. The one gesture exception is a horizontal carousel (data-stage-swipe-ignore).
 
 ---
 
@@ -353,11 +353,15 @@ Goal: <one sentence>
 | D39 | Stage tuning values (wheel thresholds, swipe thresholds, durations, visual tokens, ring spring) stay as shipped after the P2.9 device pass; revisit only if a real device or a P3 page shows a problem |
 | D40 | Experience page: Work + Learning cards, no milestones; experience_items gains optional tags text[]; no logo images or color fields in v1 |
 | D41 | Get In Touch: statement left; right = email / LinkedIn / GitHub link cards + info row with live Samarinda time; buttons email (primary) + resume (secondary); no phone number |
-| D42 | Density tiers key off panel container height (container-type: size), thresholds in lib/stage/config.ts (provisional 640 / 500, tuned in P3.9); columns follow width (≥ 1024 px) |
-| D43 | Phones may inner-scroll (O1 yes); Tech Stack header toggle removed (O2); location is Samarinda, Asia/Makassar WITA UTC+8 (O6) |
+| D42 | Density tiers key off panel container height (container-type: size), thresholds in app/globals.css (provisional 640 / 500, tuned in P3.9) |
+| D43 | Phones fit one screen by hiding secondary content, with inner scroll only as a last resort (O1 revised in P3.3); Tech Stack header toggle removed (O2); location is Samarinda, Asia/Makassar WITA UTC+8 (O6) |
 | D44 | Project status adds `completed` (finished, repo-only) beside `live` / `in-progress` / `planned`; `systems` filter type covers C/C++ |
-| D45 | Static data lives in `data/skill-groups.ts`, `data/projects.ts`, `data/experience.ts`, re-exported from `data/seed.ts`; dates are `"YYYY-MM"` with `endDate: null` = present; only Kundesk, Padel Court and Kun Bookshop are `featured`; `logoUrl` is null until P5 uploads; `techStrip` is exported from skill-groups until the profile row is extended. The placeholder profile stays in data/seed.ts with the real location (Samarinda), timezone (Asia/Makassar) and availability. |
+| D45 | Static data lives in `data/skill-groups.ts`, `data/projects.ts`, `data/experience.ts`, re-exported from `data/seed.ts`; dates are `"YYYY-MM"` with `endDate: null` = present; only Kundesk, Padel Court and Kun Bookshop are `featured`; `logoUrl` is null until P5 uploads; `techStrip` stays exported from skill-groups until P3.4 renders it. The placeholder profile stays in data/seed.ts with the real location (Samarinda), timezone (Asia/Makassar) and availability. |
 | D46 | Education bullets are one-line strings starting with the course name; no phone number on the site (O7) and no certificate links (O8) |
+| D47 | Density tiers are Tailwind custom variants `tier-regular:` (panel height ≥ 500 px) and `tier-spacious:` (≥ 640 px) defined in `app/globals.css`, because container queries can't read CSS variables; panel roots use the `tier-container` utility (`container-type: size`); base styles are the compact tier |
+| D48 | Panels are server components that take their data as props (`OverviewPanel` gets `profile` + `featured`); until P4.4 the page reads `data/seed.ts`; featured = `featured && visible`, sorted by `sort`, first 3; only Overview renders an `<h1>`; Overview text is top-aligned under the dock on tablet and desktop, the featured cards have a min height of `min(30cqh, 13rem)`, and below 768 px the cards are hidden so nothing scrolls |
+| D49 | `ButtonLink` renders a plain anchor when `download` is set; portrait and resume live in `public/images/` and `public/resume/`; `profile` gains `roleLabel`, `headline`, `intro`, `email`, `portraitUrl`, `resumeUrl`, `socials`, `chips`, `focusAreas` |
+| D50 | `data-stage-scroll` exempts the wheel unconditionally, so it goes only on elements that really scroll, never on a panel wrapper; every page fits one screen at every size, and the only inner gesture allowed is a horizontal carousel (Projects) |
 
 ### Open
 
