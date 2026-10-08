@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+/* Density tiers (D42, D47): keyed to the panel's own height, not the viewport.
+   Container queries can't read CSS variables, so the thresholds live only here.
+   Base styles are the compact tier; tier-regular adds at 500px, tier-spacious
+   at 640px. Keep tier-spacious declared after tier-regular so it wins. */
+@custom-variant tier-regular {
+  @container (min-height: 500px) {
+    @slot;
+  }
+}
+
+@custom-variant tier-spacious {
+  @container (min-height: 640px) {
+    @slot;
+  }
+}
+
 /* Fonts: next/font sets --font-inter and --font-jetbrains-mono on <html> */
 @theme inline {
   --font-sans:
@@ -241,4 +257,44 @@ body {
    not a control, so it gets no focus ring. Real controls keep theirs. */
 [data-stage-panel] [tabindex="-1"]:focus {
   outline: none;
+}
+
+/* A panel root that measures its own height for the tier variants */
+@utility tier-container {
+  container-type: size;
+}
+
+/* Hidden scrollbar for phone inner scrollers */
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Portrait feathers into the backdrop: fades at the bottom and both sides,
+   top stays solid so the head is never cut. */
+@utility portrait-fade {
+  -webkit-mask-image:
+    linear-gradient(to bottom, black 70%, transparent 100%),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 15%,
+      black 85%,
+      transparent 100%
+    );
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, black 70%, transparent 100%),
+    linear-gradient(
+      to right,
+      transparent 0%,
+      black 15%,
+      black 85%,
+      transparent 100%
+    );
+  mask-composite: intersect;
 }

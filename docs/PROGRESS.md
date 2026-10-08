@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-07
-**Current phase / step:** P3.3
+**Last updated:** 2026-10-08
+**Current phase / step:** P3.4
 **Mode default:** Build
 
 ---
@@ -27,7 +27,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 - [x] P3.1 Design chat: Experience + Get In Touch layouts, settle O1–O3 and O6, density tiers
 - [x] P3.2 Typed static data + data/seed.ts for the 4 tables
-- [ ] P3.3 Overview
+- [x] P3.3 Overview
 - [ ] P3.4 Tech Stack
 - [ ] P3.5 Projects
 - [ ] P3.6 Experience
@@ -50,6 +50,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D39: see CLAUDE.md §10.
 - D40–D43: see CLAUDE.md §10.
 - D44–D46: see CLAUDE.md §10.
+- D47–D50: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -64,7 +65,10 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - TabBar indicator does not glide (static)
 - Heading focus and the live region can both speak (double announce); full screen-reader pass in P6.3
 - Canonical, sitemap and descriptions wait for P4.5 (domain, O5)
-- Profile row (headline, availability, socials, resume URL, SEO) and `techStrip` are not in the typed seed yet; extend `types/profile.ts` in P3.3
+- Tier thresholds (500 / 640 px panel height) are estimates; 1280×720 may keep the intro; tune in P3.9
+- Top-bar badge still uses the placeholder avatar SVG, not the portrait
+- Overview chips and focus areas are new profile columns; add them in the P4.2 schema
+- Firefox only: a brief white outline flashes around a dock tile while it scales on hover (cosmetic, left unresolved; Chrome is fine)
 - Chainkuns / DarkMint marked `live`: confirm testnet vs mainnet before launch (R4)
 - Tech Stack header copy and bottom strip in the reference HTML contain unsupported claims; rewrite in P3.4
 
@@ -91,6 +95,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-08 — P3.3
+Done:
+- Overview page: hero text under the dock, tech chips, focus pills, resume download, feathered portrait, 3 taller featured project cards, three density tiers via container-height variants; featured cards hidden on phones (no inner scroll)
+- Profile type and seed extended; portrait and resume committed
+- Fixed: wheel/trackpad blocked over Overview (`data-stage-scroll` on the panel wrapper)
+Files created/changed:
+- types/profile.ts; data/seed.ts; app/globals.css; components/ui/Button.tsx; components/panels/{OverviewPanel,FeaturedProjectCard,index}; app/(site)/[[...section]]/page.tsx; public/images/profile-picture.png; public/resume/Kevin_Mahendra_FullStackDeveloper_Resume.pdf; docs
+Decisions:
+- D47 tier variants in globals.css · D48 panels take props, one h1, hero layout, no phone scroll · D49 download anchors, profile fields, asset paths · D50 data-stage-scroll rule and fit-or-hide on phones
+Verified (viewports / devices):
+- <fill in: viewports and devices checked, keyboard, reduced motion, 4× throttle>
+Known issues:
+- See Known issues above (thresholds, badge avatar, schema columns, Firefox dock flash)
+Next step (ID + one-line goal):
+- P3.4 — Tech Stack page from the four skill groups, highlights and strip, with honest copy and density tiers
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also paste components/panels/OverviewPanel.tsx and package.json, and attach the tech stack reference HTML. Phase: P3. Step: P3.4. Mode: Build. Goal: Build the Tech Stack page from skillGroups and techStrip (icon map, density tiers) and replace the unsupported header copy.
 
 ### Handoff — 2026-10-07 — P3.2
 Done:
@@ -127,21 +149,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P3. Step: P3.2. Mode: Build. Goal: Add typed static data and data/seed.ts mirroring the 4 tables, using the confirmed Experience and contact content.
 
 ### Handoff — 2026-10-07 — P2.9 (P2 closed)
-Done:
-- Manual device pass: mouse wheel, Mac trackpad, Windows precision touchpad, phone swipe + inner scroll, keyboard-only, direct load, reduced motion, inner scrollable wheel, 4× throttle — all passed
-- No tuning changes; P2 (Stage engine) complete
-Files created/changed:
-- docs only (ROADMAP checklist ticked, CLAUDE.md status + D39, PROGRESS.md)
-Decisions:
-- D39 Stage tuning values kept as shipped
-Verified (viewports / devices):
-- Real devices per the ROADMAP Stage checklist (all nine items)
-Known issues:
-- See the Known issues section above (all low-severity polish items)
-Next step (ID + one-line goal):
-- P3.1 — design chat (no code): Experience + Get In Touch layouts, settle O1–O3 and O6, define density tiers
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P3 — Five pages. Step: P3.1. Mode: Build. Goal: Design the Experience and Get In Touch layouts (links-only) in the existing style, settle O1–O3 and O6, and define density tiers per page. Also attach the three docs/reference HTML files.
+- P2.9: completed the manual Stage device pass and final tuning; P2 closed with final interaction, transition, and motion values locked.
 
 ### Handoff — 2026-10-07 — P2.8
 - P2.8: implemented the polite live region, post-turn focus management, and reduced-motion crossfade; completed the final Stage accessibility and motion behavior.
