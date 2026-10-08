@@ -16,7 +16,7 @@ interface OverviewPanelProps {
 // scales to the room the text and cards leave.
 const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
   <div className="tier-container h-full">
-    <div className="flex h-full flex-col gap-4 px-5 py-4 md:px-12 tier-regular:gap-6 tier-spacious:gap-8">
+    <div className="flex h-full flex-col gap-4 px-5 pt-3 pb-4 md:px-12 tier-regular:gap-6 tier-spacious:gap-7">
       <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] items-center gap-8 lg:grid-cols-12">
         <div className="flex flex-col gap-3 lg:col-span-7 tier-spacious:gap-4">
           <p className="font-mono text-[11px] tracking-widest text-fg-low uppercase">
@@ -76,7 +76,7 @@ const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
 
       <section
         aria-label="Featured projects"
-        className="hidden shrink-0 gap-4 md:grid md:grid-cols-3"
+        className="hidden shrink-0 gap-4 md:grid md:min-h-[min(30cqh,12rem)] md:grid-cols-3"
       >
         {featured.map((project) => (
           <FeaturedProjectCard key={project.slug} project={project} />

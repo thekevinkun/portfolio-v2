@@ -14,7 +14,7 @@ const FeaturedProjectCard = ({ project }: FeaturedProjectCardProps) => {
   const repo = project.links.find((link) => link.kind === "repo");
 
   return (
-    <GlassCard interactive className="flex flex-col gap-3 p-5">
+    <GlassCard interactive className="flex flex-col justify-between gap-3 p-5">
       <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
         <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider text-fg-low uppercase">
           <span
