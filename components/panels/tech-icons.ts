@@ -1,7 +1,6 @@
 import {
   Binary,
   Cloud,
-  Code,
   CreditCard,
   Database,
   Gem,
@@ -33,6 +32,7 @@ import {
   SiTypescript,
   SiVercel,
 } from "react-icons/si";
+import type { TechIconKey } from "@/types/skills";
 
 export type TechIcon = ComponentType<{
   className?: string;
@@ -40,8 +40,9 @@ export type TechIcon = ComponentType<{
 }>;
 
 // Keys used by data/skill-groups.ts. Brand logos where the Simple Icons export
-// is certain; lucide fallbacks for the rest.
-const TECH_ICONS: Record<string, TechIcon> = {
+// is certain; lucide fallbacks for the rest. Index it directly
+// (TECH_ICONS[key]): the Record type makes a missing key a compile error.
+export const TECH_ICONS: Record<TechIconKey, TechIcon> = {
   // Group icons
   monitor: Monitor,
   terminal: Terminal,
@@ -74,8 +75,3 @@ const TECH_ICONS: Record<string, TechIcon> = {
   c: Binary,
   git: SiGit,
 };
-
-// Unknown keys fall back to a generic code icon instead of breaking the page
-export function getTechIcon(key: string): TechIcon {
-  return TECH_ICONS[key] ?? Code;
-}

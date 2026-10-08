@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { OverviewPanel, PlaceholderPanel } from "@/components/panels";
+import type { ReactNode } from "react";
+import {
+  OverviewPanel,
+  PlaceholderPanel,
+  TechStackPanel,
+} from "@/components/panels";
 import { Stage } from "@/components/stage";
-import { profile, projects } from "@/data/seed";
+import { profile, projects, skillGroups, techStrip } from "@/data/seed";
 import { getSectionIndex } from "@/lib/stage/section-index";
 import { getSectionTitle } from "@/lib/stage/section-title";
 import { SECTIONS } from "@/lib/stage/sections";
+import type { SectionId } from "@/types/stage";
 
 interface PageProps {
   params: Promise<{ section?: string[] }>;
@@ -33,21 +39,25 @@ export default async function Page({ params }: PageProps) {
   const { section } = await params;
   if (getSectionIndex(section) === -1) notFound();
 
-  // Static data until P4.4; Overview shows the first three featured projects
+  // Static data until P4.4
   const featured = projects
     .filter((project) => project.featured && project.visible)
     .sort((a, b) => a.sort - b.sort)
     .slice(0, 3);
 
-  // The other four pages stay placeholders until P3.4–P3.7
+  const groups = skillGroups
+    .filter((group) => group.visible)
+    .sort((a, b) => a.sort - b.sort);
+
+  // Real pages replace the placeholders step by step (P3.5–P3.7)
+  const pages: Partial<Record<SectionId, ReactNode>> = {
+    overview: <OverviewPanel profile={profile} featured={featured} />,
+    "tech-stack": <TechStackPanel groups={groups} strip={techStrip} />,
+  };
+
   const panels = SECTIONS.map((s) => ({
     id: s.id,
-    content:
-      s.id === "overview" ? (
-        <OverviewPanel profile={profile} featured={featured} />
-      ) : (
-        <PlaceholderPanel id={s.id} label={s.label} />
-      ),
+    content: pages[s.id] ?? <PlaceholderPanel id={s.id} label={s.label} />,
   }));
 
   return <Stage panels={panels} />;
