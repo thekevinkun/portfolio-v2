@@ -67,7 +67,8 @@ export const ButtonLink = ({
 }: ButtonLinkProps) => {
   const classes = buttonClasses({ variant, size }, className);
 
-  if (href.startsWith("/")) {
+  // Downloads stay plain anchors so the browser handles the file
+  if (href.startsWith("/") && props.download === undefined) {
     return (
       <Link href={href} className={classes} {...props}>
         {children}
