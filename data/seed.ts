@@ -12,6 +12,9 @@ export const profile: Profile = {
   headline: "Building real-world web applications from end to end",
   intro:
     "Self-taught full stack developer building production-grade web apps, with a focus on payments, booking flows and backend reliability. Mainly Next.js, React, TypeScript and PostgreSQL.",
+  contactHeadline: "Let's work together.",
+  contactIntro:
+    "Open to freelance projects and full-time roles. Email is the best way to reach me; you'll also find me on LinkedIn and GitHub, and my resume is one click away.",
   email: "kevinmahendra.idn@gmail.com",
   portraitUrl: "/images/profile-picture.png",
   resumeUrl: "/resume/Kevin_Mahendra_FullStackDeveloper_Resume.pdf",

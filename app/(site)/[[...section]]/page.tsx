@@ -7,6 +7,7 @@ import {
   ProjectsPanel,
   TechStackPanel,
   ExperiencePanel,
+  ContactPanel,
 } from "@/components/panels";
 import { Stage } from "@/components/stage";
 import { profile, skillGroups, projects, experienceItems } from "@/data/seed";
@@ -59,12 +60,13 @@ export default async function Page({ params }: PageProps) {
     .filter((item) => item.visible)
     .sort((a, b) => a.sort - b.sort);
 
-  // Real pages replace the placeholders step by step (P3.7)
+  // All five pages are real now; PlaceholderPanel stays only as a fallback
   const pages: Partial<Record<SectionId, ReactNode>> = {
     overview: <OverviewPanel profile={profile} featured={featured} />,
     "tech-stack": <TechStackPanel groups={groups} />,
     projects: <ProjectsPanel projects={visibleProjects} />,
     experience: <ExperiencePanel items={experience} />,
+    contact: <ContactPanel profile={profile} />,
   };
 
   const panels = SECTIONS.map((s) => ({

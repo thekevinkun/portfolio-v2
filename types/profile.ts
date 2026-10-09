@@ -14,6 +14,8 @@ export interface Profile {
   roleLabel: string;
   headline: string;
   intro: string;
+  contactHeadline: string; // Get In Touch statement
+  contactIntro: string;
   email: string;
   portraitUrl: string | null;
   resumeUrl: string | null;

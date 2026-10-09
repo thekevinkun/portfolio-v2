@@ -9,3 +9,5 @@ export { default as ExperiencePanel } from "./ExperiencePanel";
 export { default as ExperienceLearningCard } from "./ExperienceLearningCard";
 export { default as ExperienceRoleCard } from "./ExperienceRoleCard";
 export { default as ExperienceShippedCard } from "./ExperienceShippedCard";
+export { default as ContactPanel } from "./ContactPanel";
+export { default as ContactLinkCard } from "./ContactLinkCard";
