@@ -8,8 +8,11 @@ export const experienceItems: ExperienceItem[] = [
     startDate: "2019-01",
     endDate: null,
     summary:
-      "Building and deploying full-stack applications focused on payments, booking systems, backend reliability and real-time data.",
+      "Building and deploying full-stack applications focused on payments, booking systems, backend reliability and real-time data. Each project is treated as a production system, not a prototype: transaction safety, secure data access and real-time updates.",
+    summaryShort:
+      "Building and deploying full-stack apps focused on payments, booking systems, backend reliability and real-time data.",
     bullets: [],
+    // The first 3 bullets of each project show in the wide layout; all 5 in the carousel
     shipped: [
       {
         name: "Kundesk",
@@ -17,6 +20,8 @@ export const experienceItems: ExperienceItem[] = [
           "Built a multi-tenant SaaS where businesses train an AI assistant on their own documents and serve customers through chat links, embeddable widgets and QR codes",
           "Built KUN, the assistant: retrieval-augmented answers using OpenAI embeddings and pgvector search, streamed over SSE, with live handoff from AI to a human agent",
           "Engineered the backend around tenant isolation, webhooks and rate limiting, backed by automated tests",
+          "Made for Indonesian SMEs: owners upload menus, FAQs and price lists, and KUN answers customers 24/7 in Bahasa Indonesia",
+          "Shipped with CI/CD on GitHub Actions, Vitest and Playwright tests, and Sentry and PostHog monitoring",
         ],
       },
       {
@@ -25,6 +30,8 @@ export const experienceItems: ExperienceItem[] = [
           "Built a real-time court-booking platform with a live admin dashboard and automated booking management",
           "Implemented live availability, scheduling flows and payment processing",
           "Secured payments with webhook signature validation, idempotency keys and Redis rate limiting",
+          "Gave owners a dashboard with insight into revenue, bookings, payments and court usage",
+          "Used Supabase Auth and Realtime for sign-in and live updates, with transactional email through Resend",
         ],
       },
       {
@@ -33,6 +40,8 @@ export const experienceItems: ExperienceItem[] = [
           "Built a MERN digital bookstore with Stripe payments, secure downloads and a Dockerized deployment",
           "Implemented JWT auth with refresh-token rotation and protected file access through signed URLs",
           "Added KUN, an AI assistant using OpenAI tool calling and SSE streaming that searches books and manages the cart",
+          "Built an in-browser reader for purchased PDF and EPUB books, with previews before buying",
+          "Built an admin dashboard to manage the store, with a GraphQL (Apollo) API, Zod validation and Helmet",
         ],
       },
     ],
