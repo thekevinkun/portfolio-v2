@@ -1,4 +1,5 @@
 export { Button, ButtonLink } from "./Button";
+export { default as Carousel } from "./Carousel";
 export { default as Chip } from "./Chip";
 export { default as GlassCard } from "./GlassCard";
 export { default as Pill } from "./Pill";
