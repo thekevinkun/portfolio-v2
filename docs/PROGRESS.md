@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-09
-**Current phase / step:** P3.7
+**Current phase / step:** P3.8
 **Mode default:** Build
 
 ---
@@ -14,7 +14,7 @@
 | ----- | ------------------------ | -------------- | ------------------------------------------- |
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
-| P3    | Five pages (static data) | 🟦 in progress | P3.1–P3.6 done; Get In Touch next |
+| P3    | Five pages (static data) | 🟦 in progress | P3.1–P3.7 done; entrance choreography next |
 | P4    | Neon data → LAUNCH       | ⬜ Not started | Launch gate                                 |
 | P5    | Dashboard                | ⬜ Not started |                                             |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
@@ -31,7 +31,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P3.4 Tech Stack
 - [x] P3.5 Projects
 - [x] P3.6 Experience
-- [ ] P3.7 Get In Touch
+- [x] P3.7 Get In Touch
 - [ ] P3.8 Entrance choreography + card spotlight
 - [ ] P3.9 Fit QA at all 8 viewports
 
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D44–D46: see CLAUDE.md §10.
 - D47–D50: see CLAUDE.md §10.
 - D51–D53: see CLAUDE.md §10.
-- D54–D56: see CLAUDE.md §10.
+- D54–D57: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -85,6 +85,9 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - Experience: the long Work summary and Shipped bullets 4–5 are hidden at ≥1280 px by design (D56); the P5.6 editor must keep the three core bullets first
 - Experience: `shipped` and `summaryShort` are new `experience_items` columns; add them in the P4.2 schema
 - Experience at 2-up: the last carousel page holds a single card (Bookshop)
+- Get In Touch: `contactHeadline` and `contactIntro` are new `profile` columns; add them in the P4.2 schema and the P5.3 editor
+- Get In Touch: the UTC offset label is computed at build time (fine for Asia/Makassar, no DST); revisit if the timezone becomes editable in P5.3
+- Get In Touch at 360×640 is the tightest fit (intro hidden, compact spacing); recheck in P3.9
 
 ---
 
@@ -109,6 +112,23 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-09 — P3.7
+Done:
+- Get In Touch page: statement, availability pill, Email (primary) and Resume (secondary) buttons; email, LinkedIn and GitHub link cards; info card with location and live Samarinda time; two columns from 1024 px, stacked below, no carousel
+- Statement copy moved onto `profile` (`contactHeadline`, `contactIntro`)
+Files created/changed:
+- types/profile.ts; data/seed.ts; lib/contact/format.ts; components/panels/{contact-icons,ContactLinkCard,ContactPanel,index}; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D57 Get In Touch layout, copy on profile, typed icon map
+Verified (viewports / devices):
+- Verify list run by Kun and confirmed good
+Known issues:
+- See Known issues above (new profile columns, build-time UTC offset, 360×640 fit)
+Next step (ID + one-line goal):
+- P3.8 — Entrance choreography (catalog C) on page activation and the card spotlight (D)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: app/globals.css, components/stage/StagePanel.tsx, components/stage/StageTrack.tsx, lib/stage/motion.ts, components/ui/GlassCard.tsx, components/panels/OverviewPanel.tsx, components/panels/ContactPanel.tsx, package.json. Phase: P3. Step: P3.8. Mode: Build. Follow WORKFLOW.md §11. Goal: Add the entrance choreography (catalog C: headline mask-reveal, subtext fade, chips and cards rise with stagger, portrait settles, once per activation) and the card spotlight (catalog D: cursor-following radial highlight, hover-only), start with a short decisions table on CSS vs Motion and how entrances hook into the panel's data-state, then stop at the verify command for my approval.
 
 ### Handoff — 2026-10-09 — P3.6
 Done:
@@ -145,21 +165,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/ui/Carousel.tsx, components/panels/TechStackPanel.tsx, components/panels/ProjectsPanel.tsx, components/panels/SkillGroupCard.tsx, app/(site)/[[...section]]/page.tsx, data/experience.ts, types/experience.ts. Phase: P3. Step: P3.6. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Experience page (Work + Learning cards from experienceItems, nothing hidden, a Carousel below 1024 px if the two cards don't fit) and stop at the verify command for my approval.
 
 ### Handoff — 2026-10-09 — P3.4
-Done:
-- Tech Stack page: 4 skill-group cards with icons, items and four one-line highlights each; reusable scroll-snap Carousel (arrows, page dots, peeking next card) for 2-up and 1-up below 1280 px; "Also used" strip removed
-- Fixed: lint error on icon lookup (typed icon map indexed directly)
-Files created/changed:
-- package.json + lockfile (react-icons); types/skills.ts; components/ui/{Carousel,SectionHeader,index}; components/panels/{tech-icons,SkillGroupCard,TechStackPanel,index}; data/{skill-groups,seed}.ts; app/(site)/[[...section]]/page.tsx; docs
-Decisions:
-- D51 native scroll-snap Carousel and its swipe/keyboard rules · D52 Tech Stack breakpoints and no hidden content · D53 icon map and typed keys
-Verified (viewports / devices):
-- Verify list run by Kun and confirmed good (viewport matrix 1440×900 down to 360×640, touch swipe, trackpad, mouse wheel, keyboard, reduced motion)
-Known issues:
-- See Known issues above (360×640 fit, Web3/C++ not on the page, carousel end behavior, stand-in icons)
-Next step (ID + one-line goal):
-- P3.5 — Projects page: filter pills, Carousel reuse, arrows and counter, status badges, link buttons
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also paste components/ui/Carousel.tsx, components/panels/FeaturedProjectCard.tsx and package.json, and attach the projects reference HTML. Phase: P3. Step: P3.5. Mode: Build. Goal: Build the Projects page from the projects seed (filter pills, carousel, arrows, counter, status badges, link buttons), reusing the Carousel.
+- P3.4: Tech Stack page (4 skill-group cards, scroll-snap Carousel below 1280 px, strip removed); D51–D53.
 
 ### Handoff — 2026-10-08 — P3.3
 - P3.3: Overview page (hero, chips, portrait, 3 featured cards, density tiers); D47–D50.

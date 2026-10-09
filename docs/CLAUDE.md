@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3.1–P3.6 done; P3.7 next.**
+> Status: **P1–P2 done; P3.1–P3.7 done; P3.8 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -292,7 +292,7 @@ portfolio/
 Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
 Also pasted: <the files this step builds on, listed in the previous handoff>
-Phase: P3 — Five pages. Step: P3.7.
+Phase: P3 — Five pages. Step: P3.8.
 Mode: Build. Follow WORKFLOW.md §11.
 Goal: <one sentence>
 ```
@@ -372,6 +372,7 @@ Goal: <one sentence>
 | D54 | Projects page: filter pills Full Stack (default), Frontend, Game, Web3, C/C++ (only filters that have visible projects; labels in `lib/projects/filters.ts`, `systems` shows as "C/C++"; no "All" pill); `ProjectsPanel` is a client component that takes `projects` as props; cards show kicker, status badge (LIVE solid, others glass), title, full summary, every tech tag and its links (Repo is the primary button when there is no demo); no hover lift inside the carousel; changing the filter remounts the carousel (`key`) so it starts at page 1 and announces the count in a polite live region; reflow animation (auto-animate) and rolling counter digits wait for P6.1 |
 | D55 | `Carousel` gains `indicator` ("dots" or "counter"); Projects pages by width: 3 cards from 1280 px, 2 from 640 px, 1 with the next card peeking below 640 px, with snap points on the first card of each page (`xl:nth-[3n+1]`, `sm:max-xl:odd`); the last page can repeat cards when the count doesn't divide evenly; the counter is page-based and sits bottom right |
 | D56 | Experience page: five cards from `experienceItems`: Work (role, summary, tags), one Shipped card per project from the Work item's optional `shipped` JSON (`{ name, bullets[] }[]`, a JSON column in P4.2), and Learning. Carousel order is Learning → Work → Shipped…; from 1280 px it is a plain row of four (Work + 3 Shipped) and Learning moves last as a full-width band (CSS order), with no carousel; 640–1279 px is 2-up sliding 2, below 640 px 1-up with the next card peeking (same breakpoints as D52). `summary` is the long text and optional `summaryShort` the wide-layout text; each project keeps 5 bullets and the wide layout shows the first 3 (`xl:hidden` on the rest). This is the one deliberate exception to D52's nothing-hidden rule. The Work item's `bullets` are empty (the card renders bullets only when present); D40's no-milestones stands. |
+| D57 | Get In Touch page: statement (`contactHeadline`, `contactIntro` on `profile`, new columns), availability pill and Email / Resume buttons on the left; email, LinkedIn and GitHub link cards plus an info card (location and live local time via `LiveClock`, UTC offset derived with `Intl`) on the right; two columns from 1024 px, stacked below, no carousel; intro shows from 768 px; availability and location live here because the footer is hidden on phones (D19); the heading is an `<h2>` with id `heading-contact` (Overview owns the only `<h1>`); icons come from the typed `CONTACT_ICONS` map (lucide `Mail`, react-icons `FaLinkedin` / `FaGithub`) per D53; no form, no phone number (D8, D41, O7). |
 
 ### Open
 
