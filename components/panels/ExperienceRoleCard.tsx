@@ -17,7 +17,16 @@ const ExperienceRoleCard = ({ item }: ExperienceRoleCardProps) => (
       </h3>
       <p className="font-mono text-[11px] text-fg-low">{item.organization}</p>
     </div>
-    <p className="text-[11px] leading-snug text-fg-medium">{item.summary}</p>
+    <p className="text-[11px] leading-snug text-fg-medium">
+      {item.summaryShort ? (
+        <>
+          <span className="xl:hidden">{item.summary}</span>
+          <span className="hidden xl:inline">{item.summaryShort}</span>
+        </>
+      ) : (
+        item.summary
+      )}
+    </p>
     {item.bullets.length > 0 && <BulletList items={item.bullets} />}
     <div className="mt-auto">
       <TagList tags={item.tags} />

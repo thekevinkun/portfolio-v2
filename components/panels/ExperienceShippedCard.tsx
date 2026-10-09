@@ -13,7 +13,7 @@ const ExperienceShippedCard = ({ project }: ExperienceShippedCardProps) => (
     <h3 className="text-sm font-bold tracking-tight text-fg-high">
       {project.name}
     </h3>
-    <BulletList items={project.bullets} />
+    <BulletList items={project.bullets} compactCount={3} />
   </GlassCard>
 );
 

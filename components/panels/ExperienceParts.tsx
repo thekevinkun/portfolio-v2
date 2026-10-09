@@ -1,4 +1,5 @@
 import { Check } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 // Small pieces shared by the three Experience cards
 
@@ -22,12 +23,23 @@ export const CardLabel = ({
   </div>
 );
 
-export const BulletList = ({ items }: { items: string[] }) => (
+// compactCount: from 1280 px only the first N bullets show (the rest are
+// for the narrower, taller carousel cards)
+export const BulletList = ({
+  items,
+  compactCount,
+}: {
+  items: string[];
+  compactCount?: number;
+}) => (
   <ul className="flex flex-col gap-1.5 tier-regular:gap-2">
-    {items.map((text) => (
+    {items.map((text, i) => (
       <li
         key={text}
-        className="flex items-start gap-1.5 text-[11px] leading-snug text-fg-medium"
+        className={cn(
+          "flex items-start gap-1.5 text-[11px] leading-snug text-fg-medium",
+          compactCount !== undefined && i >= compactCount && "xl:hidden",
+        )}
       >
         <Check className="mt-0.5 size-3 shrink-0 text-fg-high" aria-hidden />
         <span>{text}</span>
