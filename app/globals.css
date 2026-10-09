@@ -106,6 +106,13 @@
 
   /* Dock ring: the arrival ping waits for the glide to land */
   --dock-ring-ping-delay: 200ms;
+
+  /* Entrance choreography (P3.8): duration is --duration-enter */
+  --reveal-step: 40ms;
+  --reveal-delay-load: 100ms;
+  --reveal-delay-turn: 280ms;
+  --reveal-distance: 12px;
+  --reveal-distance-x: 24px;
 }
 
 html {
@@ -297,4 +304,112 @@ body {
       transparent 100%
     );
   mask-composite: intersect;
+}
+
+/* Entrance choreography (P3.8, D58). An element with data-reveal animates once,
+   when its panel becomes the active page for the first time (no data-seen).
+   Keyframes only define `from`: the end state is the element's own style, and
+   fill-mode "backwards" leaves nothing behind afterwards. */
+[data-reveal] {
+  --reveal-index: var(--i, 0);
+}
+
+/* From 1280 px a layout may reorder cards: --i-wide overrides the slot */
+@media (min-width: 80rem) {
+  [data-reveal] {
+    --reveal-index: var(--i-wide, var(--i, 0));
+  }
+}
+
+[data-reveal="mask"] {
+  --reveal-name: reveal-mask;
+}
+[data-reveal="fade"] {
+  --reveal-name: reveal-fade;
+}
+[data-reveal="rise"] {
+  --reveal-name: reveal-rise;
+}
+[data-reveal="settle"] {
+  --reveal-name: reveal-settle;
+}
+[data-reveal="from-left"] {
+  --reveal-name: reveal-from-left;
+}
+[data-reveal="from-right"] {
+  --reveal-name: reveal-from-right;
+}
+[data-reveal="drop"] {
+  --reveal-name: reveal-drop;
+}
+[data-reveal="unfold"] {
+  --reveal-name: reveal-unfold;
+  transform-origin: 50% 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* First load: short wait. After a page turn: start partway through the slide */
+  [data-stage-panel] {
+    --reveal-delay: var(--reveal-delay-load);
+  }
+  [data-stage-panel][data-animate] {
+    --reveal-delay: var(--reveal-delay-turn);
+  }
+
+  [data-stage-panel][data-state="active"]:not([data-seen]) [data-reveal] {
+    animation-name: var(--reveal-name);
+    animation-duration: var(--duration-enter);
+    animation-timing-function: var(--ease-out-expo);
+    animation-fill-mode: backwards;
+    animation-delay: calc(
+      var(--reveal-delay) + min(var(--reveal-index), 7) * var(--reveal-step)
+    );
+  }
+}
+
+@keyframes reveal-mask {
+  from {
+    transform: translate3d(0, 105%, 0);
+  }
+}
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-distance), 0);
+  }
+}
+@keyframes reveal-settle {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+@keyframes reveal-from-left {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(var(--reveal-distance-x) * -1), 0, 0);
+  }
+}
+@keyframes reveal-from-right {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--reveal-distance-x), 0, 0);
+  }
+}
+@keyframes reveal-drop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--reveal-distance) * -1), 0);
+  }
+}
+@keyframes reveal-unfold {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.95);
+  }
 }
