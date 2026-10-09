@@ -4,6 +4,7 @@ import { cn } from "@/lib/cn";
 interface SectionHeaderProps {
   title: string;
   subtitle?: string;
+  subtitleClassName?: string;
   eyebrow?: string;
   as?: "h1" | "h2";
   titleId?: string; // used later for aria-labelledby and focus after a page change
@@ -14,6 +15,7 @@ interface SectionHeaderProps {
 const SectionHeader = ({
   title,
   subtitle,
+  subtitleClassName,
   eyebrow,
   as: Heading = "h2",
   titleId,
@@ -40,7 +42,12 @@ const SectionHeader = ({
           {title}
         </Heading>
         {subtitle && (
-          <p className="mt-1 text-xs leading-normal text-fg-low md:text-sm">
+          <p
+            className={cn(
+              "mt-1 text-xs leading-normal text-fg-low md:text-sm",
+              subtitleClassName,
+            )}
+          >
             {subtitle}
           </p>
         )}

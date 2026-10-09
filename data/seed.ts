@@ -45,5 +45,5 @@ export const profile: Profile = {
 };
 
 export { projects } from "./projects";
-export { skillGroups, techStrip } from "./skill-groups";
+export { skillGroups } from "./skill-groups";
 export { experienceItems } from "./experience";

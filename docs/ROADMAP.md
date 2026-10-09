@@ -67,8 +67,8 @@
 | P3.1 | **Design chat:** layouts for **Experience** and **Get In Touch** (links-only) in the same style; settle O1–O3, O6; define density tiers per page. |
 | P3.2 | Typed static data in `types/` + temporary `data/seed.ts` mirroring the 4 tables. |
 | P3.3 | **Overview:** headline, tagline, chips, portrait with radial mask, CV button, 3 featured projects. |
-| P3.4 | **Tech Stack:** 4 group cards, highlights, optional strip, density tiers. |
-| P3.5 | **Projects:** filter pills, carousel, arrows, counter, status badges, link buttons. |
+| P3.4 | **Tech Stack:** 4 group cards (carousel below 1280 px), one-line highlights, no strip. |
+| P3.5 | **Projects:** filter pills, carousel (reuse `Carousel`), arrows, counter, status badges, link buttons. |
 | P3.6 | **Experience** per P3.1 design. |
 | P3.7 | **Get In Touch:** statement, email/LinkedIn/GitHub/resume buttons, availability. |
 | P3.8 | Entrance choreography (catalog C) on activation; card spotlight (D). |
