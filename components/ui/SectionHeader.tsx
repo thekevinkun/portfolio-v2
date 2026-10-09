@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { reveal } from "@/lib/reveal";
 
 interface SectionHeaderProps {
   title: string;
@@ -12,6 +13,7 @@ interface SectionHeaderProps {
   className?: string;
 }
 
+// The entrance here is the same on every page: title mask-reveal, text fade
 const SectionHeader = ({
   title,
   subtitle,
@@ -31,18 +33,25 @@ const SectionHeader = ({
     >
       <div className="max-w-3xl">
         {eyebrow && (
-          <p className="font-mono text-[11px] tracking-widest text-fg-low uppercase">
+          <p
+            {...reveal("fade", 0)}
+            className="font-mono text-[11px] tracking-widest text-fg-low uppercase"
+          >
             {eyebrow}
           </p>
         )}
+        {/* overflow-hidden is the mask; pb-1 + -mb-1 keep descenders visible */}
         <Heading
           id={titleId}
-          className="mt-1 text-2xl font-bold tracking-tight text-fg-high md:text-3xl"
+          className="mt-1 -mb-1 overflow-hidden pb-1 text-2xl font-bold tracking-tight text-fg-high md:text-3xl"
         >
-          {title}
+          <span {...reveal("mask", 0)} className="block">
+            {title}
+          </span>
         </Heading>
         {subtitle && (
           <p
+            {...reveal("fade", 1)}
             className={cn(
               "mt-1 text-xs leading-normal text-fg-low md:text-sm",
               subtitleClassName,

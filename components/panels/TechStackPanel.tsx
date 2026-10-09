@@ -1,6 +1,7 @@
 import { Carousel, SectionHeader } from "@/components/ui";
+import { SkillGroupCard } from "./";
+import { reveal } from "@/lib/reveal";
 import type { SkillGroup } from "@/types/skills";
-import SkillGroupCard from "./SkillGroupCard";
 
 interface TechStackPanelProps {
   groups: SkillGroup[];
@@ -11,8 +12,9 @@ interface TechStackPanelProps {
 //   ≥1280  4 cards, no carousel
 //   640+   2 cards, slide 2 (snap on every odd card)
 //   <640   1 card, slide 1, with the next card peeking in
+// overflow-clip: an entrance transform must not count as track scroll size.
 const SLIDE =
-  "max-sm:basis-[calc(100%-2.5rem)] max-sm:snap-start sm:basis-[calc((100%-0.75rem)/2)] sm:snap-align-none sm:odd:snap-start xl:basis-[calc((100%-2.25rem)/4)]";
+  "max-sm:basis-[calc(100%-2.5rem)] max-sm:snap-start sm:basis-[calc((100%-0.75rem)/2)] sm:snap-align-none sm:odd:snap-start xl:basis-[calc((100%-2.25rem)/4)] overflow-clip";
 
 const TechStackPanel = ({ groups }: TechStackPanelProps) => (
   <div className="tier-container h-full">
@@ -32,8 +34,14 @@ const TechStackPanel = ({ groups }: TechStackPanelProps) => (
           slideClassName={SLIDE}
           controlsClassName="mt-2 h-8 tier-regular:mt-3 tier-regular:h-9 xl:hidden"
         >
-          {groups.map((group) => (
-            <SkillGroupCard key={group.indexLabel} group={group} />
+          {groups.map((group, i) => (
+            <div
+              key={group.indexLabel}
+              {...reveal("from-left", 2 + i)}
+              className="flex w-full"
+            >
+              <SkillGroupCard group={group} />
+            </div>
           ))}
         </Carousel>
       </div>
