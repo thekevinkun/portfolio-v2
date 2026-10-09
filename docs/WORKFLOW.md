@@ -112,8 +112,9 @@ Conventional Commits: `type(scope): imperative summary`, 72 characters or fewer,
 ```
 Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
+Also pasted: <the files this step builds on, listed in the previous handoff>
 Phase: <id> — Step: <id>.
-Mode: Build.
+Mode: Build. Follow WORKFLOW.md §11.
 Goal: <one sentence>.
 ```
 
@@ -169,3 +170,20 @@ default branch -> pull -> new branch
   -> switch, pull, delete branch
   -> next step
 ```
+
+---
+
+## 11. Working rules for chat sessions
+
+> How the assistant works with the user in a chat. Learned on Portfolio v2 (Phase 3); applies to any project that uses this playbook.
+
+1. **UI gate.** For steps the user must see before approving (page layouts, visuals, animation), the answer ends at the verify command (`npm run typecheck && npm run lint && npm run build && npm run dev`). No docs commit, handoff or PR body until the user says they are satisfied. Non-visual steps are delivered whole in one response, docs and PR included.
+2. **One full response per step.** Complete files with full paths (§2). For a small change to a file the user already has, give an exact before/after replacement, never a description like "update the function".
+3. **Docs edits are exact text.** Show the final text in a code block, or exact before/after replacements. Never "replace the list with …" in prose.
+4. **Copy-paste text goes in code blocks:** PR titles, PR bodies (use four backticks when the body contains code fences), commit messages and commands. Always include the branch command at the start of a step.
+5. **Never write code against a file you haven't seen.** Ask for the specific files, with a one-line shell command that prints them, before producing code that touches them. If a pasted file already covers part of a plan, say what stays and what changes instead of overwriting it.
+6. **Say what you can't verify.** Mark inferences ("I haven't seen X, so this is a guess"), browser or device behavior you can't run, and your own mistakes, plainly and with the fix. Don't pile on experiments: after two failed attempts, offer to log it as a known issue.
+7. **Honest recommendations.** When asked what to do, give one decisive recommendation with its trade-off. Push back on requests that break the project rules or the content rules (R4); content must be supported by the user's real data.
+8. **State assumptions up front.** Each step starts with a short "Decisions (veto any)" table so the user can overrule before reading the code.
+9. **Review fixes are small commits on the same branch** (§8). If the user drops a cosmetic issue, log it under Known issues instead of experimenting further.
+10. **Every step ends with the next step.** When a chat ends, the handoff includes the next-chat prompt: attached files, the repo file list, the files to paste (the ones the next step builds on) and the goal.

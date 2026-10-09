@@ -267,6 +267,8 @@ portfolio/
 - **Everything that is not a component** (layouts, pages, helpers, config, server actions) uses `export function` / `export default function`.
 - **Barrels:** every folder under `components/` has an `index.ts` that re-exports its components; import through it (`@/components/ui`). Files inside the same folder import each other directly (avoids circular imports). Never create one barrel across folders, and never import `components/dashboard` from public code (keeps admin code out of public bundles, R5).
 - Server Actions for dashboard mutations.
+- **Lint (React Compiler):** never return a component from a function during render; index a module-level map instead (`TECH_ICONS[key]`, with typed keys). Never set state synchronously inside an effect; use observers or event callbacks.
+- **Gestures:** `data-stage-scroll` only on elements that really scroll; swipeable rows use `components/ui/Carousel` (D51); every new panel states its density tiers with the `tier-regular:` / `tier-spacious:` variants (D47).
 - Components ≲ 150 lines; Conventional Commits.
 - **Never:** vertical page scroll (except the phone exception), layout-property animations, a second UI kit in the public bundle, hardcoded content after Phase 4, fake metrics.
 
@@ -279,6 +281,7 @@ portfolio/
 - **One phase (or a few steps) per chat**; state the step ID.
 - **Output:** complete files with full paths, one response, short logical code chunks with simple inline comments, exact commands, a short "how to verify" list.
 - **Tree first:** before creating or overwriting a file, check the pasted file list. Never label a file "new" without seeing the tree; if a file may already exist, ask.
+- **Working rules:** follow `docs/WORKFLOW.md` §11 (UI approval gate, exact doc edits, ask for unseen files, honest recommendations).
 - Respect Sections 2 and 7. If a request conflicts, say so and ask before breaking it.
 - Anything undecided goes to Section 10, not silently into code.
 - **End of chat:** produce the `PROGRESS.md` handoff.
@@ -286,10 +289,11 @@ portfolio/
 **Chat starter**
 
 ```
-Attached: CLAUDE.md, PROGRESS.md.
+Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
-Phase: P2 — Stage engine. Step: P2.4.
-Mode: Build.
+Also pasted: <the files this step builds on, listed in the previous handoff>
+Phase: P3 — Five pages. Step: P3.6.
+Mode: Build. Follow WORKFLOW.md §11.
 Goal: <one sentence>
 ```
 
