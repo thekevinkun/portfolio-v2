@@ -8,15 +8,15 @@ interface SkillGroupCardProps {
   group: SkillGroup;
 }
 
-// One layer of the stack. Phones keep title + name-only chips; the highlights
-// need 4 columns (lg) and then show 2 (regular tier) or all (spacious tier).
+// One layer of the stack. Everything always shows; short panels only tighten
+// padding and gaps. Highlights are written to fit one line.
 const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
   const GroupIcon = TECH_ICONS[group.iconKey];
 
   return (
-    <GlassCard className="flex flex-col justify-between gap-3 p-3 md:p-4">
-      <div className="flex flex-col gap-3">
-        <div className="hidden items-center justify-between font-mono text-[10px] tracking-wider text-fg-low uppercase md:flex">
+    <GlassCard className="flex w-full flex-col justify-between gap-2 p-3 tier-regular:gap-3 tier-regular:p-4">
+      <div className="flex flex-col gap-2 tier-regular:gap-3">
+        <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-fg-low uppercase">
           <span className="flex items-center gap-1.5">
             <span
               aria-hidden="true"
@@ -32,7 +32,7 @@ const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
         <div className="flex items-center gap-2.5">
           <span
             aria-hidden="true"
-            className="hidden size-8 shrink-0 items-center justify-center rounded-lg border border-glass-border bg-glass-fill text-fg-high md:flex"
+            className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-glass-border bg-glass-fill text-fg-high"
           >
             <GroupIcon className="size-4" aria-hidden />
           </span>
@@ -40,13 +40,13 @@ const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
             <h3 className="text-sm font-bold tracking-tight text-fg-high">
               {group.title}
             </h3>
-            <p className="hidden font-mono text-[11px] text-fg-low md:block">
+            <p className="font-mono text-[11px] text-fg-low">
               {group.subtitle}
             </p>
           </div>
         </div>
 
-        <ul className="flex flex-wrap gap-1.5 md:grid md:grid-cols-2">
+        <ul className="grid grid-cols-2 gap-1 tier-regular:gap-1.5">
           {group.items.map((item) => {
             const Icon = TECH_ICONS[item.iconKey];
             return (
@@ -54,14 +54,11 @@ const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
                 key={item.name}
                 title={item.status === "learning" ? "Learning" : undefined}
                 className={cn(
-                  "flex min-w-0 items-center gap-1.5 rounded-sm border border-glass-border bg-glass-fill px-1.5 py-0.5 font-mono text-[10px] text-fg-medium md:rounded-md md:px-2 md:py-1.5 md:last:odd:col-span-2",
+                  "flex min-w-0 items-center gap-1.5 rounded-md border border-glass-border bg-glass-fill px-2 py-1 font-mono text-[10px] text-fg-medium last:odd:col-span-2 tier-regular:py-1.5",
                   item.status === "learning" && "text-fg-low",
                 )}
               >
-                <Icon
-                  className="hidden size-3.5 shrink-0 text-fg-high md:block"
-                  aria-hidden
-                />
+                <Icon className="size-3.5 shrink-0 text-fg-high" aria-hidden />
                 <span className="truncate">{item.name}</span>
               </li>
             );
@@ -69,20 +66,16 @@ const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
         </ul>
       </div>
 
-      <ul className="hidden flex-col gap-1.5 border-t border-glass-border pt-3 lg:tier-regular:flex">
-        {group.highlights.map((text, i) => (
+      <ul className="flex flex-col gap-1 border-t border-glass-border pt-2 tier-regular:gap-1.5 tier-regular:pt-3">
+        {group.highlights.map((text) => (
           <li
             key={text}
-            className={cn(
-              "items-start gap-1.5 text-[11px] leading-snug text-fg-medium",
-              i < 2 ? "flex" : "hidden lg:tier-spacious:flex",
-            )}
+            className="flex items-center gap-1.5 text-[11px] leading-snug text-fg-medium"
           >
-            <Check
-              className="mt-0.5 size-3 shrink-0 text-fg-high"
-              aria-hidden
-            />
-            <span>{text}</span>
+            <Check className="size-3 shrink-0 text-fg-high" aria-hidden />
+            <span className="truncate" title={text}>
+              {text}
+            </span>
           </li>
         ))}
       </ul>

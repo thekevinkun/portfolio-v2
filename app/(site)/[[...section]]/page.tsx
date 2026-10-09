@@ -7,7 +7,7 @@ import {
   TechStackPanel,
 } from "@/components/panels";
 import { Stage } from "@/components/stage";
-import { profile, projects, skillGroups, techStrip } from "@/data/seed";
+import { profile, projects, skillGroups } from "@/data/seed";
 import { getSectionIndex } from "@/lib/stage/section-index";
 import { getSectionTitle } from "@/lib/stage/section-title";
 import { SECTIONS } from "@/lib/stage/sections";
@@ -52,7 +52,7 @@ export default async function Page({ params }: PageProps) {
   // Real pages replace the placeholders step by step (P3.5–P3.7)
   const pages: Partial<Record<SectionId, ReactNode>> = {
     overview: <OverviewPanel profile={profile} featured={featured} />,
-    "tech-stack": <TechStackPanel groups={groups} strip={techStrip} />,
+    "tech-stack": <TechStackPanel groups={groups} />,
   };
 
   const panels = SECTIONS.map((s) => ({

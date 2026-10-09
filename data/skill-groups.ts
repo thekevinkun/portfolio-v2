@@ -1,5 +1,6 @@
-import type { SkillGroup, SkillItem } from "@/types/skills";
+import type { SkillGroup } from "@/types/skills";
 
+// Highlights are written to fit one line in a ~280px card (about 38 characters)
 export const skillGroups: SkillGroup[] = [
   {
     indexLabel: "01 / CLIENT & UI",
@@ -15,10 +16,10 @@ export const skillGroups: SkillGroup[] = [
       { name: "Framer Motion", iconKey: "motion", status: "used" },
     ],
     highlights: [
-      "Server-rendered Next.js App Router apps deployed on Vercel",
-      "In-browser PDF/EPUB book reader (Kun Bookshop)",
-      "Figma-to-code landing pages with Framer Motion animations",
-      "Interactive maps with Leaflet and Google Places (Carikopi)",
+      "Next.js App Router apps on Vercel",
+      "PDF/EPUB reader (Kun Bookshop)",
+      "Figma-to-code landing pages",
+      "Maps with Leaflet + Google Places",
     ],
     sort: 1,
     visible: true,
@@ -37,10 +38,10 @@ export const skillGroups: SkillGroup[] = [
       { name: "Payments", iconKey: "credit-card", status: "used" },
     ],
     highlights: [
-      "Midtrans webhook validation and idempotent payment handling (Padel Court)",
-      "Stripe checkout with secure file delivery (Kun Bookshop)",
-      "JWT authentication with admin dashboards",
-      "REST and GraphQL (Apollo Server) APIs (Kun Bookshop)",
+      "Idempotent Midtrans webhook handling",
+      "Stripe + secure file delivery",
+      "JWT auth with admin dashboards",
+      "REST + GraphQL (Apollo) APIs",
     ],
     sort: 2,
     visible: true,
@@ -59,10 +60,10 @@ export const skillGroups: SkillGroup[] = [
       { name: "pgvector", iconKey: "vector", status: "used" },
     ],
     highlights: [
-      "Supabase Auth and Realtime subscriptions (Padel Court)",
-      "pgvector embeddings for document-based AI answers (Kundesk)",
-      "Neon PostgreSQL with Drizzle ORM (Kundesk)",
-      "Server-side Redis caching (PacoMovies)",
+      "Supabase Auth + Realtime",
+      "pgvector embeddings (Kundesk)",
+      "Neon PostgreSQL + Drizzle ORM",
+      "Redis caching (PacoMovies)",
     ],
     sort: 3,
     visible: true,
@@ -81,21 +82,12 @@ export const skillGroups: SkillGroup[] = [
       { name: "GitHub Actions", iconKey: "github-actions", status: "used" },
     ],
     highlights: [
-      "AI assistants on OpenAI models (Kundesk, Kun Bookshop)",
-      "Docker for Kun Bookshop; apps deployed on Vercel and Railway",
-      "GitHub Actions CI/CD with Vitest and Playwright tests (Kundesk)",
+      "OpenAI-powered assistants",
+      "Docker; Railway + Vercel deploys",
+      "CI/CD with GitHub Actions",
       "AWS S3 file storage (Kundesk)",
     ],
     sort: 4,
     visible: true,
   },
-];
-
-// Optional bottom strip. Moves to the profile row when profile is extended.
-export const techStrip: SkillItem[] = [
-  { name: "Solidity", iconKey: "solidity", status: "used" },
-  { name: "Hardhat", iconKey: "hardhat", status: "used" },
-  { name: "Wagmi", iconKey: "wagmi", status: "used" },
-  { name: "C / C++", iconKey: "c", status: "used" },
-  { name: "Git", iconKey: "git", status: "used" },
 ];
