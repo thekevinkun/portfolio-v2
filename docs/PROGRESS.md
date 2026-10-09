@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-09
-**Current phase / step:** P3.5
+**Current phase / step:** P3.6
 **Mode default:** Build
 
 ---
@@ -29,7 +29,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P3.2 Typed static data + data/seed.ts for the 4 tables
 - [x] P3.3 Overview
 - [x] P3.4 Tech Stack
-- [ ] P3.5 Projects
+- [x] P3.5 Projects
 - [ ] P3.6 Experience
 - [ ] P3.7 Get In Touch
 - [ ] P3.8 Entrance choreography + card spotlight
@@ -77,6 +77,9 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - Web3, C/C++ and Git no longer appear on the Tech Stack page (strip removed); Projects filters cover Web3 and C/C++
 - Carousel: a swipe that starts on the cards can't turn the page and stops at the last card; the header, controls row, dock and tab bar still turn pages (add edge hand-off only if testing shows people getting stuck)
 - OpenAI, AWS and pgvector use generic lucide icons, not brand logos
+- Projects: at 3-up the last page can repeat cards (Full Stack has 5, so page 2 shows cards 3–5)
+- Projects: filter reflow animation (auto-animate) and rolling counter digits (number-flow) wait for P6.1
+- The P3.1 Experience tier table (compact drops details) predates D52; redo it nothing-hidden in P3.6
 
 ---
 
@@ -101,6 +104,23 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-09 — P3.5
+Done:
+- Projects page: filter pills (Full Stack, Frontend, Game, Web3, C/C++), carousel (3 / 2 / 1 per page, next card peeking at 1-up) with Previous/Next and a "01 / 02" counter, status badges (LIVE solid, COMPLETED glass), every tech tag, Live Demo / Repo buttons
+- Carousel gains an `indicator` option ("dots" | "counter")
+Files created/changed:
+- components/ui/Carousel.tsx; lib/projects/filters.ts; components/panels/{ProjectCard,ProjectsPanel,index}; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md, WORKFLOW.md)
+Decisions:
+- D54 Projects page layout and filters · D55 Carousel indicator and per-page snap points · working rules added to WORKFLOW.md §11
+Verified (viewports / devices):
+- Verify list run by Kun and confirmed good (filters, 3/2/1-up, counter, touch, trackpad, keyboard, reduced motion)
+Known issues:
+- See Known issues above
+Next step (ID + one-line goal):
+- P3.6 — Experience page: Work + Learning cards, no milestones, nothing hidden
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/ui/Carousel.tsx, components/panels/TechStackPanel.tsx, components/panels/ProjectsPanel.tsx, components/panels/SkillGroupCard.tsx, app/(site)/[[...section]]/page.tsx, data/experience.ts, types/experience.ts. Phase: P3. Step: P3.6. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Experience page (Work + Learning cards from experienceItems, nothing hidden, a Carousel below 1024 px if the two cards don't fit) and stop at the verify command for my approval.
 
 ### Handoff — 2026-10-09 — P3.4
 Done:
@@ -138,20 +158,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also paste components/panels/OverviewPanel.tsx and package.json, and attach the tech stack reference HTML. Phase: P3. Step: P3.4. Mode: Build. Goal: Build the Tech Stack page from skillGroups and techStrip (icon map, density tiers) and replace the unsupported header copy.
 
 ### Handoff — 2026-10-07 — P3.2
-Done:
-- Types for projects, skill groups, experience; seed data from the real portfolio data (15 projects, 4 skill groups + strip, work + education); top 3 featured
-Files created/changed:
-- types/{projects,skills,experience}.ts; data/{projects,skill-groups,experience}.ts; data/seed.ts (3 re-export lines; real location, timezone, availability in profile); docs
-Decisions:
-- D44 status `completed` · D45 data layout and conventions · D46 education bullets, no phone, no certificates
-Verified (viewports / devices):
-- n/a (no UI); typecheck, lint, build
-Known issues:
-- Profile row not seeded yet (needs types/profile.ts and data/seed.ts content)
-Next step (ID + one-line goal):
-- P3.3 — Overview, including extending the profile type and seed
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also paste types/profile.ts and data/seed.ts. Phase: P3. Step: P3.3. Mode: Build. Goal: Build the Overview page and extend the profile type and seed with headline, tagline, availability, socials and resume URL.
+- P3.2: typed static data (projects, skill groups, experience, education) and seed re-exports; D44–D46.
 
 ### Handoff — 2026-10-07 — P3.1 (design chat)
 - P3.1: settled Experience and Get In Touch layouts and density tiers; D40–D43 logged; O1, O2, O3, O6 resolved.

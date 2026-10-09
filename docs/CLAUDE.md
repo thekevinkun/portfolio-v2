@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3.1–P3.4 done; P3.5 next.**
+> Status: **P1–P2 done; P3.1–P3.5 done; P3.6 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -365,6 +365,8 @@ Goal: <one sentence>
 | D51 | Carousels are a native scroll-snap component (`components/ui/Carousel.tsx`), no library; the consumer sets slide widths and snap points in CSS and pages are measured from the layout; controls are Previous/Next buttons plus page dots (row height reserved, shown only when there is more than one page) and, at 1-up, a peeking next card; `data-stage-swipe-ignore` is set on the track only while it can scroll; the track has `overscroll-x-contain` and `tabIndex={-1}` so browser back-swipe is blocked and ← → still turn pages; reduced motion jumps instead of gliding |
 | D52 | Tech Stack: 4 cards from 1280 px, 2 cards sliding 2 from 640 px, 1 card sliding 1 with the next card peeking below 640 px (breakpoints follow the ~280 px a one-line highlight needs); every card always shows all its content (index, badge, icon, 5 items, 4 highlights of ≤ ~38 characters on one line); short panels only tighten spacing and hide the page subtitle; no bottom strip (`techStrip` data removed; Web3 and C/C++ are covered by the Projects filters) |
 | D53 | Tech logos use `react-icons` (Simple Icons) where the export is certain and lucide stand-ins otherwise; icon keys are a typed union (`TechIconKey` in `types/skills.ts`) and the map is indexed directly (`TECH_ICONS[key]`), because the React Compiler lint rejects components returned from a function; the P5 icon picker and Zod schema must use the same keys |
+| D54 | Projects page: filter pills Full Stack (default), Frontend, Game, Web3, C/C++ (only filters that have visible projects; labels in `lib/projects/filters.ts`, `systems` shows as "C/C++"; no "All" pill); `ProjectsPanel` is a client component that takes `projects` as props; cards show kicker, status badge (LIVE solid, others glass), title, full summary, every tech tag and its links (Repo is the primary button when there is no demo); no hover lift inside the carousel; changing the filter remounts the carousel (`key`) so it starts at page 1 and announces the count in a polite live region; reflow animation (auto-animate) and rolling counter digits wait for P6.1 |
+| D55 | `Carousel` gains `indicator` ("dots" or "counter"); Projects pages by width: 3 cards from 1280 px, 2 from 640 px, 1 with the next card peeking below 640 px, with snap points on the first card of each page (`xl:nth-[3n+1]`, `sm:max-xl:odd`); the last page can repeat cards when the count doesn't divide evenly; the counter is page-based and sits bottom right |
 
 ### Open
 
