@@ -47,7 +47,9 @@ const SectionHeader = ({
               "mt-1 text-xs leading-normal text-fg-low md:text-sm",
               subtitleClassName,
             )}
-          />
+          >
+            {subtitle}
+          </p>
         )}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}

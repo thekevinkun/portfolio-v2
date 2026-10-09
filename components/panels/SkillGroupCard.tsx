@@ -14,7 +14,7 @@ const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
   const GroupIcon = TECH_ICONS[group.iconKey];
 
   return (
-    <GlassCard className="flex w-full flex-col justify-between gap-2 p-3 tier-regular:gap-3 tier-regular:p-4">
+    <GlassCard className="flex w-full flex-col justify-between gap-2 p-3 tier-regular:gap-4 tier-regular:p-4">
       <div className="flex flex-col gap-2 tier-regular:gap-3">
         <div className="flex items-center justify-between font-mono text-[10px] tracking-wider text-fg-low uppercase">
           <span className="flex items-center gap-1.5">
