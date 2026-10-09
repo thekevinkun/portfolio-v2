@@ -113,6 +113,11 @@
   --reveal-delay-turn: 280ms;
   --reveal-distance: 12px;
   --reveal-distance-x: 24px;
+
+  /* Card spotlight (P3.8) */
+  --spotlight-size: 240px;
+  --spotlight-color: rgb(255 255 255 / 0.1);
+  --spotlight-ring: rgb(255 255 255 / 0.5);
 }
 
 html {
@@ -411,5 +416,58 @@ body {
   from {
     opacity: 0;
     transform: translate3d(0, 8px, 0) scale(0.95);
+  }
+}
+
+/* Card spotlight (P3.8): a soft glow and a thin border sheen follow the cursor.
+   Both live on pseudo-elements behind the content and only fade in on hover.
+   --mx / --my are written by components/ui/Spotlight.tsx. */
+[data-spotlight] {
+  position: relative;
+  isolation: isolate;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-spotlight]::before,
+  [data-spotlight]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-micro) linear;
+  }
+
+  [data-spotlight]::before {
+    background: radial-gradient(
+      var(--spotlight-size) circle at var(--mx, 50%) var(--my, 50%),
+      var(--spotlight-color),
+      transparent 70%
+    );
+  }
+
+  /* Ring: a 1px padding box with the content box masked out */
+  [data-spotlight]::after {
+    padding: 1px;
+    background: radial-gradient(
+      var(--spotlight-size) circle at var(--mx, 50%) var(--my, 50%),
+      var(--spotlight-ring),
+      transparent 70%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  [data-spotlight]:hover::before,
+  [data-spotlight]:hover::after {
+    opacity: 1;
   }
 }

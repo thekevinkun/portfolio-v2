@@ -10,6 +10,7 @@ import {
   ContactPanel,
 } from "@/components/panels";
 import { Stage } from "@/components/stage";
+import { Spotlight } from "@/components/ui";
 import { profile, skillGroups, projects, experienceItems } from "@/data/seed";
 import { getSectionIndex } from "@/lib/stage/section-index";
 import { getSectionTitle } from "@/lib/stage/section-title";
@@ -74,5 +75,10 @@ export default async function Page({ params }: PageProps) {
     content: pages[s.id] ?? <PlaceholderPanel id={s.id} label={s.label} />,
   }));
 
-  return <Stage panels={panels} />;
+  return (
+    <>
+      <Stage panels={panels} />
+      <Spotlight />
+    </>
+  );
 }
