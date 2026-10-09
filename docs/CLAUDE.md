@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3.1–P3.5 done; P3.6 next.**
+> Status: **P1–P2 done; P3.1–P3.6 done; P3.7 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -171,7 +171,7 @@ Every dashboard mutation: **auth check → Zod validate → write → revalidate
 | `profile` (one row) | name, headline, tagline/intro, role label, location label, timezone, email, availability text, avatar/portrait/resume URLs, socials (JSON array), SEO title/description, Overview chips (text array), focus areas (text array), Overview chips (text array), focus areas (text array) |
 | `skill_groups`      | index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible                                                                    |
 | `projects`          | slug, title, kicker label, summary, filter type (`full-stack`, `frontend`, `game`, `web3`, `systems`), **status** (live, in-progress, planned, completed), logo URL, tech tags (text array), **links** (JSON: kind, label, url), featured flag, sort, visible  |
-| `experience_items`  | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, bullets (text array), , optional tags (text array), sort, visible                                                                            |
+| `experience_items`  | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, optional short summary, bullets (text array), **shipped** (JSON: project name + bullets), optional tags (text array), sort, visible                                                                            |
 
 Auth tables come from Auth.js.
 
@@ -292,7 +292,7 @@ portfolio/
 Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
 Also pasted: <the files this step builds on, listed in the previous handoff>
-Phase: P3 — Five pages. Step: P3.6.
+Phase: P3 — Five pages. Step: P3.7.
 Mode: Build. Follow WORKFLOW.md §11.
 Goal: <one sentence>
 ```
@@ -371,6 +371,7 @@ Goal: <one sentence>
 | D53 | Tech logos use `react-icons` (Simple Icons) where the export is certain and lucide stand-ins otherwise; icon keys are a typed union (`TechIconKey` in `types/skills.ts`) and the map is indexed directly (`TECH_ICONS[key]`), because the React Compiler lint rejects components returned from a function; the P5 icon picker and Zod schema must use the same keys |
 | D54 | Projects page: filter pills Full Stack (default), Frontend, Game, Web3, C/C++ (only filters that have visible projects; labels in `lib/projects/filters.ts`, `systems` shows as "C/C++"; no "All" pill); `ProjectsPanel` is a client component that takes `projects` as props; cards show kicker, status badge (LIVE solid, others glass), title, full summary, every tech tag and its links (Repo is the primary button when there is no demo); no hover lift inside the carousel; changing the filter remounts the carousel (`key`) so it starts at page 1 and announces the count in a polite live region; reflow animation (auto-animate) and rolling counter digits wait for P6.1 |
 | D55 | `Carousel` gains `indicator` ("dots" or "counter"); Projects pages by width: 3 cards from 1280 px, 2 from 640 px, 1 with the next card peeking below 640 px, with snap points on the first card of each page (`xl:nth-[3n+1]`, `sm:max-xl:odd`); the last page can repeat cards when the count doesn't divide evenly; the counter is page-based and sits bottom right |
+| D56 | Experience page: five cards from `experienceItems`: Work (role, summary, tags), one Shipped card per project from the Work item's optional `shipped` JSON (`{ name, bullets[] }[]`, a JSON column in P4.2), and Learning. Carousel order is Learning → Work → Shipped…; from 1280 px it is a plain row of four (Work + 3 Shipped) and Learning moves last as a full-width band (CSS order), with no carousel; 640–1279 px is 2-up sliding 2, below 640 px 1-up with the next card peeking (same breakpoints as D52). `summary` is the long text and optional `summaryShort` the wide-layout text; each project keeps 5 bullets and the wide layout shows the first 3 (`xl:hidden` on the rest). This is the one deliberate exception to D52's nothing-hidden rule. The Work item's `bullets` are empty (the card renders bullets only when present); D40's no-milestones stands. |
 
 ### Open
 

@@ -6,9 +6,10 @@ import {
   PlaceholderPanel,
   ProjectsPanel,
   TechStackPanel,
+  ExperiencePanel,
 } from "@/components/panels";
 import { Stage } from "@/components/stage";
-import { profile, projects, skillGroups } from "@/data/seed";
+import { profile, skillGroups, projects, experienceItems } from "@/data/seed";
 import { getSectionIndex } from "@/lib/stage/section-index";
 import { getSectionTitle } from "@/lib/stage/section-title";
 import { SECTIONS } from "@/lib/stage/sections";
@@ -54,11 +55,16 @@ export default async function Page({ params }: PageProps) {
     .filter((project) => project.visible)
     .sort((a, b) => a.sort - b.sort);
 
-  // Real pages replace the placeholders step by step (P3.6–P3.7)
+  const experience = experienceItems
+    .filter((item) => item.visible)
+    .sort((a, b) => a.sort - b.sort);
+
+  // Real pages replace the placeholders step by step (P3.7)
   const pages: Partial<Record<SectionId, ReactNode>> = {
     overview: <OverviewPanel profile={profile} featured={featured} />,
     "tech-stack": <TechStackPanel groups={groups} />,
     projects: <ProjectsPanel projects={visibleProjects} />,
+    experience: <ExperiencePanel items={experience} />,
   };
 
   const panels = SECTIONS.map((s) => ({

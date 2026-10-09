@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-09
-**Current phase / step:** P3.6
+**Current phase / step:** P3.7
 **Mode default:** Build
 
 ---
@@ -14,7 +14,7 @@
 | ----- | ------------------------ | -------------- | ------------------------------------------- |
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
-| P3    | Five pages (static data) | 🟦 in progress | Need Experience + Get In Touch layouts (O3) |
+| P3    | Five pages (static data) | 🟦 in progress | P3.1–P3.6 done; Get In Touch next |
 | P4    | Neon data → LAUNCH       | ⬜ Not started | Launch gate                                 |
 | P5    | Dashboard                | ⬜ Not started |                                             |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
@@ -30,7 +30,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P3.3 Overview
 - [x] P3.4 Tech Stack
 - [x] P3.5 Projects
-- [ ] P3.6 Experience
+- [x] P3.6 Experience
 - [ ] P3.7 Get In Touch
 - [ ] P3.8 Entrance choreography + card spotlight
 - [ ] P3.9 Fit QA at all 8 viewports
@@ -52,6 +52,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D44–D46: see CLAUDE.md §10.
 - D47–D50: see CLAUDE.md §10.
 - D51–D53: see CLAUDE.md §10.
+- D54–D56: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -79,7 +80,11 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - OpenAI, AWS and pgvector use generic lucide icons, not brand logos
 - Projects: at 3-up the last page can repeat cards (Full Stack has 5, so page 2 shows cards 3–5)
 - Projects: filter reflow animation (auto-animate) and rolling counter digits (number-flow) wait for P6.1
-- The P3.1 Experience tier table (compact drops details) predates D52; redo it nothing-hidden in P3.6
+- Experience: the slide classes target the Learning card by its position, so they assume one Work item and one Learning item; revisit if the dashboard allows several (P5.6)
+- Experience: on wide screens Learning is moved last with CSS order, so reading order differs from visual order there (the cards have no links, so tab order is unaffected)
+- Experience: the long Work summary and Shipped bullets 4–5 are hidden at ≥1280 px by design (D56); the P5.6 editor must keep the three core bullets first
+- Experience: `shipped` and `summaryShort` are new `experience_items` columns; add them in the P4.2 schema
+- Experience at 2-up: the last carousel page holds a single card (Bookshop)
 
 ---
 
@@ -104,6 +109,23 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-09 — P3.6
+Done:
+- Experience page: Work, Shipped (one per project, from the resume) and Learning cards; wide layout is a row of four plus a full-width Learning band, carousel 2-up / 1-up below 1280 px
+- Wide layout shows the short summary and 3 bullets per project; the carousel shows the long summary and 5 bullets
+Files created/changed:
+- types/experience.ts; data/experience.ts; lib/experience/format.ts; components/panels/{ExperienceParts,ExperienceRoleCard,ExperienceShippedCard,ExperienceLearningCard,ExperiencePanel,index}; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D56 Experience cards, carousel order, long vs short content (exception to D52)
+Verified (viewports / devices):
+- Verify list run by Kun and confirmed good
+Known issues:
+- See Known issues above (Experience position-based classes, reading order, new schema columns)
+Next step (ID + one-line goal):
+- P3.7 — Get In Touch: statement, email / LinkedIn / GitHub link cards, resume button, live Samarinda time, no form (D41)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/ui/Button.tsx, components/ui/GlassCard.tsx, components/panels/OverviewPanel.tsx, components/chrome/StatusFooter.tsx, data/seed.ts, types/profile.ts, app/(site)/[[...section]]/page.tsx. Phase: P3. Step: P3.7. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Get In Touch page (statement left; email, LinkedIn and GitHub link cards right; info row with live Samarinda time; email and resume buttons; no form, no phone) and stop at the verify command for my approval.
 
 ### Handoff — 2026-10-09 — P3.5
 Done:
@@ -140,22 +162,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also paste components/ui/Carousel.tsx, components/panels/FeaturedProjectCard.tsx and package.json, and attach the projects reference HTML. Phase: P3. Step: P3.5. Mode: Build. Goal: Build the Projects page from the projects seed (filter pills, carousel, arrows, counter, status badges, link buttons), reusing the Carousel.
 
 ### Handoff — 2026-10-08 — P3.3
-Done:
-- Overview page: hero text under the dock, tech chips, focus pills, resume download, feathered portrait, 3 taller featured project cards, three density tiers via container-height variants; featured cards hidden on phones (no inner scroll)
-- Profile type and seed extended; portrait and resume committed
-- Fixed: wheel/trackpad blocked over Overview (`data-stage-scroll` on the panel wrapper)
-Files created/changed:
-- types/profile.ts; data/seed.ts; app/globals.css; components/ui/Button.tsx; components/panels/{OverviewPanel,FeaturedProjectCard,index}; app/(site)/[[...section]]/page.tsx; public/images/profile-picture.png; public/resume/Kevin_Mahendra_FullStackDeveloper_Resume.pdf; docs
-Decisions:
-- D47 tier variants in globals.css · D48 panels take props, one h1, hero layout, no phone scroll · D49 download anchors, profile fields, asset paths · D50 data-stage-scroll rule and fit-or-hide on phones
-Verified (viewports / devices):
-- <fill in: viewports and devices checked, keyboard, reduced motion, 4× throttle>
-Known issues:
-- See Known issues above (thresholds, badge avatar, schema columns, Firefox dock flash)
-Next step (ID + one-line goal):
-- P3.4 — Tech Stack page from the four skill groups, highlights and strip, with honest copy and density tiers
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also paste components/panels/OverviewPanel.tsx and package.json, and attach the tech stack reference HTML. Phase: P3. Step: P3.4. Mode: Build. Goal: Build the Tech Stack page from skillGroups and techStrip (icon map, density tiers) and replace the unsupported header copy.
+- P3.3: Overview page (hero, chips, portrait, 3 featured cards, density tiers); D47–D50.
 
 ### Handoff — 2026-10-07 — P3.2
 - P3.2: typed static data (projects, skill groups, experience, education) and seed re-exports; D44–D46.
