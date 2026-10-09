@@ -14,18 +14,15 @@ interface ContactPanelProps {
 const ContactPanel = ({ profile }: ContactPanelProps) => (
   <div className="tier-container h-full">
     <div className="flex h-full flex-col justify-center px-5 pt-2 pb-4 md:px-12">
-      <div className="grid gap-4 tier-regular:gap-5 lg:grid-cols-12 lg:items-center lg:gap-10">
-        <div className="flex flex-col gap-3 lg:col-span-7 tier-spacious:gap-4">
-          <p className="font-mono text-[11px] tracking-widest text-fg-low uppercase">
-            Get In Touch
-          </p>
+      <div className="grid gap-4 tier-regular:gap-5 lg:grid-cols-12 lg:gap-10">
+        <div className="flex flex-col gap-4 lg:col-span-7 tier-spacious:gap-4">
           <h2
             id="heading-contact"
             className="text-2xl font-extrabold tracking-tight text-fg-high tier-regular:text-3xl tier-spacious:text-4xl"
           >
             {profile.contactHeadline}
           </h2>
-          <p className="hidden max-w-xl text-base leading-relaxed text-fg-medium md:block">
+          <p className="max-w-2xl lg:max-w-lg text-base leading-relaxed text-fg-medium">
             {profile.contactIntro}
           </p>
           <Pill dot="static" className="self-start font-mono text-[11px]">
