@@ -14,8 +14,10 @@ interface CarouselProps {
   className?: string;
   /** Classes for every slide: width and snap points decide the paging */
   slideClassName?: string;
-  /** Classes for the controls row (spacing, or hide it at a breakpoint) */
+  /** Classes for the controls row (spacing, alignment, or hide it) */
   controlsClassName?: string;
+  /** "dots" between the arrows (default), or a "01 / 03" counter before them */
+  indicator?: "dots" | "counter";
 }
 
 interface View {
@@ -28,6 +30,8 @@ interface View {
 const buttonClass =
   "flex size-8 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-glass-from to-glass-to text-fg-high ring-1 ring-glass-border ring-inset transition-transform duration-(--duration-micro) ease-out-expo hover:ring-glass-border-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:scale-95 disabled:pointer-events-none disabled:opacity-40";
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 // Native scroll-snap carousel: touch and trackpad scrolling come from the
 // browser, the buttons and dots call scrollTo. Pages are measured from the
 // layout, so the consumer only sets slide widths and snap points in CSS.
@@ -38,6 +42,7 @@ const Carousel = ({
   className,
   slideClassName,
   controlsClassName,
+  indicator = "dots",
 }: CarouselProps) => {
   const trackRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<View>({ page: 0, pages: 1, stride: 0 });
@@ -77,6 +82,7 @@ const Carousel = ({
 
       perView += 1;
     }
+
     const next = items[Math.min(perView, items.length - 1)];
     if (!next) return;
 
@@ -171,6 +177,11 @@ const Carousel = ({
       >
         {scrollable && (
           <>
+            {indicator === "counter" && (
+              <span className="font-mono text-xs font-semibold tracking-wider text-fg-medium">
+                {pad(view.page + 1)} / {pad(view.pages)}
+              </span>
+            )}
             <button
               type="button"
               aria-label="Previous"
@@ -180,28 +191,30 @@ const Carousel = ({
             >
               <ChevronLeft className="size-4" aria-hidden />
             </button>
-            <div className="flex items-center">
-              {Array.from({ length: view.pages }, (_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  aria-label={`Go to page ${i + 1} of ${view.pages}`}
-                  aria-current={i === view.page ? "true" : undefined}
-                  onClick={() => goTo(i)}
-                  className="group flex h-6 items-center px-1 focus-visible:outline-2 focus-visible:outline-accent"
-                >
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      "h-1.5 rounded-full transition-colors duration-(--duration-micro)",
-                      i === view.page
-                        ? "w-5 bg-accent"
-                        : "w-1.5 bg-fg-faint group-hover:bg-fg-low",
-                    )}
-                  />
-                </button>
-              ))}
-            </div>
+            {indicator === "dots" && (
+              <div className="flex items-center">
+                {Array.from({ length: view.pages }, (_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    aria-label={`Go to page ${i + 1} of ${view.pages}`}
+                    aria-current={i === view.page ? "true" : undefined}
+                    onClick={() => goTo(i)}
+                    className="group flex h-6 items-center px-1 focus-visible:outline-2 focus-visible:outline-accent"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "h-1.5 rounded-full transition-colors duration-(--duration-micro)",
+                        i === view.page
+                          ? "w-5 bg-accent"
+                          : "w-1.5 bg-fg-faint group-hover:bg-fg-low",
+                      )}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
             <button
               type="button"
               aria-label="Next"
