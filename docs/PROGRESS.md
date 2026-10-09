@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-08
-**Current phase / step:** P3.4
+**Last updated:** 2026-10-09
+**Current phase / step:** P3.5
 **Mode default:** Build
 
 ---
@@ -28,7 +28,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P3.1 Design chat: Experience + Get In Touch layouts, settle O1–O3 and O6, density tiers
 - [x] P3.2 Typed static data + data/seed.ts for the 4 tables
 - [x] P3.3 Overview
-- [ ] P3.4 Tech Stack
+- [x] P3.4 Tech Stack
 - [ ] P3.5 Projects
 - [ ] P3.6 Experience
 - [ ] P3.7 Get In Touch
@@ -51,6 +51,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D40–D43: see CLAUDE.md §10.
 - D44–D46: see CLAUDE.md §10.
 - D47–D50: see CLAUDE.md §10.
+- D51–D53: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -71,6 +72,11 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - Firefox only: a brief white outline flashes around a dock tile while it scales on hover (cosmetic, left unresolved; Chrome is fine)
 - Chainkuns / DarkMint marked `live`: confirm testnet vs mainnet before launch (R4)
 - Tech Stack header copy and bottom strip in the reference HTML contain unsupported claims; rewrite in P3.4
+- Tech Stack highlights are written for ~280 px cards (≤ ~38 characters); longer text would truncate with "…"
+- Tech Stack at 360×640 is the tightest fit (subtitle hidden, compact spacing); recheck in P3.9
+- Web3, C/C++ and Git no longer appear on the Tech Stack page (strip removed); Projects filters cover Web3 and C/C++
+- Carousel: a swipe that starts on the cards can't turn the page and stops at the last card; the header, controls row, dock and tab bar still turn pages (add edge hand-off only if testing shows people getting stuck)
+- OpenAI, AWS and pgvector use generic lucide icons, not brand logos
 
 ---
 
@@ -95,6 +101,23 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-09 — P3.4
+Done:
+- Tech Stack page: 4 skill-group cards with icons, items and four one-line highlights each; reusable scroll-snap Carousel (arrows, page dots, peeking next card) for 2-up and 1-up below 1280 px; "Also used" strip removed
+- Fixed: lint error on icon lookup (typed icon map indexed directly)
+Files created/changed:
+- package.json + lockfile (react-icons); types/skills.ts; components/ui/{Carousel,SectionHeader,index}; components/panels/{tech-icons,SkillGroupCard,TechStackPanel,index}; data/{skill-groups,seed}.ts; app/(site)/[[...section]]/page.tsx; docs
+Decisions:
+- D51 native scroll-snap Carousel and its swipe/keyboard rules · D52 Tech Stack breakpoints and no hidden content · D53 icon map and typed keys
+Verified (viewports / devices):
+- Verify list run by Kun and confirmed good (viewport matrix 1440×900 down to 360×640, touch swipe, trackpad, mouse wheel, keyboard, reduced motion)
+Known issues:
+- See Known issues above (360×640 fit, Web3/C++ not on the page, carousel end behavior, stand-in icons)
+Next step (ID + one-line goal):
+- P3.5 — Projects page: filter pills, Carousel reuse, arrows and counter, status badges, link buttons
+Prompt for the next chat:
+  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also paste components/ui/Carousel.tsx, components/panels/FeaturedProjectCard.tsx and package.json, and attach the projects reference HTML. Phase: P3. Step: P3.5. Mode: Build. Goal: Build the Projects page from the projects seed (filter pills, carousel, arrows, counter, status badges, link buttons), reusing the Carousel.
 
 ### Handoff — 2026-10-08 — P3.3
 Done:
@@ -131,22 +154,7 @@ Prompt for the next chat:
   Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also paste types/profile.ts and data/seed.ts. Phase: P3. Step: P3.3. Mode: Build. Goal: Build the Overview page and extend the profile type and seed with headline, tagline, availability, socials and resume URL.
 
 ### Handoff — 2026-10-07 — P3.1 (design chat)
-Done:
-- Experience layout (Work + Learning cards, timeline rail), Get In Touch layout (statement + 3 link cards + live-time info row), density tiers per page, tier mechanics via container height
-- Content audit findings: invalid phone prefix, "degree" wording, highlights need project mapping
-Files created/changed:
-- docs only (CLAUDE.md §4.4, §10, §11; PROGRESS.md)
-Decisions:
-- D40–D43; O1, O2, O3, O6 resolved; O7, O8 opened
-Verified (viewports / devices):
-- n/a (no code)
-Known issues:
-- Tier thresholds are estimates until chrome heights are measured in P3.2
-- Highlight → project mapping must be confirmed before seeding (audit #4)
-Next step (ID + one-line goal):
-- P3.2 — typed static data in types/ and data/seed.ts for the 4 tables
-Prompt for the next chat:
-  Attached: CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Phase: P3. Step: P3.2. Mode: Build. Goal: Add typed static data and data/seed.ts mirroring the 4 tables, using the confirmed Experience and contact content.
+- P3.1: settled Experience and Get In Touch layouts and density tiers; D40–D43 logged; O1, O2, O3, O6 resolved.
 
 ### Handoff — 2026-10-07 — P2.9 (P2 closed)
 - P2.9: completed the manual Stage device pass and final tuning; P2 closed with final interaction, transition, and motion values locked.

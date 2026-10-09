@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3.1–P3.3 done; P3.4 next.**
+> Status: **P1–P2 done; P3.1–P3.4 done; P3.5 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -60,7 +60,7 @@ A personal portfolio for Kevin Mahendra (Kun) that feels like a console UI (PS5-
 
 | Library                                                | Used for                                                |
 | ------------------------------------------------------ | ------------------------------------------------------- |
-| Embla Carousel (or keen-slider, or native scroll-snap) | Projects carousel                                       |
+| Native scroll-snap `Carousel` component (no library)   | Tech Stack and Projects carousels                       |
 | `@formkit/auto-animate`                                | Filter-pill reflow, dashboard lists                     |
 | `@number-flow/react` (optional)                        | Rolling digits for the `01 / 04` counter and clock      |
 | `clsx` + `tailwind-merge`                              | Class handling                                          |
@@ -168,7 +168,7 @@ Every dashboard mutation: **auth check → Zod validate → write → revalidate
 
 | Table               | Contents                                                                                                                                                                                                               |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `profile` (one row) | name, headline, tagline/intro, role label, location label, timezone, email, availability text, avatar/portrait/resume URLs, socials (JSON array), SEO title/description, optional Tech Stack bottom-strip items (JSON), Overview chips (text array), focus areas (text array) |
+| `profile` (one row) | name, headline, tagline/intro, role label, location label, timezone, email, availability text, avatar/portrait/resume URLs, socials (JSON array), SEO title/description, Overview chips (text array), focus areas (text array), Overview chips (text array), focus areas (text array) |
 | `skill_groups`      | index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible                                                                    |
 | `projects`          | slug, title, kicker label, summary, filter type (`full-stack`, `frontend`, `game`, `web3`, `systems`), **status** (live, in-progress, planned, completed), logo URL, tech tags (text array), **links** (JSON: kind, label, url), featured flag, sort, visible  |
 | `experience_items`  | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, bullets (text array), , optional tags (text array), sort, visible                                                                            |
@@ -213,7 +213,7 @@ obsidian / charcoal backgrounds · glass surface + border · text high/medium/lo
 - **Density tiers** by viewport height: _spacious_ (≥ ~900 px) full content · _regular_ (~720–900) tighter · _compact_ (< ~720) hide secondary details (e.g. Tech Stack check-lists).
 - QA viewports: 1920×1080, 1440×900, 1366×768, 1280×720, 1024×768, 768×1024, 390×844, 360×640.
 - The reference screenshots are ~4:3 and leave dead vertical space; balance content for 16:9 / 16:10.
-- **Phones:** same swipe paging, dock becomes a bottom glass tab bar, pages designed compact. Prefer hiding secondary content so every page fits. Only if a page still can't fit does its **inner content scroll** (hidden scrollbar, with a scroll hint), and only as a last resort. The one gesture exception is a horizontal carousel (data-stage-swipe-ignore).
+- **Phones:** same swipe paging, dock becomes a bottom glass tab bar, pages designed compact. Every page fits. When a set of cards can't fit, use a horizontal carousel (full cards, arrows and page dots, next card peeking at 1-up) instead of hiding card content; hide only decorative or duplicated content (e.g. the Overview featured cards, which Projects shows). Inner vertical scroll is a last resort. A carousel is the one gesture exception (`data-stage-swipe-ignore`). Only if a page still can't fit does its **inner content scroll** (hidden scrollbar, with a scroll hint), and only as a last resort. The one gesture exception is a horizontal carousel (data-stage-swipe-ignore).
 
 ---
 
@@ -356,12 +356,15 @@ Goal: <one sentence>
 | D42 | Density tiers key off panel container height (container-type: size), thresholds in app/globals.css (provisional 640 / 500, tuned in P3.9) |
 | D43 | Phones fit one screen by hiding secondary content, with inner scroll only as a last resort (O1 revised in P3.3); Tech Stack header toggle removed (O2); location is Samarinda, Asia/Makassar WITA UTC+8 (O6) |
 | D44 | Project status adds `completed` (finished, repo-only) beside `live` / `in-progress` / `planned`; `systems` filter type covers C/C++ |
-| D45 | Static data lives in `data/skill-groups.ts`, `data/projects.ts`, `data/experience.ts`, re-exported from `data/seed.ts`; dates are `"YYYY-MM"` with `endDate: null` = present; only Kundesk, Padel Court and Kun Bookshop are `featured`; `logoUrl` is null until P5 uploads; `techStrip` stays exported from skill-groups until P3.4 renders it. The placeholder profile stays in data/seed.ts with the real location (Samarinda), timezone (Asia/Makassar) and availability. |
+| D45 | Static data lives in `data/skill-groups.ts`, `data/projects.ts`, `data/experience.ts`, re-exported from `data/seed.ts`; dates are `"YYYY-MM"` with `endDate: null` = present; only Kundesk, Padel Court and Kun Bookshop are `featured`; `logoUrl` is null until P5 uploads; the Tech Stack page has no bottom strip (D52). The placeholder profile stays in data/seed.ts with the real location (Samarinda), timezone (Asia/Makassar) and availability. |
 | D46 | Education bullets are one-line strings starting with the course name; no phone number on the site (O7) and no certificate links (O8) |
 | D47 | Density tiers are Tailwind custom variants `tier-regular:` (panel height ≥ 500 px) and `tier-spacious:` (≥ 640 px) defined in `app/globals.css`, because container queries can't read CSS variables; panel roots use the `tier-container` utility (`container-type: size`); base styles are the compact tier |
 | D48 | Panels are server components that take their data as props (`OverviewPanel` gets `profile` + `featured`); until P4.4 the page reads `data/seed.ts`; featured = `featured && visible`, sorted by `sort`, first 3; only Overview renders an `<h1>`; Overview text is top-aligned under the dock on tablet and desktop, the featured cards have a min height of `min(30cqh, 13rem)`, and below 768 px the cards are hidden so nothing scrolls |
 | D49 | `ButtonLink` renders a plain anchor when `download` is set; portrait and resume live in `public/images/` and `public/resume/`; `profile` gains `roleLabel`, `headline`, `intro`, `email`, `portraitUrl`, `resumeUrl`, `socials`, `chips`, `focusAreas` |
-| D50 | `data-stage-scroll` exempts the wheel unconditionally, so it goes only on elements that really scroll, never on a panel wrapper; every page fits one screen at every size, and the only inner gesture allowed is a horizontal carousel (Projects) |
+| D50 | `data-stage-scroll` exempts the wheel unconditionally, so it goes only on elements that really scroll, never on a panel wrapper; every page fits one screen at every size, and the only inner gesture allowed is a horizontal carousel (Tech Stack, Projects) |
+| D51 | Carousels are a native scroll-snap component (`components/ui/Carousel.tsx`), no library; the consumer sets slide widths and snap points in CSS and pages are measured from the layout; controls are Previous/Next buttons plus page dots (row height reserved, shown only when there is more than one page) and, at 1-up, a peeking next card; `data-stage-swipe-ignore` is set on the track only while it can scroll; the track has `overscroll-x-contain` and `tabIndex={-1}` so browser back-swipe is blocked and ← → still turn pages; reduced motion jumps instead of gliding |
+| D52 | Tech Stack: 4 cards from 1280 px, 2 cards sliding 2 from 640 px, 1 card sliding 1 with the next card peeking below 640 px (breakpoints follow the ~280 px a one-line highlight needs); every card always shows all its content (index, badge, icon, 5 items, 4 highlights of ≤ ~38 characters on one line); short panels only tighten spacing and hide the page subtitle; no bottom strip (`techStrip` data removed; Web3 and C/C++ are covered by the Projects filters) |
+| D53 | Tech logos use `react-icons` (Simple Icons) where the export is certain and lucide stand-ins otherwise; icon keys are a typed union (`TechIconKey` in `types/skills.ts`) and the map is indexed directly (`TECH_ICONS[key]`), because the React Compiler lint rejects components returned from a function; the P5 icon picker and Zod schema must use the same keys |
 
 ### Open
 
