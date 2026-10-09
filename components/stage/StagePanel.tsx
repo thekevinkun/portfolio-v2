@@ -14,6 +14,7 @@ interface StagePanelProps {
 //   data-side      the side this page arrives from (or would arrive from)
 //   data-direction travel direction of the last move
 //   data-animate   present once the first move happened (no effects on page load)
+//   data-seen      the page was left once: its entrance never replays (D58)
 const StagePanel = ({ id, index, children }: StagePanelProps) => {
   const { state } = useStage();
 
@@ -45,6 +46,7 @@ const StagePanel = ({ id, index, children }: StagePanelProps) => {
       data-side={side}
       data-direction={direction}
       data-animate={state.source === "initial" ? undefined : ""}
+      data-seen={state.seen.includes(index) ? "" : undefined}
       className="group relative h-full w-full shrink-0 data-[state=active]:z-10"
     >
       <div data-stage-layer className="h-full w-full">

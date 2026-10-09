@@ -30,6 +30,8 @@ export interface StageState {
   source: StageSource;
   /** Direction of the running edge bounce; 0 when there is none */
   bounce: StageDirection;
+  /** Pages already left once: their entrance never replays (D58) */
+  seen: readonly number[];
 }
 
 export type StageAction =
