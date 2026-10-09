@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3.1–P3.4 done; P3.5 next.**
+> Status: **P1–P2 done; P3.1–P3.5 done; P3.6 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -267,6 +267,8 @@ portfolio/
 - **Everything that is not a component** (layouts, pages, helpers, config, server actions) uses `export function` / `export default function`.
 - **Barrels:** every folder under `components/` has an `index.ts` that re-exports its components; import through it (`@/components/ui`). Files inside the same folder import each other directly (avoids circular imports). Never create one barrel across folders, and never import `components/dashboard` from public code (keeps admin code out of public bundles, R5).
 - Server Actions for dashboard mutations.
+- **Lint (React Compiler):** never return a component from a function during render; index a module-level map instead (`TECH_ICONS[key]`, with typed keys). Never set state synchronously inside an effect; use observers or event callbacks.
+- **Gestures:** `data-stage-scroll` only on elements that really scroll; swipeable rows use `components/ui/Carousel` (D51); every new panel states its density tiers with the `tier-regular:` / `tier-spacious:` variants (D47).
 - Components ≲ 150 lines; Conventional Commits.
 - **Never:** vertical page scroll (except the phone exception), layout-property animations, a second UI kit in the public bundle, hardcoded content after Phase 4, fake metrics.
 
@@ -279,6 +281,7 @@ portfolio/
 - **One phase (or a few steps) per chat**; state the step ID.
 - **Output:** complete files with full paths, one response, short logical code chunks with simple inline comments, exact commands, a short "how to verify" list.
 - **Tree first:** before creating or overwriting a file, check the pasted file list. Never label a file "new" without seeing the tree; if a file may already exist, ask.
+- **Working rules:** follow `docs/WORKFLOW.md` §11 (UI approval gate, exact doc edits, ask for unseen files, honest recommendations).
 - Respect Sections 2 and 7. If a request conflicts, say so and ask before breaking it.
 - Anything undecided goes to Section 10, not silently into code.
 - **End of chat:** produce the `PROGRESS.md` handoff.
@@ -286,10 +289,11 @@ portfolio/
 **Chat starter**
 
 ```
-Attached: CLAUDE.md, PROGRESS.md.
+Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
-Phase: P2 — Stage engine. Step: P2.4.
-Mode: Build.
+Also pasted: <the files this step builds on, listed in the previous handoff>
+Phase: P3 — Five pages. Step: P3.6.
+Mode: Build. Follow WORKFLOW.md §11.
 Goal: <one sentence>
 ```
 
@@ -365,6 +369,8 @@ Goal: <one sentence>
 | D51 | Carousels are a native scroll-snap component (`components/ui/Carousel.tsx`), no library; the consumer sets slide widths and snap points in CSS and pages are measured from the layout; controls are Previous/Next buttons plus page dots (row height reserved, shown only when there is more than one page) and, at 1-up, a peeking next card; `data-stage-swipe-ignore` is set on the track only while it can scroll; the track has `overscroll-x-contain` and `tabIndex={-1}` so browser back-swipe is blocked and ← → still turn pages; reduced motion jumps instead of gliding |
 | D52 | Tech Stack: 4 cards from 1280 px, 2 cards sliding 2 from 640 px, 1 card sliding 1 with the next card peeking below 640 px (breakpoints follow the ~280 px a one-line highlight needs); every card always shows all its content (index, badge, icon, 5 items, 4 highlights of ≤ ~38 characters on one line); short panels only tighten spacing and hide the page subtitle; no bottom strip (`techStrip` data removed; Web3 and C/C++ are covered by the Projects filters) |
 | D53 | Tech logos use `react-icons` (Simple Icons) where the export is certain and lucide stand-ins otherwise; icon keys are a typed union (`TechIconKey` in `types/skills.ts`) and the map is indexed directly (`TECH_ICONS[key]`), because the React Compiler lint rejects components returned from a function; the P5 icon picker and Zod schema must use the same keys |
+| D54 | Projects page: filter pills Full Stack (default), Frontend, Game, Web3, C/C++ (only filters that have visible projects; labels in `lib/projects/filters.ts`, `systems` shows as "C/C++"; no "All" pill); `ProjectsPanel` is a client component that takes `projects` as props; cards show kicker, status badge (LIVE solid, others glass), title, full summary, every tech tag and its links (Repo is the primary button when there is no demo); no hover lift inside the carousel; changing the filter remounts the carousel (`key`) so it starts at page 1 and announces the count in a polite live region; reflow animation (auto-animate) and rolling counter digits wait for P6.1 |
+| D55 | `Carousel` gains `indicator` ("dots" or "counter"); Projects pages by width: 3 cards from 1280 px, 2 from 640 px, 1 with the next card peeking below 640 px, with snap points on the first card of each page (`xl:nth-[3n+1]`, `sm:max-xl:odd`); the last page can repeat cards when the count doesn't divide evenly; the counter is page-based and sits bottom right |
 
 ### Open
 

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import {
   OverviewPanel,
   PlaceholderPanel,
+  ProjectsPanel,
   TechStackPanel,
 } from "@/components/panels";
 import { Stage } from "@/components/stage";
@@ -49,10 +50,15 @@ export default async function Page({ params }: PageProps) {
     .filter((group) => group.visible)
     .sort((a, b) => a.sort - b.sort);
 
-  // Real pages replace the placeholders step by step (P3.5–P3.7)
+  const visibleProjects = projects
+    .filter((project) => project.visible)
+    .sort((a, b) => a.sort - b.sort);
+
+  // Real pages replace the placeholders step by step (P3.6–P3.7)
   const pages: Partial<Record<SectionId, ReactNode>> = {
     overview: <OverviewPanel profile={profile} featured={featured} />,
     "tech-stack": <TechStackPanel groups={groups} />,
+    projects: <ProjectsPanel projects={visibleProjects} />,
   };
 
   const panels = SECTIONS.map((s) => ({
