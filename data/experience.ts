@@ -9,11 +9,32 @@ export const experienceItems: ExperienceItem[] = [
     endDate: null,
     summary:
       "Building and deploying full-stack applications focused on payments, booking systems, backend reliability and real-time data.",
-    bullets: [
-      "Built a court-booking platform with Midtrans payments: webhook validation, payment verification and idempotency to prevent duplicate transactions (Padel Court)",
-      "Built a digital bookstore with Stripe and secure file delivery so only verified buyers can read purchased books (Kun Bookshop)",
-      "Developed AI assistants on contextual data: product search and cart help in Kun Bookshop, document-trained support in Kundesk",
-      "Used Supabase Realtime subscriptions for live admin dashboard updates (Padel Court)",
+    bullets: [],
+    shipped: [
+      {
+        name: "Kundesk",
+        bullets: [
+          "Built a multi-tenant SaaS where businesses train an AI assistant on their own documents and serve customers through chat links, embeddable widgets and QR codes",
+          "Built KUN, the assistant: retrieval-augmented answers using OpenAI embeddings and pgvector search, streamed over SSE, with live handoff from AI to a human agent",
+          "Engineered the backend around tenant isolation, webhooks and rate limiting, backed by automated tests",
+        ],
+      },
+      {
+        name: "Padel Court",
+        bullets: [
+          "Built a real-time court-booking platform with a live admin dashboard and automated booking management",
+          "Implemented live availability, scheduling flows and payment processing",
+          "Secured payments with webhook signature validation, idempotency keys and Redis rate limiting",
+        ],
+      },
+      {
+        name: "Kun Bookshop",
+        bullets: [
+          "Built a MERN digital bookstore with Stripe payments, secure downloads and a Dockerized deployment",
+          "Implemented JWT auth with refresh-token rotation and protected file access through signed URLs",
+          "Added KUN, an AI assistant using OpenAI tool calling and SSE streaming that searches books and manages the cart",
+        ],
+      },
     ],
     tags: [
       "Next.js",
