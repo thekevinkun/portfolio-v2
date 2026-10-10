@@ -16,34 +16,39 @@ interface TechStackPanelProps {
 const SLIDE =
   "max-sm:basis-[calc(100%-2.5rem)] max-sm:snap-start sm:basis-[calc((100%-0.75rem)/2)] sm:snap-align-none sm:odd:snap-start xl:basis-[calc((100%-2.25rem)/4)] overflow-clip";
 
+// Below 1024px the header and the cards are one group centered in the panel
+// (my-auto, which falls back to top-aligned if the group is too tall);
+// from 1024px the group fills the panel: header on top, cards centered below.
 const TechStackPanel = ({ groups }: TechStackPanelProps) => (
   <div className="tier-container h-full">
-    <div className="flex h-full flex-col gap-2 px-5 pt-2 pb-4 md:px-12 tier-regular:gap-4">
-      <SectionHeader
-        title="Tech Stack"
-        subtitle="Grouped by layer. Everything here has shipped in a real project."
-        subtitleClassName="hidden tier-regular:block"
-        titleId="heading-tech-stack"
-        className="shrink-0"
-      />
+    <div className="flex h-full flex-col px-5 pt-2 pb-4 md:px-12">
+      <div className="flex flex-col gap-2 max-lg:my-auto lg:min-h-0 lg:flex-1 tier-regular:gap-4">
+        <SectionHeader
+          title="Tech Stack"
+          subtitle="Grouped by layer. Everything here has shipped in a real project."
+          subtitleClassName="hidden tier-regular:block"
+          titleId="heading-tech-stack"
+          className="shrink-0"
+        />
 
-      <div className="flex min-h-0 flex-1 flex-col justify-center md:max-lg:justify-start">
-        <Carousel
-          label="Tech stack by layer"
-          className="gap-3"
-          slideClassName={SLIDE}
-          controlsClassName="mt-2 h-8 tier-regular:mt-3 tier-regular:h-9 xl:hidden"
-        >
-          {groups.map((group, i) => (
-            <div
-              key={group.indexLabel}
-              {...reveal("from-left", 2 + i)}
-              className="flex w-full"
-            >
-              <SkillGroupCard group={group} />
-            </div>
-          ))}
-        </Carousel>
+        <div className="flex min-h-0 flex-1 flex-col justify-center">
+          <Carousel
+            label="Tech stack by layer"
+            className="gap-3"
+            slideClassName={SLIDE}
+            controlsClassName="mt-2 h-8 tier-regular:mt-3 tier-regular:h-9 xl:hidden"
+          >
+            {groups.map((group, i) => (
+              <div
+                key={group.indexLabel}
+                {...reveal("from-left", 2 + i)}
+                className="flex w-full"
+              >
+                <SkillGroupCard group={group} />
+              </div>
+            ))}
+          </Carousel>
+        </div>
       </div>
     </div>
   </div>
