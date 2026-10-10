@@ -66,7 +66,7 @@ const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
             </div>
             <div
               {...reveal("rise", 5)}
-              className="hidden flex-wrap items-center gap-2 tier-spacious:flex md:tier-pills:flex"
+              className="flex flex-wrap items-center gap-2 tier-spacious:flex md:tier-pills:flex"
             >
               {profile.focusAreas.map((area) => (
                 <Pill key={area} dot="static" className="font-mono text-[11px]">
