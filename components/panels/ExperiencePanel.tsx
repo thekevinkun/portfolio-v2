@@ -71,13 +71,14 @@ const ExperiencePanel = ({ items }: ExperiencePanelProps) => {
     </div>
   ));
 
-  // Below 1024px the header and the cards are one group centered in the panel
-  // (my-auto, which falls back to top-aligned if the group is too tall); from
-  // 1024px the group fills the panel: header on top, cards centered below.
+  // From 768 to 1023px the header and the cards are one group centered in the
+  // panel (my-auto, which falls back to top-aligned if the group is too tall).
+  // On phones and from 1024px the group fills the panel: header on top, cards
+  // centered in the space below.
   return (
     <div className="tier-container h-full">
       <div className="flex h-full flex-col px-5 pt-2 pb-3 md:px-12 tier-roomy:pb-4">
-        <div className="flex flex-col gap-2 max-lg:my-auto lg:min-h-0 lg:flex-1 tier-roomy:gap-4">
+        <div className="flex min-h-0 flex-1 flex-col gap-2 md:max-lg:my-auto md:max-lg:flex-none tier-roomy:gap-4">
           <SectionHeader
             title="Experience"
             subtitle="Independent work and self-directed study, with what I did on each project."

@@ -17,16 +17,17 @@ interface OverviewPanelProps {
 // shows them. Between 500 and 580 spacing is tighter so text and cards both
 // fit. Phones keep their own rules (intro and chips from 500, focus areas
 // from 640).
-// Layout: from 1024px the hero row fills the panel (portrait scales to it);
-// below that the hero text and the cards are one group centered in the panel.
+// Layout: on phones and from 1024px the hero row fills the panel (the
+// portrait scales to it); from 768 to 1023px the hero text and the cards are
+// one group centered in the panel.
 // Entrance slots: text 0–3 (same as every page), chips/pills/button 4–6,
 // portrait 2 (slow fade), featured cards in their own slow one-by-one sequence.
 const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
   <div className="tier-container h-full">
     <div className="flex h-full flex-col px-5 pt-3 pb-4 md:px-12">
-      <div className="flex flex-col gap-4 max-lg:my-auto lg:min-h-0 lg:flex-1 tier-roomy:gap-6 tier-spacious:gap-7">
-        <div className="grid items-center gap-8 lg:min-h-0 lg:flex-1 lg:grid-cols-12 lg:grid-rows-[minmax(0,1fr)]">
-          <div className="flex flex-col gap-2 lg:col-span-7 tier-roomy:gap-3 tier-spacious:gap-4">
+      <div className="flex min-h-0 flex-1 flex-col gap-4 md:max-lg:my-auto md:max-lg:flex-none tier-roomy:gap-6 tier-spacious:gap-7">
+        <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] items-center gap-8 md:max-lg:flex-none lg:grid-cols-12">
+          <div className="flex flex-col gap-3 lg:col-span-7 tier-roomy:gap-3 tier-spacious:gap-4">
             <p
               {...reveal("fade", 0)}
               className="font-mono text-[11px] tracking-widest text-fg-low uppercase"
@@ -51,7 +52,7 @@ const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
             </p>
             <p
               {...reveal("fade", 3)}
-              className="hidden max-w-2xl text-sm leading-relaxed text-fg-medium tier-regular:block tier-regular:text-base md:tier-snug:block"
+              className="hidden max-w-xl text-sm leading-relaxed text-fg-medium tier-regular:block tier-regular:text-base md:tier-snug:block"
             >
               {profile.intro}
             </p>

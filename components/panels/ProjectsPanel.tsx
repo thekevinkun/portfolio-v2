@@ -21,9 +21,10 @@ interface ProjectsPanelProps {
 const SLIDE =
   "max-sm:basis-[calc(100%-2.5rem)] max-sm:snap-start sm:basis-[calc((100%-0.75rem)/2)] sm:max-xl:odd:snap-start xl:basis-[calc((100%-1.5rem)/3)] xl:nth-[3n+1]:snap-start overflow-clip";
 
-// Below 1024px header, filters and cards are one group centered in the panel
-// (my-auto, which falls back to top-aligned if the group is too tall); from
-// 1024px the group fills the panel: header on top, cards centered below.
+// From 768 to 1023px header, filters and cards are one group centered in the
+// panel (my-auto, which falls back to top-aligned if the group is too tall).
+// On phones and from 1024px the group fills the panel: header on top, cards
+// centered in the space below.
 const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
   // Only filters that have projects, in the canonical order
   const filters = PROJECT_FILTERS.filter((filter) =>
@@ -42,7 +43,7 @@ const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
   return (
     <div className="tier-container h-full">
       <div className="flex h-full flex-col px-5 pt-2 pb-4 md:px-12">
-        <div className="flex flex-col gap-2 max-lg:my-auto lg:min-h-0 lg:flex-1 tier-regular:gap-4">
+        <div className="flex min-h-0 flex-1 flex-col gap-2 md:max-lg:my-auto md:max-lg:flex-none tier-regular:gap-4">
           <SectionHeader
             title="Projects"
             subtitle="Selected work, from AI SaaS to command-line tools. Pick a category, then open the demo or the code."

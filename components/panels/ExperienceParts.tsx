@@ -32,7 +32,7 @@ export const BulletList = ({
   items: string[];
   compactCount?: number;
 }) => (
-  <ul className="flex flex-col gap-1.5 tier-roomy:gap-2">
+  <ul className="flex flex-col gap-1 tier-roomy:gap-2">
     {items.map((text, i) => (
       <li
         key={text}
