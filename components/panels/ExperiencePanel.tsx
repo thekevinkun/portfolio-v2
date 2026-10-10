@@ -77,7 +77,7 @@ const ExperiencePanel = ({ items }: ExperiencePanelProps) => {
         <SectionHeader
           title="Experience"
           subtitle="Independent work and self-directed study, with what I did on each project."
-          subtitleClassName="hidden tier-roomy:block"
+          subtitleClassName="hidden tier-subtitle:block"
           titleId="heading-experience"
           className="shrink-0"
         />

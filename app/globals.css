@@ -42,6 +42,14 @@
   }
 }
 
+/* Experience subtitle: from 500px tall, except in the wide layout, which
+   needs 580px first (its row of cards plus the Learning band is tall). */
+@custom-variant tier-subtitle {
+  @container (min-height: 580px) or ((min-height: 500px) and (width < 80rem)) {
+    @slot;
+  }
+}
+
 /* Fonts: next/font sets --font-inter and --font-jetbrains-mono on <html> */
 @theme inline {
   --font-sans:
