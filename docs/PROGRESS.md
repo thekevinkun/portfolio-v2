@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-09
-**Current phase / step:** P3.8
+**Last updated:** 2026-10-10
+**Current phase / step:** P3.9
 **Mode default:** Build
 
 ---
@@ -14,7 +14,7 @@
 | ----- | ------------------------ | -------------- | ------------------------------------------- |
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
-| P3    | Five pages (static data) | 🟦 in progress | P3.1–P3.7 done; entrance choreography next |
+| P3    | Five pages (static data) | 🟦 in progress | P3.1–P3.8 done; fit QA next |
 | P4    | Neon data → LAUNCH       | ⬜ Not started | Launch gate                                 |
 | P5    | Dashboard                | ⬜ Not started |                                             |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
@@ -32,7 +32,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P3.5 Projects
 - [x] P3.6 Experience
 - [x] P3.7 Get In Touch
-- [ ] P3.8 Entrance choreography + card spotlight
+- [x] P3.8 Entrance choreography + card spotlight
 - [ ] P3.9 Fit QA at all 8 viewports
 
 ---
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D44–D46: see CLAUDE.md §10.
 - D47–D50: see CLAUDE.md §10.
 - D51–D53: see CLAUDE.md §10.
-- D54–D57: see CLAUDE.md §10.
+- D54–D59: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -88,6 +88,10 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - Get In Touch: `contactHeadline` and `contactIntro` are new `profile` columns; add them in the P4.2 schema and the P5.3 editor
 - Get In Touch: the UTC offset label is computed at build time (fine for Asia/Makassar, no DST); revisit if the timezone becomes editable in P5.3
 - Get In Touch at 360×640 is the tightest fit (intro hidden, compact spacing); recheck in P3.9
+- Entrance timing is tuned by feel: default 650 ms / 55 ms step / 300 ms wait after a turn (`:root` in globals.css); Overview 800 ms / 110 ms (`[data-section="overview"]`), featured cards offset 850 ms / step 220 ms / 900 ms, portrait 1600 ms (OverviewPanel.tsx)
+- Carousel slides must keep `overflow-clip`: animated cards would otherwise change the track's scroll size and break Carousel's page measurement and the wheel guard
+- Projects: after a filter click, later visits to Projects start their cards with no wait instead of waiting for the page slide
+- Spotlight border sheen uses `mask-composite`; spot-check Safari and Firefox in P6.2, and check entrances plus spotlight at 4× CPU throttle there
 
 ---
 
@@ -112,6 +116,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-10 — P3.8
+Done:
+- Entrance choreography on all five pages: header and text identical everywhere (title mask-reveal, text fade, chips/pills/buttons rise), a different card effect per page, replayed on every visit
+- Overview timed slower and more cinematic: slow portrait fade, featured cards rise one by one
+- Card spotlight (glow + border sheen) on mouse devices for every GlassCard
+Files created/changed:
+- types/reveal.ts; lib/reveal.ts; app/globals.css; components/stage/StagePanel.tsx; components/ui/{SectionHeader,GlassCard,Spotlight,index}; components/panels/{OverviewPanel,TechStackPanel,ProjectsPanel,ExperiencePanel,ContactPanel}; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D58 entrance choreography (CSS only, replay on every visit, per-page card effects, Overview timing) · D59 card spotlight
+Verified (viewports / devices):
+- Verify list run by Kun and confirmed good
+Known issues:
+- See Known issues above (timing knobs, overflow-clip on carousel slides, Projects filter quirk, spotlight browser/perf checks)
+Next step (ID + one-line goal):
+- P3.9 — Fit QA at all 8 viewports; fix overflow with density tiers
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: app/globals.css, components/ui/Carousel.tsx, components/panels/OverviewPanel.tsx, components/panels/TechStackPanel.tsx, components/panels/ProjectsPanel.tsx, components/panels/ExperiencePanel.tsx, components/panels/ContactPanel.tsx. Phase: P3. Step: P3.9. Mode: Build. Follow WORKFLOW.md §11. Goal: Fit QA. Here is my table of which page overflows or looks cramped at which of the 8 viewports: <table>. Fix each problem with density tiers (tuning the 500 / 640 px tier thresholds if needed) in small commits, hiding only decorative content, and stop at the verify command for my approval.
 
 ### Handoff — 2026-10-09 — P3.7
 Done:
@@ -148,21 +170,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/ui/Button.tsx, components/ui/GlassCard.tsx, components/panels/OverviewPanel.tsx, components/chrome/StatusFooter.tsx, data/seed.ts, types/profile.ts, app/(site)/[[...section]]/page.tsx. Phase: P3. Step: P3.7. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Get In Touch page (statement left; email, LinkedIn and GitHub link cards right; info row with live Samarinda time; email and resume buttons; no form, no phone) and stop at the verify command for my approval.
 
 ### Handoff — 2026-10-09 — P3.5
-Done:
-- Projects page: filter pills (Full Stack, Frontend, Game, Web3, C/C++), carousel (3 / 2 / 1 per page, next card peeking at 1-up) with Previous/Next and a "01 / 02" counter, status badges (LIVE solid, COMPLETED glass), every tech tag, Live Demo / Repo buttons
-- Carousel gains an `indicator` option ("dots" | "counter")
-Files created/changed:
-- components/ui/Carousel.tsx; lib/projects/filters.ts; components/panels/{ProjectCard,ProjectsPanel,index}; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md, WORKFLOW.md)
-Decisions:
-- D54 Projects page layout and filters · D55 Carousel indicator and per-page snap points · working rules added to WORKFLOW.md §11
-Verified (viewports / devices):
-- Verify list run by Kun and confirmed good (filters, 3/2/1-up, counter, touch, trackpad, keyboard, reduced motion)
-Known issues:
-- See Known issues above
-Next step (ID + one-line goal):
-- P3.6 — Experience page: Work + Learning cards, no milestones, nothing hidden
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/ui/Carousel.tsx, components/panels/TechStackPanel.tsx, components/panels/ProjectsPanel.tsx, components/panels/SkillGroupCard.tsx, app/(site)/[[...section]]/page.tsx, data/experience.ts, types/experience.ts. Phase: P3. Step: P3.6. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Experience page (Work + Learning cards from experienceItems, nothing hidden, a Carousel below 1024 px if the two cards don't fit) and stop at the verify command for my approval.
+- P3.5: Projects page (filter pills, 3 / 2 / 1-up Carousel with counter, status badges, link buttons); D54–D55.
 
 ### Handoff — 2026-10-09 — P3.4
 - P3.4: Tech Stack page (4 skill-group cards, scroll-snap Carousel below 1280 px, strip removed); D51–D53.

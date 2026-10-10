@@ -106,6 +106,19 @@
 
   /* Dock ring: the arrival ping waits for the glide to land */
   --dock-ring-ping-delay: 200ms;
+
+  /* Entrance choreography (P3.8) */
+  --reveal-duration: 650ms;
+  --reveal-step: 55ms;
+  --reveal-delay-load: 100ms;
+  --reveal-delay-turn: 300ms;
+  --reveal-distance: 12px;
+  --reveal-distance-x: 24px;
+
+  /* Card spotlight (P3.8) */
+  --spotlight-size: 240px;
+  --spotlight-color: rgb(255 255 255 / 0.1);
+  --spotlight-ring: rgb(255 255 255 / 0.5);
 }
 
 html {
@@ -297,4 +310,172 @@ body {
       transparent 100%
     );
   mask-composite: intersect;
+}
+
+/* Entrance choreography (P3.8, D58). An element with data-reveal animates every
+   time its panel becomes the active page. Keyframes only define `from`: the end
+   state is the element's own style, and fill-mode "backwards" leaves nothing
+   behind afterwards. Per-element knobs are set inline by lib/reveal.ts:
+   --i slot, --i-wide slot from 1280px, --reveal-offset extra wait,
+   --reveal-step, --reveal-duration, --reveal-distance, --reveal-delay. */
+[data-reveal] {
+  --reveal-index: var(--i, 0);
+}
+
+/* From 1280 px a layout may reorder cards: --i-wide overrides the slot */
+@media (min-width: 80rem) {
+  [data-reveal] {
+    --reveal-index: var(--i-wide, var(--i, 0));
+  }
+}
+
+/* Overview is the landing page: slower and more cinematic than the rest */
+[data-stage-panel][data-section="overview"] {
+  --reveal-duration: 800ms;
+  --reveal-step: 110ms;
+  --reveal-delay-load: 250ms;
+  --reveal-distance: 16px;
+}
+
+[data-reveal="mask"] {
+  --reveal-name: reveal-mask;
+}
+[data-reveal="fade"] {
+  --reveal-name: reveal-fade;
+}
+/* A slow, soft fade for large images */
+[data-reveal="appear"] {
+  --reveal-name: reveal-fade;
+  --reveal-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+[data-reveal="rise"] {
+  --reveal-name: reveal-rise;
+}
+[data-reveal="from-left"] {
+  --reveal-name: reveal-from-left;
+}
+[data-reveal="from-right"] {
+  --reveal-name: reveal-from-right;
+}
+[data-reveal="drop"] {
+  --reveal-name: reveal-drop;
+}
+[data-reveal="unfold"] {
+  --reveal-name: reveal-unfold;
+  transform-origin: 50% 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* First load: short wait. After a page turn: start partway through the slide */
+  [data-stage-panel] {
+    --reveal-delay: var(--reveal-delay-load);
+  }
+  [data-stage-panel][data-animate] {
+    --reveal-delay: var(--reveal-delay-turn);
+  }
+
+  [data-stage-panel][data-state="active"] [data-reveal] {
+    animation-name: var(--reveal-name);
+    animation-duration: var(--reveal-duration);
+    animation-timing-function: var(--reveal-ease, var(--ease-out-expo));
+    animation-fill-mode: backwards;
+    animation-delay: calc(
+      var(--reveal-delay) + var(--reveal-offset, 0ms) +
+        min(var(--reveal-index), 7) * var(--reveal-step)
+    );
+  }
+}
+
+@keyframes reveal-mask {
+  from {
+    transform: translate3d(0, 105%, 0);
+  }
+}
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes reveal-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-distance), 0);
+  }
+}
+@keyframes reveal-from-left {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(var(--reveal-distance-x) * -1), 0, 0);
+  }
+}
+@keyframes reveal-from-right {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--reveal-distance-x), 0, 0);
+  }
+}
+@keyframes reveal-drop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--reveal-distance) * -1), 0);
+  }
+}
+@keyframes reveal-unfold {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.95);
+  }
+}
+
+/* Card spotlight (P3.8): a soft glow and a thin border sheen follow the cursor.
+   Both live on pseudo-elements behind the content and only fade in on hover.
+   --mx / --my are written by components/ui/Spotlight.tsx. */
+[data-spotlight] {
+  position: relative;
+  isolation: isolate;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  [data-spotlight]::before,
+  [data-spotlight]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-micro) linear;
+  }
+
+  [data-spotlight]::before {
+    background: radial-gradient(
+      var(--spotlight-size) circle at var(--mx, 50%) var(--my, 50%),
+      var(--spotlight-color),
+      transparent 70%
+    );
+  }
+
+  /* Ring: a 1px padding box with the content box masked out */
+  [data-spotlight]::after {
+    padding: 1px;
+    background: radial-gradient(
+      var(--spotlight-size) circle at var(--mx, 50%) var(--my, 50%),
+      var(--spotlight-ring),
+      transparent 70%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  [data-spotlight]:hover::before,
+  [data-spotlight]:hover::after {
+    opacity: 1;
+  }
 }

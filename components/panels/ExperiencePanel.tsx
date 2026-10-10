@@ -5,10 +5,18 @@ import {
   ExperienceRoleCard,
   ExperienceShippedCard,
 } from "./";
+import { reveal } from "@/lib/reveal";
 import type { ExperienceItem } from "@/types/experience";
+
 interface ExperiencePanelProps {
   items: ExperienceItem[];
 }
+
+interface ExperienceEntry {
+  key: string;
+  node: ReactNode;
+}
+
 // Carousel order is Learning, Work, Shipped… (DOM order). From 1280 px the
 // 1st card (Learning) is moved last and made full width, so the row is
 // Work + 3 Shipped with Learning as a band below:
@@ -16,8 +24,12 @@ interface ExperiencePanelProps {
 //   640+   2 cards, slide 2 (snap on every odd card)
 //   <640   1 card, slide 1, next card peeking in
 // nth-1 assumes one learning item, placed before the work items.
+// overflow-clip: an entrance transform must not count as track scroll size.
 const SLIDE =
-  "max-sm:basis-[calc(100%-2.5rem)] max-sm:snap-start sm:basis-[calc((100%-0.75rem)/2)] sm:max-xl:odd:snap-start xl:basis-[calc((100%-2.25rem)/4)] xl:nth-1:order-last xl:nth-1:basis-full";
+  "max-sm:basis-[calc(100%-2.5rem)] max-sm:snap-start sm:basis-[calc((100%-0.75rem)/2)] sm:max-xl:odd:snap-start xl:basis-[calc((100%-2.25rem)/4)] xl:nth-1:order-last xl:nth-1:basis-full overflow-clip";
+
+// The header uses entrance slots 0–1; cards start at 2
+const FIRST_CARD = 2;
 
 const ExperiencePanel = ({ items }: ExperiencePanelProps) => {
   const work = items.filter(
@@ -25,22 +37,37 @@ const ExperiencePanel = ({ items }: ExperiencePanelProps) => {
   );
   const learning = items.filter((item) => item.kind === "education");
 
-  const cards: ReactNode[] = [
-    ...learning.map((item) => (
-      <ExperienceLearningCard key={`learning-${item.sort}`} item={item} />
-    )),
-    ...work.map((item) => (
-      <ExperienceRoleCard key={`role-${item.sort}`} item={item} />
-    )),
-    ...work.flatMap((item) =>
-      (item.shipped ?? []).map((project) => (
-        <ExperienceShippedCard
-          key={`shipped-${item.sort}-${project.name}`}
-          project={project}
-        />
-      )),
-    ),
-  ];
+  const learnings: ExperienceEntry[] = learning.map((item) => ({
+    key: `learning-${item.sort}`,
+    node: <ExperienceLearningCard item={item} />,
+  }));
+  const roles: ExperienceEntry[] = work.map((item) => ({
+    key: `role-${item.sort}`,
+    node: <ExperienceRoleCard item={item} />,
+  }));
+  const shipped: ExperienceEntry[] = work.flatMap((item) =>
+    (item.shipped ?? []).map((project) => ({
+      key: `shipped-${item.sort}-${project.name}`,
+      node: <ExperienceShippedCard project={project} />,
+    })),
+  );
+
+  // Entrance order follows what the eye sees: DOM order in the carousel,
+  // Work → Shipped → Learning in the wide layout (--i-wide)
+  const wideOrder = [...roles, ...shipped, ...learnings];
+  const cards = [...learnings, ...roles, ...shipped].map((card, i) => (
+    <div
+      key={card.key}
+      {...reveal(
+        "unfold",
+        FIRST_CARD + i,
+        FIRST_CARD + wideOrder.indexOf(card),
+      )}
+      className="flex w-full"
+    >
+      {card.node}
+    </div>
+  ));
 
   return (
     <div className="tier-container h-full">

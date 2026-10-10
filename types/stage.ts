@@ -28,7 +28,6 @@ export interface StageState {
   direction: StageDirection;
   phase: StagePhase;
   source: StageSource;
-  /** Direction of the running edge bounce; 0 when there is none */
   bounce: StageDirection;
 }
 

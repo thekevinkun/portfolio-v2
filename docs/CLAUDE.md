@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3.1–P3.7 done; P3.8 next.**
+> Status: **P1–P2 done; P3.1–P3.8 done; P3.9 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -147,7 +147,7 @@ The wheel listener is on `window` (chrome included); `ctrl`+wheel (zoom) is igno
 | Cooldown | 120 ms minimum after the transition before the next gesture |
 | `will-change` | On the track during transition only |
 | State | `{ index (target), from, direction, phase, source, bounce }`; phases `idle → transitioning → cooldown → idle` and `idle → bouncing → cooldown → idle` |
-| Panel attributes | `data-state="active\|outgoing\|idle"`, `data-side="before\|after"` (the side a page arrives from), `data-direction="next\|prev\|none"`, `data-animate` (present after the first move). Inner `data-stage-layer` (parallax) and `data-stage-shadow`. All visuals key off these in `globals.css`, inside `prefers-reduced-motion: no-preference`. |
+| Panel attributes | `data-state="active\|outgoing\|idle"`, `data-side="before\|after"` (the side a page arrives from), `data-direction="next\|prev\|none"`, `data-animate` (present after the first move), `data-section` (the section id, so CSS can tune one page's entrance). Inner `data-stage-layer` (parallax) and `data-stage-shadow`. All visuals key off these in `globals.css`, inside `prefers-reduced-motion: no-preference`. |
 | Inactive panels | `inert` + animations paused; `inert` removed from the incoming panel at transition start, applied to the outgoing one at transition end |
 | Reduced motion | --duration-page becomes 150 ms and --duration-bounce 0 ms. The track has no transition (it jumps), the incoming page fades in over --duration-page, and parallax, shadow, outgoing scale/dim and the bounce are off. The move ends from the provider's fallback timer (duration + 100 ms). The Dock ring jumps (MotionConfig reducedMotion="user"). |
 
@@ -223,7 +223,7 @@ obsidian / charcoal backgrounds · glass surface + border · text high/medium/lo
 
 1. Animate `transform` and `opacity` only.
 2. One signature motion (page turn) + a few reused micro-interactions.
-3. Durations: micro 150–250 ms, entrances 400–600 ms, page turn ≈ 650 ms. Stagger ≤ 40 ms, ≤ 8 items.
+3. Durations: micro 150–250 ms, entrances ≈ 650 ms (Overview, the landing page, is slower: 800 ms, with a 1.6 s portrait fade), page turn ≈ 650 ms. Stagger 55 ms (Overview 110–220 ms), ≤ 8 slots.
 4. Springs only for the dock ring; everything else cubic-bezier.
 5. Entrances run once per activation. Only ambient effects loop (CSS-only, paused when hidden/inactive).
 6. Real `backdrop-filter` blur on ≤ 3 visible layers (top bar/dock). Cards use faked glass: translucent gradient + 1 px highlight.
@@ -236,7 +236,7 @@ obsidian / charcoal backgrounds · glass surface + border · text high/medium/lo
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | A        | **Page turn** — slide + parallax + outgoing scale/dim + soft edge shadow                                                            |
 | B        | **Dock ring** — active ring glides between tiles (shared-layout), ping dot on arrival, hover/focus lift 1.05×                       |
-| C        | **Entrance choreography** — headline mask-reveal, subtext fade, chips/cards rise 12 px + fade with stagger, portrait eases 1.04 → 1 |
+| C        | **Entrance choreography** — headline mask-reveal, subtext fade, chips/pills/buttons rise 12 px + fade with stagger, cards use one effect per page (D58), portrait fades in slowly |
 | D        | **Card spotlight** — cursor-following radial highlight (CSS vars), border sheen, 4 px lift                                          |
 | E        | **Projects** — carousel with arrows, rolling `01 / 04` counter, filter reflow via auto-animate                                      |
 | F        | **Live clock** — ticking clock in the top bar (real timezone)                                                                       |
@@ -292,7 +292,7 @@ portfolio/
 Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
 Also pasted: <the files this step builds on, listed in the previous handoff>
-Phase: P3 — Five pages. Step: P3.8.
+Phase: P3 — Five pages. Step: P3.9.
 Mode: Build. Follow WORKFLOW.md §11.
 Goal: <one sentence>
 ```
@@ -373,6 +373,8 @@ Goal: <one sentence>
 | D55 | `Carousel` gains `indicator` ("dots" or "counter"); Projects pages by width: 3 cards from 1280 px, 2 from 640 px, 1 with the next card peeking below 640 px, with snap points on the first card of each page (`xl:nth-[3n+1]`, `sm:max-xl:odd`); the last page can repeat cards when the count doesn't divide evenly; the counter is page-based and sits bottom right |
 | D56 | Experience page: five cards from `experienceItems`: Work (role, summary, tags), one Shipped card per project from the Work item's optional `shipped` JSON (`{ name, bullets[] }[]`, a JSON column in P4.2), and Learning. Carousel order is Learning → Work → Shipped…; from 1280 px it is a plain row of four (Work + 3 Shipped) and Learning moves last as a full-width band (CSS order), with no carousel; 640–1279 px is 2-up sliding 2, below 640 px 1-up with the next card peeking (same breakpoints as D52). `summary` is the long text and optional `summaryShort` the wide-layout text; each project keeps 5 bullets and the wide layout shows the first 3 (`xl:hidden` on the rest). This is the one deliberate exception to D52's nothing-hidden rule. The Work item's `bullets` are empty (the card renders bullets only when present); D40's no-milestones stands. |
 | D57 | Get In Touch page: statement (`contactHeadline`, `contactIntro` on `profile`, new columns), availability pill and Email / Resume buttons on the left; email, LinkedIn and GitHub link cards plus an info card (location and live local time via `LiveClock`, UTC offset derived with `Intl`) on the right; two columns from 1024 px, stacked below, no carousel; intro shows from 768 px; availability and location live here because the footer is hidden on phones (D19); the heading is an `<h2>` with id `heading-contact` (Overview owns the only `<h1>`); icons come from the typed `CONTACT_ICONS` map (lucide `Mail`, react-icons `FaLinkedin` / `FaGithub`) per D53; no form, no phone number (D8, D41, O7). |
+| D58 | Entrance choreography is CSS only, keyed off the active panel (`data-state="active"`), so it replays on every visit (no visited tracking); content waits 100 ms on first load and 300 ms after a page turn. Elements opt in with `data-reveal="<effect>"` through `reveal(effect, slot, options?)` in `lib/reveal.ts`; slots stagger by `--reveal-step` (capped at 8) and `--i-wide` reorders slots from 1280 px (Experience). Header and text are the same on every page (title mask-reveal, text fade, chips/pills/buttons rise); cards differ per page: Overview rise (portrait slow fade, featured cards rise 44 px one by one), Tech Stack from-left cascade, Projects from-right, Experience unfold, Get In Touch drop. Default timing 650 ms with a 55 ms step; Overview overrides it with `[data-section="overview"]` in globals.css (800 ms, 110 ms). Carousel slides keep `overflow-clip` so entrance transforms don't change the track's scroll size. After a Projects filter click the new cards cascade in with no wait. Reduced motion: no entrances. |
+| D59 | Card spotlight: every `GlassCard` carries `data-spotlight` unless `spotlight={false}`; one delegated `pointermove` listener (`components/ui/Spotlight.tsx`, mounted in the page) writes `--mx` / `--my` once per frame; the glow and a 1 px border sheen are `::before` / `::after` that fade in on hover, only on `(hover: hover) and (pointer: fine)` and not under reduced motion; the lift stays on `interactive` cards and cards inside carousels don't lift (D54). | |
 
 ### Open
 

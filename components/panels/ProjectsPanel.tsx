@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { Button, Carousel, SectionHeader } from "@/components/ui";
+import { ProjectCard } from "./";
 import { cn } from "@/lib/cn";
+import { reveal } from "@/lib/reveal";
 import { PROJECT_FILTERS } from "@/lib/projects/filters";
 import type { Project, ProjectFilter } from "@/types/projects";
-import ProjectCard from "./ProjectCard";
 
 interface ProjectsPanelProps {
   projects: Project[];
@@ -16,8 +17,9 @@ interface ProjectsPanelProps {
 //   ≥1280  3 cards, snap on cards 1, 4, 7…
 //   640+   2 cards, snap on cards 1, 3, 5…
 //   <640   1 card, snap on every card, next card peeking in
+// overflow-clip: an entrance transform must not count as track scroll size.
 const SLIDE =
-  "max-sm:basis-[calc(100%-2.5rem)] max-sm:snap-start sm:basis-[calc((100%-0.75rem)/2)] sm:max-xl:odd:snap-start xl:basis-[calc((100%-1.5rem)/3)] xl:nth-[3n+1]:snap-start";
+  "max-sm:basis-[calc(100%-2.5rem)] max-sm:snap-start sm:basis-[calc((100%-0.75rem)/2)] sm:max-xl:odd:snap-start xl:basis-[calc((100%-1.5rem)/3)] xl:nth-[3n+1]:snap-start overflow-clip";
 
 const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
   // Only filters that have projects, in the canonical order
@@ -27,6 +29,8 @@ const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
   const [active, setActive] = useState<ProjectFilter>(
     filters[0]?.id ?? "full-stack",
   );
+  // After the first filter click the cards render without an entrance
+  const [switched, setSwitched] = useState(false);
 
   const visible = projects.filter((project) => project.filter === active);
   const activeLabel =
@@ -46,6 +50,7 @@ const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
         <div
           role="group"
           aria-label="Filter projects"
+          {...reveal("rise", 2)}
           className="flex shrink-0 flex-wrap items-center gap-1.5 tier-regular:gap-2"
         >
           {filters.map((filter) => {
@@ -56,7 +61,10 @@ const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
                 variant={selected ? "primary" : "secondary"}
                 size="sm"
                 aria-pressed={selected}
-                onClick={() => setActive(filter.id)}
+                onClick={() => {
+                  setActive(filter.id);
+                  setSwitched(true);
+                }}
                 className={cn(
                   "gap-1.5 px-3 py-1 text-[11px] uppercase tier-regular:px-4 tier-regular:py-1.5 tier-regular:text-xs",
                   !selected && "font-medium",
@@ -84,8 +92,18 @@ const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
             slideClassName={SLIDE}
             controlsClassName="mt-2 h-8 justify-end tier-regular:mt-3 tier-regular:h-9"
           >
-            {visible.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
+            {visible.map((project, i) => (
+              <div
+                key={project.slug}
+                {...reveal(
+                  "from-right",
+                  switched ? i : 3 + i,
+                  switched ? { delay: "0ms" } : undefined,
+                )}
+                className="flex w-full"
+              >
+                <ProjectCard project={project} />
+              </div>
             ))}
           </Carousel>
         </div>
