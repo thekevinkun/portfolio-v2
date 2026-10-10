@@ -23,8 +23,8 @@ export const CardLabel = ({
   </div>
 );
 
-// compactCount: from 1280 px only the first N bullets show (the rest are
-// for the narrower, taller carousel cards)
+// compactCount: in the wide layout only the first N bullets show (the rest
+// are for the roomier carousel cards)
 export const BulletList = ({
   items,
   compactCount,
@@ -32,13 +32,13 @@ export const BulletList = ({
   items: string[];
   compactCount?: number;
 }) => (
-  <ul className="flex flex-col gap-1.5 tier-regular:gap-2">
+  <ul className="flex flex-col gap-1 tier-roomy:gap-2">
     {items.map((text, i) => (
       <li
         key={text}
         className={cn(
           "flex items-start gap-1.5 text-[11px] leading-snug text-fg-medium",
-          compactCount !== undefined && i >= compactCount && "xl:hidden",
+          compactCount !== undefined && i >= compactCount && "tier-wide:hidden",
         )}
       >
         <Check className="mt-0.5 size-3 shrink-0 text-fg-high" aria-hidden />
