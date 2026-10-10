@@ -11,7 +11,6 @@ export function createInitialState(index: number): StageState {
     phase: "idle",
     source: "initial",
     bounce: 0,
-    seen: [],
   };
 }
 
@@ -26,11 +25,6 @@ function moveTo(
   const index = Math.min(Math.max(target, 0), SECTION_COUNT - 1);
   if (index === state.index) return state;
 
-  // The page being left has had its entrance (D58)
-  const seen = state.seen.includes(state.index)
-    ? state.seen
-    : [...state.seen, state.index];
-
   return {
     index,
     from: state.index,
@@ -38,7 +32,6 @@ function moveTo(
     phase: "transitioning",
     source,
     bounce: 0,
-    seen,
   };
 }
 
