@@ -4,14 +4,40 @@
    Container queries can't read CSS variables, so the thresholds live only here.
    Base styles are the compact tier; tier-regular adds at 500px, tier-spacious
    at 640px. Keep tier-spacious declared after tier-regular so it wins. */
+
+/* Measured panel heights (the chrome is 257px on desktop: panel = viewport − 257):
+   1280×720 → 463 · 1366×768 / 1024×768 → 511 · 1536×791 → 534 · 1440×900 → 643.
+   snug (350): the Overview text column shows complete.
+   roomy (580): featured cards show their summary; Experience gets larger spacing.
+   Declaration order matters: snug < regular < roomy < spacious, later wins. */
+@custom-variant tier-snug {
+  @container (min-height: 350px) {
+    @slot;
+  }
+}
+
 @custom-variant tier-regular {
   @container (min-height: 500px) {
     @slot;
   }
 }
 
+@custom-variant tier-roomy {
+  @container (min-height: 580px) {
+    @slot;
+  }
+}
+
 @custom-variant tier-spacious {
   @container (min-height: 640px) {
+    @slot;
+  }
+}
+
+/* Experience's wide layout (row of cards + Learning band) needs both room
+   across and room down; anything smaller falls back to the carousel. */
+@custom-variant tier-wide {
+  @container (min-width: 80rem) and (min-height: 500px) {
     @slot;
   }
 }
