@@ -16,7 +16,7 @@ interface OverviewPanelProps {
 // so nothing scrolls. The hero row takes the leftover height, so the portrait
 // scales to the room the text and cards leave.
 // Entrance slots: text 0–3 (same as every page), chips/pills/button 4–6,
-// portrait 2, featured cards 5–7.
+// portrait 2 (slow fade), featured cards in their own slow one-by-one sequence.
 const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
   <div className="tier-container h-full">
     <div className="flex h-full flex-col gap-4 px-5 pt-3 pb-4 md:px-12 tier-regular:gap-6 tier-spacious:gap-7">
@@ -79,7 +79,7 @@ const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
 
         {profile.portraitUrl && (
           <div
-            {...reveal("settle", 2)}
+            {...reveal("appear", 2, { duration: "1600ms" })}
             className="relative hidden h-full min-h-0 lg:col-span-5 lg:block"
           >
             <div
@@ -102,7 +102,16 @@ const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
         className="hidden shrink-0 gap-4 md:grid md:min-h-[min(30cqh,12rem)] md:grid-cols-3"
       >
         {featured.map((project, i) => (
-          <div key={project.slug} {...reveal("rise", 5 + i)} className="grid">
+          <div
+            key={project.slug}
+            {...reveal("rise", i, {
+              offset: "850ms",
+              step: "220ms",
+              duration: "900ms",
+              distance: "44px",
+            })}
+            className="grid"
+          >
             <FeaturedProjectCard project={project} />
           </div>
         ))}

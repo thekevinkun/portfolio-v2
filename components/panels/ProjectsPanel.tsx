@@ -95,7 +95,11 @@ const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
             {visible.map((project, i) => (
               <div
                 key={project.slug}
-                {...(!switched && reveal("from-right", 3 + i))}
+                {...reveal(
+                  "from-right",
+                  switched ? i : 3 + i,
+                  switched ? { delay: "0ms" } : undefined,
+                )}
                 className="flex w-full"
               >
                 <ProjectCard project={project} />

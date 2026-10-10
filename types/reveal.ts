@@ -2,8 +2,8 @@
 export type RevealEffect =
   | "mask"
   | "fade"
+  | "appear"
   | "rise"
-  | "settle"
   | "from-left"
   | "from-right"
   | "drop"
