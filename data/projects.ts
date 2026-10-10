@@ -25,7 +25,7 @@ export const projects: Project[] = [
   },
   {
     slug: "padel-court",
-    title: "Padel Court Batu Alam Permai",
+    title: "Padel Batu Alam Permai",
     kicker: "BOOKING SYSTEM",
     summary:
       "Court booking platform with Midtrans payments and a real-time owner dashboard for revenue and usage.",

@@ -13,14 +13,17 @@ const TopBar = ({ profile }: TopBarProps) => {
           aria-hidden="true"
           className="size-2 animate-pulse rounded-full bg-accent shadow-dot-glow"
         />
-        <span className="font-bold tracking-widest text-fg-high uppercase">
-          {profile.name}
+        <span className="hidden font-bold tracking-widest text-fg-high sm:inline">
+          {profile.username}
         </span>
         <span aria-hidden="true" className="hidden text-fg-faint sm:inline">
           /
         </span>
         <span className="hidden text-[11px] tracking-widest text-fg-low uppercase sm:inline">
           Portfolio
+        </span>
+        <span className="inline font-bold tracking-widest text-fg-high sm:hidden">
+          {profile.availabilityShort}
         </span>
       </div>
 

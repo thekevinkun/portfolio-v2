@@ -6,10 +6,12 @@ export interface SocialLink {
 
 export interface Profile {
   name: string;
+  username: string;
   handle: string;
   locationLabel: string;
   timezone: string; // IANA id, e.g. "Asia/Jakarta"; drives the clock
   availability: string;
+  availabilityShort: string;
   avatarUrl: string | null;
   roleLabel: string;
   headline: string;

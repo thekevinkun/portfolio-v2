@@ -187,3 +187,4 @@ default branch -> pull -> new branch
 8. **State assumptions up front.** Each step starts with a short "Decisions (veto any)" table so the user can overrule before reading the code.
 9. **Review fixes are small commits on the same branch** (§8). If the user drops a cosmetic issue, log it under Known issues instead of experimenting further.
 10. **Every step ends with the next step.** When a chat ends, the handoff includes the next-chat prompt: attached files, the repo file list, the files to paste (the ones the next step builds on) and the goal.
+11. **Fit and layout work starts from measurements.** Before choosing density thresholds or breakpoints, ask for the numbers (the panel height at each QA viewport, from one console snippet) and the files, and show the arithmetic. Estimates are labeled as estimates and logged as known issues until measured.

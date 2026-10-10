@@ -46,7 +46,7 @@ const ProfileBadge = ({ profile }: ProfileBadgeProps) => {
             aria-hidden="true"
             className="size-1.5 animate-pulse rounded-full bg-accent"
           />
-          {profile.availability}
+          {profile.availabilityShort}
         </span>
       </div>
     </div>

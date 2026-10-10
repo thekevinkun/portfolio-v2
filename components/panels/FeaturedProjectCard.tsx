@@ -7,14 +7,17 @@ interface FeaturedProjectCardProps {
 
 const linkClass = "gap-1 px-2.5 py-0.5 text-[10px]";
 
-// One featured project on the Overview. Every tier shows kicker, links, title
-// and summary; the spacious tier adds the tech line.
+// One featured project on the Overview: kicker, links, logo, title and summary.
+// The card only exists from 500px of panel height (see OverviewPanel).
 const FeaturedProjectCard = ({ project }: FeaturedProjectCardProps) => {
   const live = project.links.find((link) => link.kind === "live");
   const repo = project.links.find((link) => link.kind === "repo");
 
   return (
-    <GlassCard interactive className="flex flex-col justify-between gap-3 p-5">
+    <GlassCard
+      interactive
+      className="flex min-w-0 flex-col justify-between gap-3 p-5"
+    >
       <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
         <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider text-fg-low uppercase">
           <span
@@ -65,10 +68,6 @@ const FeaturedProjectCard = ({ project }: FeaturedProjectCardProps) => {
           </p>
         </div>
       </div>
-
-      <p className="hidden truncate border-t border-glass-border pt-2 font-mono text-[10px] text-fg-medium tier-spacious:block">
-        {project.tech.slice(0, 4).join(" • ")}
-      </p>
     </GlassCard>
   );
 };
