@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P3 done; P4.1 next.**
+> Status: **P1–P3 done; P4.1 planned, P4.2 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -67,6 +67,7 @@ A personal portfolio for Kevin Mahendra (Kun) that feels like a console UI (PS5-
 | `sonner`                                               | Dashboard toasts                                        |
 | `react-icons` (Simple Icons set) + `lucide-react`      | Tech logos + UI icons; a small key→icon map (~40 icons) |
 | `@vercel/analytics` (optional)                         | Visitor counts                                          |
+| `tsx` (dev only)                                       | Runs `scripts/seed.ts` (D71)                            |
 
 ### Deliberately NOT used
 
@@ -162,18 +163,20 @@ Neon → Drizzle queries (parallel) → getStageData() → Stage (SSR, all 5 pan
 Dashboard save → server action → write → revalidatePath on the public routes
 ```
 
+Until P5, `export const revalidate = 3600` on the route refreshes the pages from Neon (D69).
+
 Every dashboard mutation: **auth check → Zod validate → write → revalidate.** No exceptions.
 
 ### 4.4 Data model (4 tables)
 
-| Table               | Contents                                                                                                                                                                                                               |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `profile` (one row) | name, headline, tagline/intro, role label, location label, timezone, email, availability text, avatar/portrait/resume URLs, socials (JSON array), SEO title/description, Overview chips (text array), focus areas (text array), Overview chips (text array), focus areas (text array) |
-| `skill_groups`      | index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible                                                                    |
-| `projects`          | slug, title, kicker label, summary, filter type (`full-stack`, `frontend`, `game`, `web3`, `systems`), **status** (live, in-progress, planned, completed), logo URL, tech tags (text array), **links** (JSON: kind, label, url), featured flag, sort, visible  |
-| `experience_items`  | kind (`work`, `freelance`, `education`, `milestone`), title, organization, start, end/present, summary, optional short summary, bullets (text array), **shipped** (JSON: project name + bullets), optional tags (text array), sort, visible                                                                            |
+| Table               | Contents                                                                                                                                                                                                                                  |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `profile` (one row, `id` fixed to 1) | name, username, handle, role label, headline, intro, contact headline + intro, location label, timezone, email, availability + short availability, avatar/portrait/resume URLs (nullable), socials (JSON: kind, label, url), Overview chips (text array), focus areas (text array), SEO title + description |
+| `skill_groups`      | slug (unique), index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible                                                                         |
+| `projects`          | slug (unique), title, kicker label, summary, filter type (enum: `full-stack`, `frontend`, `game`, `web3`, `systems`), **status** (enum: live, in-progress, planned, completed), logo URL, tech tags (text array), **links** (JSON: kind `live`/`repo`, label, url), featured flag, sort, visible |
+| `experience_items`  | slug (unique), kind (enum: `work`, `freelance`, `education`, `milestone`), title, organization, start/end (`YYYY-MM` text, end null = present), summary, optional short summary, bullets (text array), **shipped** (optional JSON: project name + bullets), tags (text array), sort, visible |
 
-Auth tables come from Auth.js.
+All list tables also carry a uuid `id`. Auth tables come from Auth.js.
 
 ### 4.5 Dashboard
 
@@ -256,7 +259,9 @@ portfolio/
 ├── components/  stage/ · panels/ · ui/ · chrome/ · dashboard/
 ├── lib/         db/ (schema, queries) · auth/ · stage/ · env.ts
 ├── types/       ← all shared types (never inline)
-├── validators/  ← Zod schemas
+├── validators/  ← Zod schemas (JSON columns, enums from types/)
+├── scripts/     ← seed.ts (run with tsx)
+├── drizzle/     ← generated SQL migrations
 └── docs/        ← CLAUDE.md, ROADMAP.md, PROGRESS.md
 ```
 
@@ -374,11 +379,24 @@ Goal: <one sentence>
 | D56 | Experience page: five cards from `experienceItems`: Work (role, summary, tags), one Shipped card per project from the Work item's optional `shipped` JSON (`{ name, bullets[] }[]`, a JSON column in P4.2), and Learning. Carousel order is Learning → Work → Shipped…; from 1280 px it is a plain row of four (Work + 3 Shipped) and Learning moves last as a full-width band (CSS order), with no carousel; 640–1279 px is 2-up sliding 2, below 640 px 1-up with the next card peeking (same breakpoints as D52). `summary` is the long text and optional `summaryShort` the wide-layout text; each project keeps 5 bullets and the wide layout shows the first 3 (`xl:hidden` on the rest). This is the one deliberate exception to D52's nothing-hidden rule. The Work item's `bullets` are empty (the card renders bullets only when present); D40's no-milestones stands. |
 | D57 | Get In Touch page: statement (`contactHeadline`, `contactIntro` on `profile`, new columns), availability pill and Email / Resume buttons on the left; email, LinkedIn and GitHub link cards plus an info card (location and live local time via `LiveClock`, UTC offset derived with `Intl`) on the right; two columns from 1024 px, stacked below, no carousel; intro shows from 768 px; availability and location live here because the footer is hidden on phones (D19); the heading is an `<h2>` with id `heading-contact` (Overview owns the only `<h1>`); icons come from the typed `CONTACT_ICONS` map (lucide `Mail`, react-icons `FaLinkedin` / `FaGithub`) per D53; no form, no phone number (D8, D41, O7). |
 | D58 | Entrance choreography is CSS only, keyed off the active panel (`data-state="active"`), so it replays on every visit (no visited tracking); content waits 100 ms on first load and 300 ms after a page turn. Elements opt in with `data-reveal="<effect>"` through `reveal(effect, slot, options?)` in `lib/reveal.ts`; slots stagger by `--reveal-step` (capped at 8) and `--i-wide` reorders slots from 1280 px (Experience). Header and text are the same on every page (title mask-reveal, text fade, chips/pills/buttons rise); cards differ per page: Overview rise (portrait slow fade, featured cards rise 44 px one by one), Tech Stack from-left cascade, Projects from-right, Experience unfold, Get In Touch drop. Default timing 650 ms with a 55 ms step; Overview overrides it with `[data-section="overview"]` in globals.css (800 ms, 110 ms). Carousel slides keep `overflow-clip` so entrance transforms don't change the track's scroll size. After a Projects filter click the new cards cascade in with no wait. Reduced motion: no entrances. |
-| D59 | Card spotlight: every `GlassCard` carries `data-spotlight` unless `spotlight={false}`; one delegated `pointermove` listener (`components/ui/Spotlight.tsx`, mounted in the page) writes `--mx` / `--my` once per frame; the glow and a 1 px border sheen are `::before` / `::after` that fade in on hover, only on `(hover: hover) and (pointer: fine)` and not under reduced motion; the lift stays on `interactive` cards and cards inside carousels don't lift (D54). | |
+| D59 | Card spotlight: every `GlassCard` carries `data-spotlight` unless `spotlight={false}`; one delegated `pointermove` listener (`components/ui/Spotlight.tsx`, mounted in the page) writes `--mx` / `--my` once per frame; the glow and a 1 px border sheen are `::before` / `::after` that fade in on hover, only on `(hover: hover) and (pointer: fine)` and not under reduced motion; the lift stays on `interactive` cards and cards inside carousels don't lift (D54). |
 | D60 | Density variants are measured, not estimated. Desktop chrome (top bar + dock + footer) is 257 px, so panel height = viewport height − 257 (1280×720 → 463, 1366×768 and 1024×768 → 511, 1536×791 → 534, 1440×900 → 643). Below 768 px the footer is hidden and the tab bar replaces it (D19), about 129 px of chrome (360×640 → 511). Variants in `app/globals.css`: `tier-snug` ≥ 350, `tier-regular` ≥ 500, `tier-roomy` ≥ 580, `tier-spacious` ≥ 640 (declare in this order; later wins), `tier-tight` < 580, `tier-pills` (≥ 580, or ≥ 350 on screens ≥ 1280 wide), `tier-wide` (≥ 1280 wide and ≥ 500 tall). These replace the provisional thresholds of D42 and D47. |
 | D61 | Overview fit: the text column (eyebrow, name, headline, intro, chips, button) is complete from `tier-snug` on tablet and desktop; the focus pills use `tier-pills`, so they hide only on screens narrower than 1280 px and shorter than 580 px (1024×768); the featured cards are always full (kicker, links, logo, title, two-line summary; no tech line) and show from 500 px of panel height and 768 px of width, below that Projects shows them (§5.3); between 500 and 580 px spacing is tighter (smaller gaps and button). Phones keep their own rules (intro and chips from 500, focus pills from 640). |
 | D62 | Experience picks its layout by width and height: the wide layout (a row of four with Learning as a full-width band) needs `tier-wide`; anything else is the Carousel (2-up from 640 px, 1-up below, order Learning → Work → Shipped). The summary and bullet variants of D56 key off the same variant (wide: short summary and 3 bullets per project; otherwise long summary and 5). The subtitle shows from 500 px like the other pages. On phones (below 640 px wide) shorter than 580 px the cards are trimmed (3 bullets, short summary, Learning tags hidden) instead of hiding the subtitle. This replaces the width-only 1280 px rule of D56 and the D52 breakpoints for this page. |
 | D63 | Vertical alignment by width: on phones (below 768 px) and from 1024 px a page's header stays on top and its content is centered in the space below; from 768 to 1023 px the header and content (on Overview the hero text and the cards) are one block centered in the panel (`my-auto`, which falls back to top-aligned if the block is too tall). Get In Touch is a single centered block at every size. |
+| D64 | Enum-like values have one source: `as const` tuples in `types/` (`PROJECT_FILTERS`, `PROJECT_STATUSES`, `PROJECT_LINK_KINDS`, `SKILL_STATUSES`, `SOCIAL_KINDS`, `EXPERIENCE_KINDS`, `TECH_ICON_KEYS`), with the union types derived from them; `pgEnum` and the Zod schemas in `validators/` read the same tuples, so the three cannot drift (D53's icon-key rule included) |
+| D65 | Keys and rows: `projects`, `skill_groups` and `experience_items` have a uuid `id` plus a unique `slug` (added to the `SkillGroup` and `ExperienceItem` types and data: `frontend`, `backend`, `data`, `ai-cloud`; `independent-full-stack`, `self-directed-learning`); `profile` is one row with integer `id` fixed to 1 by a CHECK; list tables carry `sort` (integer, default 0, no unique constraint so reorders can swap) and `visible` (boolean, default true); no timestamp columns until P5 needs them |
+| D66 | Column types: string lists are native `text[]` (`chips`, `focus_areas`, `highlights`, `tech`, `bullets`, `tags`); objects are `jsonb` typed with `$type<>` (`socials`, `items`, `links`, `shipped`); `project_filter`, `project_status` and `experience_kind` are Postgres enums; `icon_key` stays `text`, validated by Zod, so a new icon never needs a migration; dates stay `"YYYY-MM"` text (D45) with a CHECK on the format; the TypeScript field `filter` maps to the column `filter_type` |
+| D67 | `profile` gains `seoTitle` and `seoDescription` (site-wide defaults used in P4.5); per-section titles stay in `lib/stage/section-title.ts` as UI labels |
+| D68 | Read path: `lib/db/queries.ts` has one `cache()`-wrapped getter per table (the layout and the page share one query each) and `getStageData()` runs them in parallel; getters return only `visible` rows ordered by `sort`, strip `id`, map `null` to `undefined` for optional fields so the existing types and panels stay unchanged, and parse every JSON column with the Zod schemas; bad data or a missing `profile` row throws instead of rendering blank; server-only, no client component imports `lib/db` or `validators/` |
+| D69 | Until P5, freshness is time-based: `export const revalidate = 3600` on the route; a hand edit in Neon shows within an hour (the first visit after the window serves the old page and triggers the refresh) or after a redeploy; P5 adds `revalidatePath`; no webhook route |
+| D70 | Migrations: edit `lib/db/schema.ts`, `drizzle-kit generate`, review the SQL, `drizzle-kit migrate`; `drizzle/` is committed; npm scripts `db:generate`, `db:migrate`, `db:seed`; one Neon database serves local, preview and production during P4, so migrations stay additive while production reads it |
+| D71 | Seed: `scripts/seed.ts`, run with `tsx` (new dev dependency, approved here per R9; Node's native TypeScript stripping cannot resolve the `@/` alias); loads `.env.local` like `drizzle.config.ts`; validates the static data with the Zod schemas; inserts by `slug` and by default only adds missing rows, so re-running never overwrites dashboard edits; `--update` overwrites on purpose |
+| D72 | R3 guard: an ESLint `no-restricted-imports` rule blocks `@/data/*` everywhere except `scripts/` and `data/`; after P4.4 `data/` is seed input only |
+| D73 | O4 settled: English only at launch, no locale columns; adding a language later means a translation layer on all four tables and a locale route segment |
+| D74 | O5 settled for launch: `kevinmahendra.vercel.app`; the site URL comes from a `SITE_URL` env var validated in `lib/env.ts` and feeds canonical, sitemap and JSON-LD in P4.5; the custom domain question returns in P6.4 and needs no schema change |
+| D75 | `shipped[].name` is free text, not a reference to a project (v1); the P5.6 editor must say so |
+| D76 | Testnet projects (Chainkuns, DarkMint) keep status `live` (deployed and reachable); their summaries say they run on a testnet (R4); no new status value; the wording is applied in the P4.3 seed data |
 
 ### Open
 

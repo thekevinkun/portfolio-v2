@@ -83,13 +83,13 @@
 | Step | Task |
 |---|---|
 | P4.1 | Plan chat (no code): finalize the 4-table schema and JSON column shapes. |
-| P4.2 | Drizzle schema + migration (review SQL, apply to Neon). |
-| P4.3 | Seed script from the static data (idempotent). |
-| P4.4 | `getStageData()` queries; swap all panels to DB data; remove static seed from runtime imports. |
+| P4.2 | Types become `as const` tuples and gain `slug` fields (D64, D65); Drizzle schema, `db:*` scripts, migration (review SQL, apply to Neon). |
+| P4.3 | Zod schemas in `validators/`; `scripts/seed.ts` via `tsx`, idempotent (D71); fix the "aproduction" typo; add "testnet" to the Chainkuns and DarkMint summaries (D76). |
+| P4.4 | `getStageData()` queries (D68); swap all panels to DB data; `revalidate = 3600` (D69); ESLint guard on `@/data/*` (D72); remove static seed from runtime imports. |
 | P4.5 | SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD `Person`, OG image. |
 | P4.6 | **Launch checklist:** re-run content audit (R4), Lighthouse, deploy to production, update LinkedIn/GitHub/Upwork/CV links. |
 
-**Acceptance:** editing a row in Neon + revalidation updates the site; Lighthouse mobile ≥ 90; no hardcoded content left. **→ LAUNCH**
+**Acceptance:** editing a row in Neon updates the site after the revalidate window (D69) or a redeploy; Lighthouse mobile ≥ 90; no hardcoded content left. **→ LAUNCH**
 
 ---
 
