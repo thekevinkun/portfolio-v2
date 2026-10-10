@@ -23,8 +23,8 @@ export const CardLabel = ({
   </div>
 );
 
-// compactCount: in the wide layout only the first N bullets show (the rest
-// are for the roomier carousel cards)
+// compactCount: only the first N bullets show in the wide layout and on
+// phones shorter than 580px (the rest are for the roomier carousel cards)
 export const BulletList = ({
   items,
   compactCount,
@@ -32,13 +32,15 @@ export const BulletList = ({
   items: string[];
   compactCount?: number;
 }) => (
-  <ul className="flex flex-col gap-1 tier-roomy:gap-2">
+  <ul className="flex flex-col gap-1.5 tier-roomy:gap-2">
     {items.map((text, i) => (
       <li
         key={text}
         className={cn(
-          "flex items-start gap-1.5 text-[11px] leading-snug text-fg-medium",
-          compactCount !== undefined && i >= compactCount && "tier-wide:hidden",
+          "flex items-start gap-1.5 text-[11px] lg:text-[11.5px] leading-snug text-fg-medium",
+          compactCount !== undefined &&
+            i >= compactCount &&
+            "tier-wide:hidden max-sm:tier-tight:hidden",
         )}
       >
         <Check className="mt-0.5 size-3 shrink-0 text-fg-high" aria-hidden />
@@ -48,8 +50,14 @@ export const BulletList = ({
   </ul>
 );
 
-export const TagList = ({ tags }: { tags: string[] }) => (
-  <ul className="flex flex-wrap gap-1">
+export const TagList = ({
+  tags,
+  className,
+}: {
+  tags: string[];
+  className?: string;
+}) => (
+  <ul className={cn("flex flex-wrap gap-1", className)}>
     {tags.map((tag) => (
       <li
         key={tag}

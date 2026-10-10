@@ -71,26 +71,31 @@ const ExperiencePanel = ({ items }: ExperiencePanelProps) => {
     </div>
   ));
 
+  // Below 1024px the header and the cards are one group centered in the panel
+  // (my-auto, which falls back to top-aligned if the group is too tall); from
+  // 1024px the group fills the panel: header on top, cards centered below.
   return (
     <div className="tier-container h-full">
-      <div className="flex h-full flex-col gap-2 px-5 pt-2 pb-3 md:px-12 tier-roomy:gap-4 tier-roomy:pb-4">
-        <SectionHeader
-          title="Experience"
-          subtitle="Independent work and self-directed study, with what I did on each project."
-          subtitleClassName="hidden tier-subtitle:block"
-          titleId="heading-experience"
-          className="shrink-0"
-        />
+      <div className="flex h-full flex-col px-5 pt-2 pb-3 md:px-12 tier-roomy:pb-4">
+        <div className="flex flex-col gap-2 max-lg:my-auto lg:min-h-0 lg:flex-1 tier-roomy:gap-4">
+          <SectionHeader
+            title="Experience"
+            subtitle="Independent work and self-directed study, with what I did on each project."
+            subtitleClassName="hidden tier-regular:block"
+            titleId="heading-experience"
+            className="shrink-0"
+          />
 
-        <div className="flex min-h-0 flex-1 flex-col justify-center md:max-lg:justify-start">
-          <Carousel
-            label="Experience"
-            className="gap-3 tier-wide:flex-wrap tier-wide:overflow-visible"
-            slideClassName={SLIDE}
-            controlsClassName="mt-2 h-8 tier-regular:mt-3 tier-regular:h-9 tier-wide:hidden"
-          >
-            {cards}
-          </Carousel>
+          <div className="flex min-h-0 flex-1 flex-col justify-center">
+            <Carousel
+              label="Experience"
+              className="gap-3 tier-wide:flex-wrap tier-wide:overflow-visible"
+              slideClassName={SLIDE}
+              controlsClassName="mt-2 h-8 tier-regular:mt-3 tier-regular:h-9 tier-wide:hidden"
+            >
+              {cards}
+            </Carousel>
+          </div>
         </div>
       </div>
     </div>
