@@ -21,8 +21,6 @@ const StatusFooter = ({ profile }: StatusFooterProps) => {
         {profile.availability}
       </div>
 
-      <span className="hidden lg:inline">Hosted on Vercel</span>
-
       <div className="flex items-center gap-3">
         <span>{profile.locationLabel}</span>
         <span aria-hidden="true" className="text-fg-faint">

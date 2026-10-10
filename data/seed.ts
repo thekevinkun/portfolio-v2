@@ -3,10 +3,12 @@ import type { Profile } from "@/types/profile";
 // Mirrors the future `profile` table (P4).
 export const profile: Profile = {
   name: "Kevin Mahendra",
+  username: "thekevinkun",
   handle: "kevinmahendra",
   locationLabel: "Samarinda, Indonesia",
   timezone: "Asia/Makassar",
   availability: "Open to freelance & full-time",
+  availabilityShort: "Open to work",
   avatarUrl: "/placeholder/avatar.svg",
   roleLabel: "Full Stack Developer",
   headline: "Building real-world web applications from end to end",
