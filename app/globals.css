@@ -107,10 +107,11 @@
   /* Dock ring: the arrival ping waits for the glide to land */
   --dock-ring-ping-delay: 200ms;
 
-  /* Entrance choreography (P3.8): duration is --duration-enter */
-  --reveal-step: 40ms;
+  /* Entrance choreography (P3.8) */
+  --reveal-duration: 650ms;
+  --reveal-step: 55ms;
   --reveal-delay-load: 100ms;
-  --reveal-delay-turn: 280ms;
+  --reveal-delay-turn: 300ms;
   --reveal-distance: 12px;
   --reveal-distance-x: 24px;
 
@@ -311,10 +312,12 @@ body {
   mask-composite: intersect;
 }
 
-/* Entrance choreography (P3.8, D58). An element with data-reveal animates once,
-   when its panel becomes the active page for the first time (no data-seen).
-   Keyframes only define `from`: the end state is the element's own style, and
-   fill-mode "backwards" leaves nothing behind afterwards. */
+/* Entrance choreography (P3.8, D58). An element with data-reveal animates every
+   time its panel becomes the active page. Keyframes only define `from`: the end
+   state is the element's own style, and fill-mode "backwards" leaves nothing
+   behind afterwards. Per-element knobs are set inline by lib/reveal.ts:
+   --i slot, --i-wide slot from 1280px, --reveal-offset extra wait,
+   --reveal-step, --reveal-duration, --reveal-distance, --reveal-delay. */
 [data-reveal] {
   --reveal-index: var(--i, 0);
 }
@@ -326,17 +329,27 @@ body {
   }
 }
 
+/* Overview is the landing page: slower and more cinematic than the rest */
+[data-stage-panel][data-section="overview"] {
+  --reveal-duration: 800ms;
+  --reveal-step: 110ms;
+  --reveal-delay-load: 250ms;
+  --reveal-distance: 16px;
+}
+
 [data-reveal="mask"] {
   --reveal-name: reveal-mask;
 }
 [data-reveal="fade"] {
   --reveal-name: reveal-fade;
 }
+/* A slow, soft fade for large images */
+[data-reveal="appear"] {
+  --reveal-name: reveal-fade;
+  --reveal-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
 [data-reveal="rise"] {
   --reveal-name: reveal-rise;
-}
-[data-reveal="settle"] {
-  --reveal-name: reveal-settle;
 }
 [data-reveal="from-left"] {
   --reveal-name: reveal-from-left;
@@ -361,13 +374,14 @@ body {
     --reveal-delay: var(--reveal-delay-turn);
   }
 
-  [data-stage-panel][data-state="active"]:not([data-seen]) [data-reveal] {
+  [data-stage-panel][data-state="active"] [data-reveal] {
     animation-name: var(--reveal-name);
-    animation-duration: var(--duration-enter);
-    animation-timing-function: var(--ease-out-expo);
+    animation-duration: var(--reveal-duration);
+    animation-timing-function: var(--reveal-ease, var(--ease-out-expo));
     animation-fill-mode: backwards;
     animation-delay: calc(
-      var(--reveal-delay) + min(var(--reveal-index), 7) * var(--reveal-step)
+      var(--reveal-delay) + var(--reveal-offset, 0ms) +
+        min(var(--reveal-index), 7) * var(--reveal-step)
     );
   }
 }
@@ -386,12 +400,6 @@ body {
   from {
     opacity: 0;
     transform: translate3d(0, var(--reveal-distance), 0);
-  }
-}
-@keyframes reveal-settle {
-  from {
-    opacity: 0;
-    transform: scale(1.04);
   }
 }
 @keyframes reveal-from-left {
