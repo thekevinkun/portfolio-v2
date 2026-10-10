@@ -42,10 +42,19 @@
   }
 }
 
-/* Experience subtitle: from 500px tall, except in the wide layout, which
-   needs 580px first (its row of cards plus the Learning band is tall). */
-@custom-variant tier-subtitle {
-  @container (min-height: 580px) or ((min-height: 500px) and (width < 80rem)) {
+/* Short panels: under 580px tall (phones, small laptops). Trims the
+   Experience cards on phones. */
+@custom-variant tier-tight {
+  @container (max-height: 579px) {
+    @slot;
+  }
+}
+
+/* Overview focus pills: from 580px tall, or from 350px when the screen is
+   1280px wide or more (a 1024px-wide text column is too narrow for them). */
+@custom-variant tier-pills {
+  @container (min-height: 580px) or
+    ((min-height: 350px) and (min-width: 80rem)) {
     @slot;
   }
 }
