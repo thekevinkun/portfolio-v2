@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { ButtonLink, Chip, Pill } from "@/components/ui";
-import { FeaturedProjectCard } from "./";
 import { reveal } from "@/lib/reveal";
 import type { Profile } from "@/types/profile";
 import type { Project } from "@/types/projects";
+import FeaturedProjectCard from "./FeaturedProjectCard";
 
 interface OverviewPanelProps {
   profile: Profile;
@@ -11,18 +11,20 @@ interface OverviewPanelProps {
 }
 
 // Density (panel height): the text column is complete from tier-snug (350px)
-// up on tablet and desktop, with tighter sizes below 500. Phones keep their
-// own rules (intro and chips from 500, focus areas from 640). The featured
-// cards are compact (no summary) from 500, show the summary from 580 and the
-// tech line from 640; below 500 or below 768 wide they are hidden (Projects
-// shows them). The hero row takes the leftover height.
+// up on tablet and desktop. The featured cards (always full: kicker, links,
+// title, summary) show from tier-regular (500px) and from 768px wide; below
+// that Projects shows them. Between 500 and 580 spacing is tighter (smaller
+// gaps and button) so text and cards both fit; from 580 it is the roomy
+// layout, from 640 the spacious one. Phones keep their own rules (intro and
+// chips from 500, focus areas from 640). The hero row takes the leftover
+// height.
 // Entrance slots: text 0–3 (same as every page), chips/pills/button 4–6,
 // portrait 2 (slow fade), featured cards in their own slow one-by-one sequence.
 const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
   <div className="tier-container h-full">
-    <div className="flex h-full flex-col gap-4 px-5 pt-3 pb-4 md:px-12 tier-regular:gap-6 tier-spacious:gap-7">
+    <div className="flex h-full flex-col gap-4 px-5 pt-3 pb-4 md:px-12 tier-roomy:gap-6 tier-spacious:gap-7">
       <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] items-center gap-8 lg:grid-cols-12">
-        <div className="flex flex-col gap-2 lg:col-span-7 tier-regular:gap-3 tier-spacious:gap-4">
+        <div className="flex flex-col gap-2 lg:col-span-7 tier-roomy:gap-3 tier-spacious:gap-4">
           <p
             {...reveal("fade", 0)}
             className="font-mono text-[11px] tracking-widest text-fg-low uppercase"
@@ -74,7 +76,7 @@ const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
               <ButtonLink
                 href={profile.resumeUrl}
                 download
-                className="py-2.5 tier-regular:py-3.5"
+                className="py-2.5 tier-roomy:py-3.5"
               >
                 Download Resume ↗
               </ButtonLink>
