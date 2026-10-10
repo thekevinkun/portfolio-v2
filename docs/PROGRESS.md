@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-10
-**Current phase / step:** P3.9
+**Current phase / step:** P4.1
 **Mode default:** Build
 
 ---
@@ -25,15 +25,12 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [x] P3.1 Design chat: Experience + Get In Touch layouts, settle O1–O3 and O6, density tiers
-- [x] P3.2 Typed static data + data/seed.ts for the 4 tables
-- [x] P3.3 Overview
-- [x] P3.4 Tech Stack
-- [x] P3.5 Projects
-- [x] P3.6 Experience
-- [x] P3.7 Get In Touch
-- [x] P3.8 Entrance choreography + card spotlight
-- [ ] P3.9 Fit QA at all 8 viewports
+- [ ] P4.1 Plan chat (no code): finalize the 4-table schema and JSON column shapes
+- [ ] P4.2 Drizzle schema + migration (review SQL, apply to Neon)
+- [ ] P4.3 Seed script from the static data (idempotent)
+- [ ] P4.4 `getStageData()` queries; swap all panels to DB data; remove static seed from runtime imports
+- [ ] P4.5 SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD `Person`, OG image
+- [ ] P4.6 Launch checklist: re-run content audit (R4), Lighthouse, deploy to production, update LinkedIn/GitHub/Upwork/CV links
 
 ---
 
@@ -52,7 +49,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D44–D46: see CLAUDE.md §10.
 - D47–D50: see CLAUDE.md §10.
 - D51–D53: see CLAUDE.md §10.
-- D54–D59: see CLAUDE.md §10.
+- D54–D63: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -67,31 +64,29 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - TabBar indicator does not glide (static)
 - Heading focus and the live region can both speak (double announce); full screen-reader pass in P6.3
 - Canonical, sitemap and descriptions wait for P4.5 (domain, O5)
-- Tier thresholds (500 / 640 px panel height) are estimates; 1280×720 may keep the intro; tune in P3.9
 - Top-bar badge still uses the placeholder avatar SVG, not the portrait
-- Overview chips and focus areas are new profile columns; add them in the P4.2 schema
 - Firefox only: a brief white outline flashes around a dock tile while it scales on hover (cosmetic, left unresolved; Chrome is fine)
 - Chainkuns / DarkMint marked `live`: confirm testnet vs mainnet before launch (R4)
-- Tech Stack header copy and bottom strip in the reference HTML contain unsupported claims; rewrite in P3.4
 - Tech Stack highlights are written for ~280 px cards (≤ ~38 characters); longer text would truncate with "…"
-- Tech Stack at 360×640 is the tightest fit (subtitle hidden, compact spacing); recheck in P3.9
 - Web3, C/C++ and Git no longer appear on the Tech Stack page (strip removed); Projects filters cover Web3 and C/C++
 - Carousel: a swipe that starts on the cards can't turn the page and stops at the last card; the header, controls row, dock and tab bar still turn pages (add edge hand-off only if testing shows people getting stuck)
 - OpenAI, AWS and pgvector use generic lucide icons, not brand logos
 - Projects: at 3-up the last page can repeat cards (Full Stack has 5, so page 2 shows cards 3–5)
 - Projects: filter reflow animation (auto-animate) and rolling counter digits (number-flow) wait for P6.1
-- Experience: the slide classes target the Learning card by its position, so they assume one Work item and one Learning item; revisit if the dashboard allows several (P5.6)
-- Experience: on wide screens Learning is moved last with CSS order, so reading order differs from visual order there (the cards have no links, so tab order is unaffected)
-- Experience: the long Work summary and Shipped bullets 4–5 are hidden at ≥1280 px by design (D56); the P5.6 editor must keep the three core bullets first
-- Experience: `shipped` and `summaryShort` are new `experience_items` columns; add them in the P4.2 schema
+- Projects: after a filter click, later visits to Projects start their cards with no wait instead of waiting for the page slide
+- New columns for the P4.2 schema and the P5 editors: `profile` gets `chips`, `focusAreas`, `contactHeadline`, `contactIntro`; `experience_items` gets `summaryShort`, `shipped` (JSON) and `tags`
+- The CLAUDE.md §4.4 `profile` row has a duplicated phrase ("Overview chips … focus areas" twice); fix it in P4.1
+- Experience: slide classes target the Learning card by position (`nth-1`), so they assume one Learning item before the Work items; revisit if the dashboard allows several (P5.6)
+- Experience: in the wide layout Learning is moved last with CSS order, so reading order differs from visual order there (the cards have no links, so tab order is unaffected)
+- Experience: the long Work summary and Shipped bullets 4–5 show only outside the wide layout (D62); on phones shorter than 580 px the trimmed cards also hide Learning tags; the P5.6 editor must keep the three core bullets first
 - Experience at 2-up: the last carousel page holds a single card (Bookshop)
-- Get In Touch: `contactHeadline` and `contactIntro` are new `profile` columns; add them in the P4.2 schema and the P5.3 editor
+- Experience at 1366×768 (panel 511) is the tightest wide layout; if the Learning band ever touches the footer, hide its tag chips in that range with a dedicated variant
+- Experience: `--i-wide` (entrance order) follows viewport width ≥ 1280 px, while the wide layout also needs 500 px of height, so a wide but short window shows the carousel animating in wide order (harmless)
 - Get In Touch: the UTC offset label is computed at build time (fine for Asia/Makassar, no DST); revisit if the timezone becomes editable in P5.3
-- Get In Touch at 360×640 is the tightest fit (intro hidden, compact spacing); recheck in P3.9
 - Entrance timing is tuned by feel: default 650 ms / 55 ms step / 300 ms wait after a turn (`:root` in globals.css); Overview 800 ms / 110 ms (`[data-section="overview"]`), featured cards offset 850 ms / step 220 ms / 900 ms, portrait 1600 ms (OverviewPanel.tsx)
 - Carousel slides must keep `overflow-clip`: animated cards would otherwise change the track's scroll size and break Carousel's page measurement and the wheel guard
-- Projects: after a filter click, later visits to Projects start their cards with no wait instead of waiting for the page slide
 - Spotlight border sheen uses `mask-composite`; spot-check Safari and Firefox in P6.2, and check entrances plus spotlight at 4× CPU throttle there
+- Density thresholds (D60) were measured on the eight QA viewports plus one 1536×791 laptop window; if a real device shows a problem, tune the variants in `app/globals.css`
 
 ---
 
@@ -117,23 +112,23 @@ Prompt for the next chat:
 
 ## Handoff log
 
-### Handoff — 2026-10-10 — P3.8
+### Handoff — 2026-10-10 — P3.8–P3.9 (P3 closed)
 Done:
-- Entrance choreography on all five pages: header and text identical everywhere (title mask-reveal, text fade, chips/pills/buttons rise), a different card effect per page, replayed on every visit
-- Overview timed slower and more cinematic: slow portrait fade, featured cards rise one by one
+- Entrance choreography on all five pages: header and text identical everywhere, a different card effect per page, replayed on every visit; Overview slower and more cinematic
 - Card spotlight (glow + border sheen) on mouse devices for every GlassCard
+- Fit QA: measured density variants, footer hidden below 768 px, Overview text column and full featured cards on laptop heights, Experience layout by width and height, tablet vertical centering; every page fits all eight QA viewports
 Files created/changed:
-- types/reveal.ts; lib/reveal.ts; app/globals.css; components/stage/StagePanel.tsx; components/ui/{SectionHeader,GlassCard,Spotlight,index}; components/panels/{OverviewPanel,TechStackPanel,ProjectsPanel,ExperiencePanel,ContactPanel}; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md)
+- types/reveal.ts; lib/reveal.ts; app/globals.css; components/stage/StagePanel.tsx; components/chrome/StatusFooter.tsx; components/ui/{SectionHeader,GlassCard,Spotlight,index}; components/panels/{OverviewPanel,TechStackPanel,ProjectsPanel,ExperiencePanel,ContactPanel,FeaturedProjectCard,ExperienceParts,ExperienceRoleCard,ExperienceShippedCard,ExperienceLearningCard}; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md, WORKFLOW.md)
 Decisions:
-- D58 entrance choreography (CSS only, replay on every visit, per-page card effects, Overview timing) · D59 card spotlight
+- D58 entrances · D59 spotlight · D60 measured density variants and footer · D61 Overview fit · D62 Experience layout by width and height · D63 vertical alignment by width
 Verified (viewports / devices):
-- Verify list run by Kun and confirmed good
+- Fit table run by Kun at 1920×1080, 1440×900, 1366×768, 1280×720, 1024×768, 768×1024, 390×844 and 360×640, plus a 1536×791 laptop window; every page confirmed good after the fixes
 Known issues:
-- See Known issues above (timing knobs, overflow-clip on carousel slides, Projects filter quirk, spotlight browser/perf checks)
+- See Known issues above (new schema columns, entrance timing knobs, overflow-clip on carousel slides, tightest Experience fit)
 Next step (ID + one-line goal):
-- P3.9 — Fit QA at all 8 viewports; fix overflow with density tiers
+- P4.1 — Plan chat (no code): finalize the 4-table schema and JSON column shapes
 Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: app/globals.css, components/ui/Carousel.tsx, components/panels/OverviewPanel.tsx, components/panels/TechStackPanel.tsx, components/panels/ProjectsPanel.tsx, components/panels/ExperiencePanel.tsx, components/panels/ContactPanel.tsx. Phase: P3. Step: P3.9. Mode: Build. Follow WORKFLOW.md §11. Goal: Fit QA. Here is my table of which page overflows or looks cramped at which of the 8 viewports: <table>. Fix each problem with density tiers (tuning the 500 / 640 px tier thresholds if needed) in small commits, hiding only decorative content, and stop at the verify command for my approval.
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P4 section of ROADMAP.md, types/profile.ts, types/projects.ts, types/skills.ts, types/experience.ts, data/seed.ts, data/projects.ts, data/skill-groups.ts, data/experience.ts, lib/db/schema.ts, lib/db/index.ts, drizzle.config.ts, lib/env.ts. Phase: P4 — Neon data. Step: P4.1. Mode: Build, but this is a plan chat (ROADMAP P4.1): no code. Follow WORKFLOW.md §11. Goal: Finalize the 4-table schema and the JSON column shapes (profile, skill_groups, projects, experience_items) from the static data types, including the new columns logged in Known issues, settle O4 (bilingual) and O5 (domain) or accept their defaults, then give me the decision table and the exact docs edits (CLAUDE.md §4.4 and §10, PROGRESS.md) and stop for my approval.
 
 ### Handoff — 2026-10-09 — P3.7
 Done:

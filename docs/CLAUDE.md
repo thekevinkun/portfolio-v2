@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P2 done; P3.1–P3.8 done; P3.9 next.**
+> Status: **P1–P3 done; P4.1 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -210,7 +210,7 @@ obsidian / charcoal backgrounds · glass surface + border · text high/medium/lo
 ### 5.3 Fit-to-screen (how R1 works)
 
 - `dvh`, `clamp()`, `min()` — no fixed pixel section heights.
-- **Density tiers** by viewport height: _spacious_ (≥ ~900 px) full content · _regular_ (~720–900) tighter · _compact_ (< ~720) hide secondary details (e.g. Tech Stack check-lists).
+- **Density tiers** by the panel's own height (measured, D60): `tier-snug` ≥ 350 · `tier-regular` ≥ 500 · `tier-roomy` ≥ 580 · `tier-spacious` ≥ 640 px; base styles are the compact tier. On desktop the panel height is the viewport height − 257 px. Combined variants `tier-tight`, `tier-pills` and `tier-wide` are defined in D60.
 - QA viewports: 1920×1080, 1440×900, 1366×768, 1280×720, 1024×768, 768×1024, 390×844, 360×640.
 - The reference screenshots are ~4:3 and leave dead vertical space; balance content for 16:9 / 16:10.
 - **Phones:** same swipe paging, dock becomes a bottom glass tab bar, pages designed compact. Every page fits. When a set of cards can't fit, use a horizontal carousel (full cards, arrows and page dots, next card peeking at 1-up) instead of hiding card content; hide only decorative or duplicated content (e.g. the Overview featured cards, which Projects shows). Inner vertical scroll is a last resort. A carousel is the one gesture exception (`data-stage-swipe-ignore`). Only if a page still can't fit does its **inner content scroll** (hidden scrollbar, with a scroll hint), and only as a last resort. The one gesture exception is a horizontal carousel (data-stage-swipe-ignore).
@@ -292,7 +292,7 @@ portfolio/
 Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
 Also pasted: <the files this step builds on, listed in the previous handoff>
-Phase: P3 — Five pages. Step: P3.9.
+Phase: P4 — Neon data. Step: P4.1.
 Mode: Build. Follow WORKFLOW.md §11.
 Goal: <one sentence>
 ```
@@ -375,6 +375,10 @@ Goal: <one sentence>
 | D57 | Get In Touch page: statement (`contactHeadline`, `contactIntro` on `profile`, new columns), availability pill and Email / Resume buttons on the left; email, LinkedIn and GitHub link cards plus an info card (location and live local time via `LiveClock`, UTC offset derived with `Intl`) on the right; two columns from 1024 px, stacked below, no carousel; intro shows from 768 px; availability and location live here because the footer is hidden on phones (D19); the heading is an `<h2>` with id `heading-contact` (Overview owns the only `<h1>`); icons come from the typed `CONTACT_ICONS` map (lucide `Mail`, react-icons `FaLinkedin` / `FaGithub`) per D53; no form, no phone number (D8, D41, O7). |
 | D58 | Entrance choreography is CSS only, keyed off the active panel (`data-state="active"`), so it replays on every visit (no visited tracking); content waits 100 ms on first load and 300 ms after a page turn. Elements opt in with `data-reveal="<effect>"` through `reveal(effect, slot, options?)` in `lib/reveal.ts`; slots stagger by `--reveal-step` (capped at 8) and `--i-wide` reorders slots from 1280 px (Experience). Header and text are the same on every page (title mask-reveal, text fade, chips/pills/buttons rise); cards differ per page: Overview rise (portrait slow fade, featured cards rise 44 px one by one), Tech Stack from-left cascade, Projects from-right, Experience unfold, Get In Touch drop. Default timing 650 ms with a 55 ms step; Overview overrides it with `[data-section="overview"]` in globals.css (800 ms, 110 ms). Carousel slides keep `overflow-clip` so entrance transforms don't change the track's scroll size. After a Projects filter click the new cards cascade in with no wait. Reduced motion: no entrances. |
 | D59 | Card spotlight: every `GlassCard` carries `data-spotlight` unless `spotlight={false}`; one delegated `pointermove` listener (`components/ui/Spotlight.tsx`, mounted in the page) writes `--mx` / `--my` once per frame; the glow and a 1 px border sheen are `::before` / `::after` that fade in on hover, only on `(hover: hover) and (pointer: fine)` and not under reduced motion; the lift stays on `interactive` cards and cards inside carousels don't lift (D54). | |
+| D60 | Density variants are measured, not estimated. Desktop chrome (top bar + dock + footer) is 257 px, so panel height = viewport height − 257 (1280×720 → 463, 1366×768 and 1024×768 → 511, 1536×791 → 534, 1440×900 → 643). Below 768 px the footer is hidden and the tab bar replaces it (D19), about 129 px of chrome (360×640 → 511). Variants in `app/globals.css`: `tier-snug` ≥ 350, `tier-regular` ≥ 500, `tier-roomy` ≥ 580, `tier-spacious` ≥ 640 (declare in this order; later wins), `tier-tight` < 580, `tier-pills` (≥ 580, or ≥ 350 on screens ≥ 1280 wide), `tier-wide` (≥ 1280 wide and ≥ 500 tall). These replace the provisional thresholds of D42 and D47. |
+| D61 | Overview fit: the text column (eyebrow, name, headline, intro, chips, button) is complete from `tier-snug` on tablet and desktop; the focus pills use `tier-pills`, so they hide only on screens narrower than 1280 px and shorter than 580 px (1024×768); the featured cards are always full (kicker, links, logo, title, two-line summary; no tech line) and show from 500 px of panel height and 768 px of width, below that Projects shows them (§5.3); between 500 and 580 px spacing is tighter (smaller gaps and button). Phones keep their own rules (intro and chips from 500, focus pills from 640). |
+| D62 | Experience picks its layout by width and height: the wide layout (a row of four with Learning as a full-width band) needs `tier-wide`; anything else is the Carousel (2-up from 640 px, 1-up below, order Learning → Work → Shipped). The summary and bullet variants of D56 key off the same variant (wide: short summary and 3 bullets per project; otherwise long summary and 5). The subtitle shows from 500 px like the other pages. On phones (below 640 px wide) shorter than 580 px the cards are trimmed (3 bullets, short summary, Learning tags hidden) instead of hiding the subtitle. This replaces the width-only 1280 px rule of D56 and the D52 breakpoints for this page. |
+| D63 | Vertical alignment by width: on phones (below 768 px) and from 1024 px a page's header stays on top and its content is centered in the space below; from 768 to 1023 px the header and content (on Overview the hero text and the cards) are one block centered in the panel (`my-auto`, which falls back to top-aligned if the block is too tall). Get In Touch is a single centered block at every size. |
 
 ### Open
 
