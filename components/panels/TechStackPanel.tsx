@@ -27,7 +27,7 @@ const TechStackPanel = ({ groups }: TechStackPanelProps) => (
         className="shrink-0"
       />
 
-      <div className="flex min-h-0 flex-1 flex-col justify-center">
+      <div className="flex min-h-0 flex-1 flex-col justify-center md:max-lg:justify-start">
         <Carousel
           label="Tech stack by layer"
           className="gap-3"

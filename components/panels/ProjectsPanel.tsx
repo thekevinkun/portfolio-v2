@@ -82,7 +82,7 @@ const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
           })}
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col justify-center">
+        <div className="flex min-h-0 flex-1 flex-col justify-center md:max-lg:justify-start">
           {/* key: a new filter starts again from the first page */}
           <Carousel
             key={active}
