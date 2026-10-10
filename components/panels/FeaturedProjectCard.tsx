@@ -14,7 +14,10 @@ const FeaturedProjectCard = ({ project }: FeaturedProjectCardProps) => {
   const repo = project.links.find((link) => link.kind === "repo");
 
   return (
-    <GlassCard interactive className="flex flex-col justify-between gap-3 p-5">
+    <GlassCard
+      interactive
+      className="flex min-w-0 flex-col justify-between gap-3 p-4 tier-roomy:p-5"
+    >
       <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
         <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-wider text-fg-low uppercase">
           <span
@@ -60,7 +63,7 @@ const FeaturedProjectCard = ({ project }: FeaturedProjectCardProps) => {
           <h2 className="text-base font-bold tracking-tight text-fg-high">
             {project.title}
           </h2>
-          <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-fg-low">
+          <p className="mt-0.5 hidden text-xs leading-relaxed text-fg-low tier-roomy:line-clamp-2">
             {project.summary}
           </p>
         </div>
