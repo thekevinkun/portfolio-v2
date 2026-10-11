@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-10
-**Current phase / step:** P4.2
+**Last updated:** 2026-10-11
+**Current phase / step:** P4.3
 **Mode default:** Build
 
 ---
@@ -15,7 +15,7 @@
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
-| P4    | Neon data → LAUNCH       | 🟦 in progress | P4.1 planned; launch gate                   |
+| P4    | Neon data → LAUNCH       | 🟦 in progress | P4.1–P4.2 done; launch gate                 |
 | P5    | Dashboard                | ⬜ Not started |                                             |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 
@@ -26,8 +26,8 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Current phase checklist
 
 - [x] P4.1 Plan chat (no code): finalize the 4-table schema and JSON column shapes
-- [ ] P4.2 Drizzle schema + migration (review SQL, apply to Neon)
-- [ ] P4.3 Zod schemas; `scripts/seed.ts` via `tsx`, idempotent; fix "aproduction" typo; testnet wording for Chainkuns/DarkMint (D76)
+- [x] P4.2 Types as `as const` tuples + `slug` fields; Drizzle schema, `db:*` scripts, migration applied to Neon
+- [ ] P4.3 Zod schemas; `scripts/seed.ts` via `tsx`, idempotent; testnet wording for Chainkuns/DarkMint (D76)
 - [ ] P4.4 `getStageData()` queries; swap all panels to DB data; remove static seed from runtime imports
 - [ ] P4.5 SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD `Person`, OG image
 - [ ] P4.6 Launch checklist: re-run content audit (R4), Lighthouse, deploy to production, update LinkedIn/GitHub/Upwork/CV links
@@ -50,7 +50,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D47–D50: see CLAUDE.md §10.
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
-- D64–D75: see CLAUDE.md §10.
+- D64–D77: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -112,6 +112,24 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-11 — P4.2
+Done:
+- Types now derive their unions from `as const` tuples; `slug` added to skill groups and experience items; `seoTitle` and `seoDescription` added to profile (seed carries proposed copy)
+- Drizzle schema for the four tables, `db:generate` and `db:migrate` scripts, first migration generated, reviewed and applied to Neon
+Files created/changed:
+- types/{profile,projects,skills,experience}.ts; data/{seed,skill-groups,experience}.ts; lib/db/schema.ts; package.json; drizzle/0000_silly_living_tribunal.sql and drizzle/meta/; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
+Decisions:
+- D77 schema details (relative imports, extra tuples, array defaults, named checks)
+Verified (viewports / devices):
+- Typecheck, lint, build; generated SQL reviewed against the schema; table, constraint and enum check in the Neon SQL editor
+Known issues:
+- Seed outside Next: `lib/env.ts` requires `NODE_ENV`, which `tsx` usually leaves unset (P4.3)
+- Nothing caps `featured` at 3 rows (P5.4)
+Next step (ID + one-line goal):
+- P4.3 — Zod schemas in `validators/` and an idempotent `scripts/seed.ts`
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: package.json, tsconfig.json, .env.example, lib/env.ts, lib/db/index.ts, lib/db/schema.ts, drizzle.config.ts, types/profile.ts, types/projects.ts, types/skills.ts, types/experience.ts, data/seed.ts, data/projects.ts, data/skill-groups.ts, data/experience.ts, eslint.config.mjs. Phase: P4 — Neon data. Step: P4.3. Mode: Build. Follow WORKFLOW.md §11. Goal: Write the Zod schemas in validators/ (reading the tuples from types/), add scripts/seed.ts run with tsx (add-missing by slug, --update to overwrite, D71), apply the testnet wording (D76), and stop at the verify command for my approval.
+
 ### Handoff — 2026-10-11 — P4.1 (plan chat)
 Done:
 - Planned the 4-table schema and JSON shapes from the real types and data; settled O4 and O5; fixed stale docs (tracker, duplicated §4.4 phrase, stray table cell in D59)
@@ -147,21 +165,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P4 section of ROADMAP.md, types/profile.ts, types/projects.ts, types/skills.ts, types/experience.ts, data/seed.ts, data/projects.ts, data/skill-groups.ts, data/experience.ts, lib/db/schema.ts, lib/db/index.ts, drizzle.config.ts, lib/env.ts. Phase: P4 — Neon data. Step: P4.1. Mode: Build, but this is a plan chat (ROADMAP P4.1): no code. Follow WORKFLOW.md §11. Goal: Finalize the 4-table schema and the JSON column shapes (profile, skill_groups, projects, experience_items) from the static data types, including the new columns logged in Known issues, settle O4 (bilingual) and O5 (domain) or accept their defaults, then give me the decision table and the exact docs edits (CLAUDE.md §4.4 and §10, PROGRESS.md) and stop for my approval.
 
 ### Handoff — 2026-10-09 — P3.7
-Done:
-- Get In Touch page: statement, availability pill, Email (primary) and Resume (secondary) buttons; email, LinkedIn and GitHub link cards; info card with location and live Samarinda time; two columns from 1024 px, stacked below, no carousel
-- Statement copy moved onto `profile` (`contactHeadline`, `contactIntro`)
-Files created/changed:
-- types/profile.ts; data/seed.ts; lib/contact/format.ts; components/panels/{contact-icons,ContactLinkCard,ContactPanel,index}; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D57 Get In Touch layout, copy on profile, typed icon map
-Verified (viewports / devices):
-- Verify list run by Kun and confirmed good
-Known issues:
-- See Known issues above (new profile columns, build-time UTC offset, 360×640 fit)
-Next step (ID + one-line goal):
-- P3.8 — Entrance choreography (catalog C) on page activation and the card spotlight (D)
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: app/globals.css, components/stage/StagePanel.tsx, components/stage/StageTrack.tsx, lib/stage/motion.ts, components/ui/GlassCard.tsx, components/panels/OverviewPanel.tsx, components/panels/ContactPanel.tsx, package.json. Phase: P3. Step: P3.8. Mode: Build. Follow WORKFLOW.md §11. Goal: Add the entrance choreography (catalog C: headline mask-reveal, subtext fade, chips and cards rise with stagger, portrait settles, once per activation) and the card spotlight (catalog D: cursor-following radial highlight, hover-only), start with a short decisions table on CSS vs Motion and how entrances hook into the panel's data-state, then stop at the verify command for my approval.
+- P3.7: Get In Touch page (statement, availability, link cards, live Samarinda time, no form); D57.
 
 ### Handoff — 2026-10-09 — P3.6
 - P3.6: Experience page (Work, Shipped and Learning cards, wide row or carousel by width and height); D56.

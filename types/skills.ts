@@ -1,38 +1,41 @@
-// Keys into the icon map in components/panels/tech-icons.ts. A union, so a
-// wrong key fails typecheck instead of failing at render.
-export type TechIconKey =
-  | "monitor"
-  | "terminal"
-  | "database"
-  | "zap"
-  | "nextjs"
-  | "react"
-  | "typescript"
-  | "tailwind"
-  | "motion"
-  | "nodejs"
-  | "express"
-  | "api"
-  | "graphql"
-  | "credit-card"
-  | "postgresql"
-  | "supabase"
-  | "mongodb"
-  | "redis"
-  | "vector"
-  | "openai"
-  | "docker"
-  | "vercel"
-  | "aws"
-  | "github-actions"
-  | "solidity"
-  | "hardhat"
-  | "wagmi"
-  | "c"
-  | "git";
+// Keys into the icon map in components/panels/tech-icons.ts. A tuple, so the
+// Zod schema can read the same list and a wrong key fails typecheck (D64).
+export const TECH_ICON_KEYS = [
+  "monitor",
+  "terminal",
+  "database",
+  "zap",
+  "nextjs",
+  "react",
+  "typescript",
+  "tailwind",
+  "motion",
+  "nodejs",
+  "express",
+  "api",
+  "graphql",
+  "credit-card",
+  "postgresql",
+  "supabase",
+  "mongodb",
+  "redis",
+  "vector",
+  "openai",
+  "docker",
+  "vercel",
+  "aws",
+  "github-actions",
+  "solidity",
+  "hardhat",
+  "wagmi",
+  "c",
+  "git",
+] as const;
+export type TechIconKey = (typeof TECH_ICON_KEYS)[number];
 
 // "used" = shipped in a real project · "learning" = not shipped yet (R4)
-export type SkillStatus = "used" | "learning";
+export const SKILL_STATUSES = ["used", "learning"] as const;
+export type SkillStatus = (typeof SKILL_STATUSES)[number];
 
 export type SkillItem = {
   name: string;
@@ -41,6 +44,7 @@ export type SkillItem = {
 };
 
 export type SkillGroup = {
+  slug: string;
   indexLabel: string;
   title: string;
   subtitle: string;

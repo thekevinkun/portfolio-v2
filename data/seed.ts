@@ -47,6 +47,9 @@ export const profile: Profile = {
     "Payment Systems",
     "Admin Dashboards",
   ],
+  seoTitle: "Kevin Mahendra — Full Stack Developer",
+  seoDescription:
+    "Self-taught full stack developer building production-grade web apps: payments, booking flows and backend reliability. Next.js, React, TypeScript, PostgreSQL.",
 };
 
 export { projects } from "./projects";
