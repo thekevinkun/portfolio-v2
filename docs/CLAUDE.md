@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P4 done (launched); P5 (dashboard) next.**
+> Status: **P1–P4 done (launched); P5 (dashboard) planned (D82–D97), building from P5.1.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -51,9 +51,9 @@ A personal portfolio for Kevin Mahendra (Kun) that feels like a console UI (PS5-
 | Animation    | Motion (formerly Framer Motion) with `LazyMotion` + CSS for ambient/hover effects                       |
 | Database     | Neon + Drizzle (`@neondatabase/serverless`)                                                             |
 | Validation   | Zod (server-side, for dashboard writes)                                                                 |
-| Dashboard UI | shadcn/ui (dashboard only), React 19 `useActionState` for forms                                         |
-| Auth         | Auth.js with GitHub login, allowlisted to Kun's account                                                 |
-| Images       | Vercel Blob (save the URL in the field), `next/image`                                                   |
+| Dashboard UI | our own primitives in components/dashboard/ui plus native form elements (D93), React 19 `useActionState` for forms                                        |
+| Auth         | Auth.js (`next-auth@beta`) with GitHub login, JWT sessions, no adapter, allowlisted by GitHub user id (D82, D83)                                               |
+| Images       | Vercel Blob (public store, upload through a server action, save the URL in the field, D94), `next/image`                                                   |
 | Hosting      | Vercel (its build's typecheck is the safety net)                                                        |
 
 ### Small libraries (each earns its place)
@@ -61,7 +61,7 @@ A personal portfolio for Kevin Mahendra (Kun) that feels like a console UI (PS5-
 | Library                                                | Used for                                                |
 | ------------------------------------------------------ | ------------------------------------------------------- |
 | Native scroll-snap `Carousel` component (no library)   | Tech Stack and Projects carousels                       |
-| `@formkit/auto-animate`                                | Filter-pill reflow, dashboard lists                     |
+| `@formkit/auto-animate`                                | Filter-pill reflow (P6.1).                              |
 | `@number-flow/react` (optional)                        | Rolling digits for the `01 / 04` counter and clock      |
 | `clsx` + `tailwind-merge`                              | Class handling                                          |
 | `sonner`                                               | Dashboard toasts                                        |
@@ -176,25 +176,25 @@ Every dashboard mutation: **auth check → Zod validate → write → revalidate
 | `projects`          | slug (unique), title, kicker label, summary, filter type (enum: `full-stack`, `frontend`, `game`, `web3`, `systems`), **status** (enum: live, in-progress, planned, completed), logo URL, tech tags (text array), **links** (JSON: kind `live`/`repo`, label, url), featured flag, sort, visible |
 | `experience_items`  | slug (unique), kind (enum: `work`, `freelance`, `education`, `milestone`), title, organization, start/end (`YYYY-MM` text, end null = present), summary, optional short summary, bullets (text array), **shipped** (optional JSON: project name + bullets), tags (text array), sort, visible |
 
-All list tables also carry a uuid `id`. Auth tables come from Auth.js.
+All list tables also carry a uuid `id`. Auth uses JWT sessions, so there are no auth tables (D82).
 
 ### 4.5 Dashboard
 
-Private `/dashboard`, single admin.
+Private `/dashboard`, single admin. Routes: `/dashboard/login` (public) and an `(admin)` group for everything else. R1 and R2 do not apply here (D95).
 
-| Screen     | Does                                                                                              |
-| ---------- | ------------------------------------------------------------------------------------------------- |
-| Overview   | Links to each editor + "view site"                                                                |
-| Profile    | Edit identity, intro, availability, socials, SEO; upload avatar/portrait/resume                   |
-| Tech Stack | Groups, items, highlights, strip; up/down reorder; icon picker                                    |
-| Projects   | Create/edit/delete, status, filter type, links, tags, featured + visible toggles, up/down reorder |
-| Experience | Timeline items CRUD + reorder                                                                     |
+| Screen     | Does (v1, D92)                                                                                                   |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- |
+| Overview   | Counts (visible / hidden), links to each editor, "view site"                                                     |
+| Profile    | Identity, intro, contact copy, availability, socials, chips, focus areas, SEO; upload avatar, portrait, resume   |
+| Tech Stack | Edit, reorder, hide the groups; items (≤ 7) with icon picker and used/learning; highlights (≤ 5, ≤ 40 chars)     |
+| Projects   | Create/edit/delete, status, filter type, two link slots, tags, logo, featured (≤ 3 visible) + visible, up/down reorder within a filter |
+| Experience | Edit the Work and Learning items; shipped projects add/remove/reorder (≤ 3); no create/delete of top-level items |
 
-Principles: confirm deletes, toasts for results, prefer hide (`visible=false`) over delete.
+Principles: confirm deletes (and suggest hiding), toasts for results, slug read-only after creation, every write validated by the P4.3 schemas on the server (D89).
 
 ### 4.6 Security (short list)
 
-Dashboard guarded by `proxy.ts` **and** re-checked in every server action; GitHub allowlist; env vars validated at startup; no secrets in client bundles; default Next security headers.
+`proxy.ts` redirects signed-out visitors, but the boundary is `requireAdmin()` in every dashboard page, layout and server action (D84). GitHub allowlist by numeric user id, re-checked against `ADMIN_GITHUB_ID` on every call (D83). Env vars validated at startup (`lib/env.ts`, `lib/auth/env.ts`, `lib/blob/env.ts`, D85). Uploads limited by type and size, no SVG (D94). Local dev and Preview use a Neon dev branch (D86). No secrets in client bundles; default Next security headers.
 
 ---
 
@@ -255,11 +255,13 @@ portfolio/
 ├── app/
 │   ├── (site)/[[...section]]/layout.tsx ← chrome + StageProvider (initial index from the URL)
 │   ├── (site)/[[...section]]/page.tsx   ← Stage entry for all public URLs
-│   └── dashboard/                       ← admin
+│   ├── api/auth/[...nextauth]/route.ts  ← Auth.js handlers
+│   └── dashboard/                       ← admin: login/ and (admin)/ editors
 ├── components/  stage/ · panels/ · ui/ · chrome/ · dashboard/
-├── lib/         db/ (schema, queries) · auth/ · stage/ · env.ts
+├── lib/         db/ (schema, queries, admin-queries) · auth/ · dashboard/ (actions) · blob/ · stage/ · env.ts
 ├── types/       ← all shared types (never inline)
 ├── validators/  ← Zod schemas (JSON columns, enums from types/)
+├── proxy.ts     ← redirects signed-out visitors from /dashboard/** (D84)
 ├── scripts/     ← seed.ts (run with tsx)
 ├── drizzle/     ← generated SQL migrations
 └── docs/        ← CLAUDE.md, ROADMAP.md, PROGRESS.md
@@ -324,7 +326,7 @@ Goal: <one sentence>
 | ID | Decision |
 | --- | --- |
 | D1 | Next.js + TS strict + Tailwind v4 |
-| D2 | No Ant Design; shadcn/ui in the dashboard only |
+| D2 | No Ant Design; no shadcn/ui either (D93); the dashboard uses our own primitives |
 | D3 | Neon + Drizzle; 4 tables with JSON/array columns |
 | D4 | One Stage component serves all 5 URLs; SSR all sections; `replaceState` URL sync |
 | D5 | Persistent chrome; only content slides |
@@ -404,6 +406,23 @@ Goal: <one sentence>
 | D79 | P4.4 shipped D68, D69 and D72 with these details: `lib/db/queries.ts` has plain `async function` loaders exported through `cache()` (`getProfile`, `getSkillGroups`, `getProjects`, `getExperienceItems`, `getStageData`); rows are filtered by `visible` and ordered by `sort` then `slug` in SQL, `id` is dropped, and each row is parsed by the P4.3 schemas (the error names the table and slug); `null` becomes `undefined` for `summaryShort` and `shipped`; `revalidate = 3600` is a literal in `page.tsx` only; the five pages build as static (SSG) from Neon and a hand edit in Neon appeared after the revalidate window (tested with a 10 s value); the ESLint rule blocks `@/data` and `@/data/*` except in `scripts/` and `data/` (relative imports are not covered); no `server-only` package: `lib/env.ts` throws if `lib/db` reaches a client bundle; `data/` is seed input only |
 | D80 | P4.5 shipped D67 and D74 with these details: `SITE_URL` is a required env var (trailing slash stripped), the same production value in every Vercel environment; the root layout's `generateMetadata` supplies `metadataBase`, the default title and description, and the icons (`app/favicon.ico`, 16 and 32 px favicons and the apple-touch-icon from `public/`); `getSectionMetadata` (`lib/seo/metadata.ts`) gives each URL its title (Overview = `profile.seoTitle`, the others `<Label> \| <name>`), the `profile.seoDescription`, its own canonical (D30), Open Graph tags and a `summary_large_image` twitter card using `public/og-image.jpg` (1200×630); the five titles are computed on the server (`getSectionTitles`) and passed to `StageUrlSync`, so the tab title matches the server title; `app/manifest.ts` builds the manifest from the profile (theme color `#050505`, keep it in step with `--color-canvas`; a profile edit shows after the next redeploy); `app/robots.ts` disallows `/dashboard` and links the sitemap; `app/sitemap.ts` lists the five URLs with no `lastModified`; JSON-LD `Person` (name, url, jobTitle, description, image, `sameAs`; no email, no address) comes from `lib/seo/person.ts` with `<` escaped and renders on every URL |
 | D81 | P4.6 launch audit (R4): every claim on the site was checked against the owner's project facts and confirmed; the Work card organization reads "Independent / Personal Projects" (not "Self-Employed"); the CS50 line reads "CS50x (Harvard University, free online course)"; the top-bar avatar is the portrait (`/images/profile-picture.png`); until the dashboard exists, content changes are made in `data/` and applied with `npm run db:seed -- --update` (overwrites every row); launch measurements: Lighthouse desktop 99 / 98 / 100 / 100, mobile 92 / 98 / 100 / 100 (mobile LCP 3.1 s, Speed Index 4.2 s); production smoke test passed (five pages 200, unknown paths and `/dashboard` 404) |
+| D82 | Auth stack: `next-auth@beta` (Auth.js v5) with the GitHub provider, JWT sessions, no database adapter and therefore no auth tables; exact version pinned at install (R9); Auth.js now lives under Better Auth but supports Next 16, so D9 stands and switching library would need a new decision |
+| D83 | Allowlist: one GitHub numeric user id in `ADMIN_GITHUB_ID` (not the username); the `signIn` callback rejects every other account, the id is copied into the JWT, and `requireAdmin()` compares it to the env var on every call, so changing the variable ends existing sessions; session lifetime 7 days |
+| D84 | Guard: `proxy.ts` (named export `proxy`, matcher `/dashboard/:path*`, Node runtime on Next 16) only redirects signed-out visitors to `/dashboard/login`; the boundary is `requireAdmin()` called by every dashboard page, layout and server action (it redirects when there is no admin session); public routes are never matched by the proxy |
+| D85 | Config: auth variables are validated in `lib/auth/env.ts` (`AUTH_SECRET`, `AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET`, `ADMIN_GITHUB_ID`) and the Blob token in `lib/blob/env.ts`, outside `lib/env.ts` so `npm run db:seed` needs neither; they are set in Vercel Production and Preview because the build imports these modules; two GitHub OAuth apps (localhost and production), so sign-in works only on those two origins, not on preview URLs |
+| D86 | Data safety: local development and Vercel Preview use a Neon dev branch seeded with `db:seed`; only Production uses the main branch, so testing create and delete never touches live content; migrations are applied to both (additive, D70); this amends D70's single shared database |
+| D87 | Action pattern: every dashboard mutation is a server action in `lib/dashboard/actions/<area>.ts` built on one `adminAction` helper: `requireAdmin()` → Zod parse → write → `revalidateSite()` → typed `ActionResult` (field errors keyed by path, never thrown for user input); forms are client components with `useActionState` sending one JSON `payload` field; row actions (visibility, reorder, delete) run in `startTransition`; results show as sonner toasts; P5.3a verifies the helper works as a `"use server"` export, with an explicit `await requireAdmin()` as the first line of each action as the fallback |
+| D88 | Revalidation: `revalidateSite()` calls `revalidatePath("/", "layout")` after every successful write (five routes and the root-layout SEO metadata); `revalidate = 3600` stays as a fallback; P5.3a tests whether a profile edit refreshes the manifest |
+| D89 | Validators: the P4.3 schemas stay the single source; base object shapes are split from their refinements so form schemas omit `sort` and `visible`; limits move to `types/limits.ts`, shared by validators and editor hints, so client code never imports `validators/` or Zod (D68); new rules: `shipped` has at most 3 projects, and at most 3 `featured && visible` projects (cross-row check in the project actions); the slug is set at creation and read-only afterwards; new rows get `sort = max + 1` and `visible = true` |
+| D90 | Admin reads: `lib/db/admin-queries.ts` returns every row (hidden too) with `id`, `sort` and `visible`, not strictly parsed, so a hand-broken row can still be opened and fixed; public queries are unchanged; dashboard pages are dynamic |
+| D91 | Reorder is up/down buttons (no drag library): one action takes `id` and a direction, swaps within the group (Projects: same filter type; others: the whole list) and renumbers `sort` 0..n-1 for all rows in one `db.batch`; visibility is an immediate switch; delete is an AlertDialog that suggests hiding |
+| D92 | v1 editor scope: Profile all fields; Projects full CRUD, reorder, visibility, featured, two fixed link slots; Tech Stack edit, reorder and hide groups (no create or delete, the design is four cards, D52) with items and highlights within the validator limits; Experience edit the Work and Learning items only, shipped projects add/remove/reorder (at most 3), no create, delete, reorder or hide of top-level items (D56, D62); revisit when the layouts allow it |
+| D93 | Dashboard UI primitives: no shadcn/ui and no Radix (amends D2); `components/dashboard/ui` holds a few small components built on our tokens and the existing `GlassCard`, `Button`, `Pill` and `Chip`: Input, Textarea, Select (native `<select>`), Switch (native checkbox with `role="switch"`), ConfirmDialog (native `<dialog>`, which gives the focus trap and Esc), FieldRow; toasts use `sonner`; no dashboard theme CSS, `lib/cn` is used as is |
+| D94 | Blob: `@vercel/blob`, public store, `put` through a server action with `addRandomSuffix`; `serverActions.bodySizeLimit` is `4mb` in `next.config.ts`; limits: png/jpeg/webp up to 2 MB, PDF up to 4 MB, no SVG; `images.remotePatterns` for `*.public.blob.vercel-storage.com`; the upload returns a URL into form state and is saved with the form; a replaced or removed Blob URL is deleted after a successful save (best effort, site paths never); orphans from abandoned uploads are accepted |
+| D95 | Dashboard UI: dark, same tokens and fonts, desktop-first; R1 and R2 do not apply (normal scrolling, no wheel paging); QA at 1440×900 and 390×844; visible focus; sidebar on desktop, top bar on phones; `noindex` |
+| D96 | R9 log for P5: new dependencies `next-auth@beta`, `@vercel/blob` and `sonner`; not added: shadcn/ui and Radix, auto-animate (stays P6.1), dnd-kit, react-hook-form, TanStack Table, an auth adapter |
+| D97 | Seed after the dashboard: default `db:seed` (add missing rows) stays safe; `--update` overwrites dashboard edits, so P5.7 makes it require `--yes-overwrite`; content changes go through the dashboard from P5.3 on |
+| D98 | Tech Stack card limits go from 5 items and 4 highlights to 7 items and 5 highlights per group (highlights stay at most 40 characters) so new skills can be added; amends D52 and D78; the numbers live in `types/limits.ts` (D89) and change in P5.5, not earlier; P3.9 fit QA was done at 5 and 4, so P5.5 starts from measured panel heights, re-runs fit QA at all eight viewports with a full card (7 items, 5 highlights), and may tune the density tiers in `TechStackPanel` or lower the limits if a viewport overflows (R1) |
 
 ### Open
 
