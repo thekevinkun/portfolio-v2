@@ -16,7 +16,7 @@
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
-| P5    | Dashboard                | ⬜ Not started |                                             |
+| P5    | Dashboard                | 🟦 In progress | Plan approved (D82–D98); building from P5.1 |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
@@ -25,13 +25,15 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [ ] P5.1 Auth.js + GitHub allowlist; `proxy.ts` guard + `requireAdmin()` re-check in every action
-- [ ] P5.2 Dashboard layout (shadcn/ui, dark) + overview links
-- [ ] P5.3 Profile editor (incl. Blob uploads for avatar/portrait/resume)
-- [ ] P5.4 Projects editor (CRUD, status, links, tags, featured/visible, up/down reorder)
-- [ ] P5.5 Tech Stack editor (groups, items, highlights, icon picker, reorder)
+- [ ] P5.1 Auth: next-auth@beta, GitHub allowlist, `requireAdmin()`, `proxy.ts`, bare login page
+- [ ] P5.2 Dashboard shell: own form primitives, layout, nav, overview
+- [ ] P5.3a Action pattern + Profile editor (no uploads)
+- [ ] P5.3b Blob uploads (avatar, portrait, resume)
+- [ ] P5.4a Projects list: visibility, reorder, delete, featured cap
+- [ ] P5.4b Projects create/edit form
+- [ ] P5.5 Tech Stack editor
 - [ ] P5.6 Experience editor
-- [ ] P5.7 Cross-cutting: Zod validation on every write, confirm deletes, toasts, `revalidatePath`, "view on site"
+- [ ] P5.7 Hardening and cleanup
 
 ---
 
@@ -52,6 +54,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
+- D82–D98: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -72,7 +75,7 @@ None. O4 and O5 settled (D73, D74).
 - Projects: at 3-up the last page can repeat cards (Full Stack has 5, so page 2 shows cards 3–5)
 - Projects: filter reflow animation (auto-animate) and rolling counter digits (number-flow) wait for P6.1
 - Projects: after a filter click, later visits to Projects start their cards with no wait instead of waiting for the page slide
-- Experience: slide classes target the Learning card by position (`nth-1`), so they assume one Learning item before the Work items; revisit if the dashboard allows several (P5.6)
+- Experience: slide classes target the Learning card by position (`nth-1`), so they assume one Learning item before the Work items; revisit if the dashboard allows several (the v1 editor edits the two existing items only, D92)
 - Experience: in the wide layout Learning is moved last with CSS order, so reading order differs from visual order there (the cards have no links, so tab order is unaffected)
 - Experience: the long Work summary and Shipped bullets 4–5 show only outside the wide layout (D62); on phones shorter than 580 px the trimmed cards also hide Learning tags; the P5.6 editor must keep the three core bullets first
 - Experience at 2-up: the last carousel page holds a single card (Bookshop)
@@ -84,8 +87,9 @@ None. O4 and O5 settled (D73, D74).
 - Spotlight border sheen uses `mask-composite`; spot-check Safari and Firefox in P6.2, and check entrances plus spotlight at 4× CPU throttle there
 - Density thresholds (D60) were measured on the eight QA viewports plus one 1536×791 laptop window; if a real device shows a problem, tune the variants in `app/globals.css`
 - The validator limits (5 skill items, 4 highlights of at most 40 characters, 3–5 shipped bullets per project) must be visible in the P5.5 and P5.6 editors
+- Tech Stack cards were fit-tested with 5 items and 4 highlights (P3.9); D98 raises the limits to 7 and 5 in P5.5, which must re-run fit QA with full cards (a short panel such as 1366×768 is the likeliest to overflow)
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
-- Nothing caps `featured` at 3 rows; add the check in the P5.4 validators
+- Nothing caps `featured` at 3 rows; the P5.4 project actions add the check (D89)
 - A bad row in Neon (for example a live project with no live link) fails the build; whether a failed hourly regeneration keeps serving the last good page was not tested (check before launch, P4.6)
 - The manifest is built at deploy time; a profile edit shows after the next redeploy
 - Unused files in `public/`: the five default Next SVGs (`file`, `globe`, `next`, `vercel`, `window`) and `placeholder/avatar.svg`; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
@@ -115,6 +119,22 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-11 — P5 plan chat
+Done:
+- Planned the whole dashboard: Auth.js (JWT, GitHub id allowlist), proxy guard plus `requireAdmin()` everywhere, server-action pattern, own form primitives (no shadcn), Blob uploads, editor scope, reorder and visibility behavior, validator reuse, env vars, Neon dev branch; P5.1–P5.7 split into commit-sized steps
+Files created/changed:
+- docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
+Decisions:
+- D82–D98
+Verified (viewports / devices):
+- Plan only. Not verified: `"use server"` wrapper exports, `db.batch` atomicity, manifest revalidation, Zod 4 `.omit()` on refined objects, GitHub `providerAccountId` as the numeric id
+Known issues:
+- Experience and Tech Stack editors are edit-only in v1 (D92); local `.env.local` must point at the Neon dev branch before the first dashboard write (D86)
+Next step (ID + one-line goal):
+- P5.1 — Auth: sign in with GitHub, only your account, guarded `/dashboard`
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, next.config.ts, eslint.config.mjs, .env.example, .gitignore, tsconfig.json, lib/env.ts, app/layout.tsx, app/robots.ts. Phase: P5 — Dashboard. Step: P5.1. Mode: Build. Follow WORKFLOW.md §11. Goal: Add Auth.js with the GitHub provider and the numeric-id allowlist, `requireAdmin()`, the `proxy.ts` guard for `/dashboard`, a bare login page and a signed-in placeholder, verifying the Next 16 `proxy` export first.
 
 ### Handoff — 2026-10-11 — P4.6 (P4 closed)
 Done:
@@ -150,18 +170,7 @@ Next step (ID + one-line goal):
 - P4.6 — launch checklist: re-run the content audit (R4), Lighthouse, production deploy check, update the external links
 
 ### Handoff — 2026-10-11 — P4.4
-Done:
-- Cached query layer and `getStageData()`; the layout and page read profile, skill groups, projects and experience from Neon; `revalidate = 3600`; ESLint guard on `@/data/*`; `data/` is seed input only
-Files created/changed:
-- lib/db/queries.ts; app/(site)/[[...section]]/layout.tsx and page.tsx; eslint.config.mjs; data/seed.ts (comment); docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D79 query layer, parsing, revalidate literal, lint guard
-Verified (viewports / devices):
-- Typecheck, lint, build (the five routes are SSG); all five pages unchanged at 1440×900 and 390×844; a Neon edit appeared in the footer in dev; a hand edit appeared after a 10 s revalidate window with `next start`
-Known issues:
-- Failed hourly regeneration not tested; a bad row fails the build
-Next step (ID + one-line goal):
-- P4.5 — SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD Person, OG image
+- P4.4: cached query layer, `getStageData()`, `revalidate = 3600`, ESLint guard on `@/data/*`; D79.
 
 ### Handoff — 2026-10-11 — P4.3
 - P4.3: Zod validators, idempotent tsx seed script (`--check`, `--update`), testnet wording; D78.

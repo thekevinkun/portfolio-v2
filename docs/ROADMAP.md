@@ -95,15 +95,19 @@
 
 ## P5 — Dashboard (M)
 
+Plan locked in the P5 plan chat (D82–D97). 🎨 steps are visual: they stop at the verify command until approved. Prepare the env vars and accounts listed in the PROGRESS.md handoff.
+
 | Step | Task |
 |---|---|
-| P5.1 | Auth.js + GitHub allowlist; `proxy.ts` guard + `requireAdmin()` re-check in every action. |
-| P5.2 | Dashboard layout (shadcn/ui, dark) + overview links. |
-| P5.3 | Profile editor (incl. Blob uploads for avatar/portrait/resume). |
-| P5.4 | Projects editor (CRUD, status, links, tags, featured/visible, up/down reorder); at most 3 featured (not enforced yet); a `live` project needs a live link (D78). |
-| P5.5 | Tech Stack editor (groups, items, highlights, icon picker, reorder; limits from the D78 validators). |
-| P5.6 | Experience editor. |
-| P5.7 | Cross-cutting: Zod validation on every write, confirm deletes, toasts, `revalidatePath`, "view on site". |
+| P5.1 | Auth: `next-auth@beta`, GitHub provider, JWT sessions, allowlist by GitHub id (D82, D83); `lib/auth/env.ts`; `requireAdmin()`; `proxy.ts` guard; bare login page and signed-in placeholder (D84, D85) |
+| P5.2 🎨 | Dashboard shell: own form primitives in `components/dashboard/ui` (Input, Textarea, Select, Switch, ConfirmDialog on native `<dialog>`, D93); layout, nav, Toaster, noindex; overview with counts and links |
+| P5.3a | Action pattern (`adminAction`, `ActionResult`, `revalidateSite`, field primitives; D87, D88) and the Profile editor without uploads; admin profile query (D90) |
+| P5.3b 🎨 | Vercel Blob uploads for avatar, portrait and resume (D94); delete replaced blobs; `next.config.ts` changes |
+| P5.4a 🎨 | Projects list: validator base split and `types/limits.ts` (D89), admin query, visibility, reorder within a filter, delete with confirm, featured cap of 3 (D91) |
+| P5.4b 🎨 | Projects create/edit form: status, filter, tags, two link slots, logo upload; slug set at creation |
+| P5.5 🎨 | Tech Stack editor: edit, reorder and hide groups; items (up to 7) with icon picker; highlights (up to 5); limits visible; fit QA with full cards at all eight viewports (D92, D98) |
+| P5.6 🎨 | Experience editor: Work and Learning items, shipped projects (max 3), three core bullets kept first (D92) |
+| P5.7 | Hardening: `--yes-overwrite` guard on the seed (D97); empty-state test; every route and action tried signed out; revoke test; "view on site" links; Known issues cleanup |
 
 **Acceptance:** unauthenticated access is rejected everywhere; only the allowlisted account signs in; create/edit/reorder/hide/delete each reflect on the public site on next load.
 
