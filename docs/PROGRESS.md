@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-11
-**Current phase / step:** P4.3
+**Current phase / step:** P4.4
 **Mode default:** Build
 
 ---
@@ -15,7 +15,7 @@
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
-| P4    | Neon data → LAUNCH       | 🟦 in progress | P4.1–P4.2 done; launch gate                 |
+| P4    | Neon data → LAUNCH       | 🟦 in progress | P4.1–P4.3 done; launch gate                 |
 | P5    | Dashboard                | ⬜ Not started |                                             |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 
@@ -27,7 +27,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 - [x] P4.1 Plan chat (no code): finalize the 4-table schema and JSON column shapes
 - [x] P4.2 Types as `as const` tuples + `slug` fields; Drizzle schema, `db:*` scripts, migration applied to Neon
-- [ ] P4.3 Zod schemas; `scripts/seed.ts` via `tsx`, idempotent; testnet wording for Chainkuns/DarkMint (D76)
+- [x] P4.3 Zod schemas; `scripts/seed.ts` via `tsx`, idempotent; testnet wording for Chainkuns/DarkMint (D76)
 - [ ] P4.4 `getStageData()` queries; swap all panels to DB data; remove static seed from runtime imports
 - [ ] P4.5 SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD `Person`, OG image
 - [ ] P4.6 Launch checklist: re-run content audit (R4), Lighthouse, deploy to production, update LinkedIn/GitHub/Upwork/CV links
@@ -50,7 +50,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D47–D50: see CLAUDE.md §10.
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
-- D64–D77: see CLAUDE.md §10.
+- D64–D78: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -84,7 +84,7 @@ None. O4 and O5 settled (D73, D74).
 - Carousel slides must keep `overflow-clip`: animated cards would otherwise change the track's scroll size and break Carousel's page measurement and the wheel guard
 - Spotlight border sheen uses `mask-composite`; spot-check Safari and Firefox in P6.2, and check entrances plus spotlight at 4× CPU throttle there
 - Density thresholds (D60) were measured on the eight QA viewports plus one 1536×791 laptop window; if a real device shows a problem, tune the variants in `app/globals.css`
-- Seed outside Next: `lib/env.ts` requires `NODE_ENV`, which is usually unset under `tsx`; settle in P4.3
+- The validator limits (5 skill items, 4 highlights of at most 40 characters, 3–5 shipped bullets per project) must be visible in the P5.5 and P5.6 editors
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - Nothing caps `featured` at 3 rows; add the check in the P5.4 validators
 
@@ -111,6 +111,25 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-11 — P4.3
+Done:
+- Zod schemas for the four tables in `validators/`, tied to the types with `satisfies` and to the DB through the shared tuples
+- `scripts/seed.ts` (default / `--update` / `--check`), `tsx` added, `db:seed` script; Neon seeded with profile, 4 skill groups, 15 projects and 2 experience items
+- Chainkuns and DarkMint summaries say testnet; `NODE_ENV` defaults to development in `lib/env.ts`
+Files created/changed:
+- lib/env.ts; validators/{shared,profile,projects,skills,experience}.ts (`.gitkeep` removed); scripts/seed.ts; data/projects.ts; package.json and lockfile; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D78 validators, rules beyond shape, seed modes
+Verified (viewports / devices):
+- Typecheck, lint, build; `--check`, a bad `startDate` refused, two seed runs (first writes, second skips), rows read back in Neon, `--update` contract, Web3 cards at 1440×900 and 390×844
+Known issues:
+- Validator limits must show in the P5.5 and P5.6 editors
+- Nothing caps `featured` at 3 rows (P5.4)
+Next step (ID + one-line goal):
+- P4.4 — `getStageData()` queries, panels read from Neon, `revalidate = 3600`, ESLint guard on `@/data/*`
+Prompt for the next chat:
+  (see the block in the chat)
 
 ### Handoff — 2026-10-11 — P4.2
 Done:
@@ -147,22 +166,7 @@ Prompt for the next chat:
   (see the block in the chat)
 
 ### Handoff — 2026-10-10 — P3.8–P3.9 (P3 closed)
-Done:
-- Entrance choreography on all five pages: header and text identical everywhere, a different card effect per page, replayed on every visit; Overview slower and more cinematic
-- Card spotlight (glow + border sheen) on mouse devices for every GlassCard
-- Fit QA: measured density variants, footer hidden below 768 px, Overview text column and full featured cards on laptop heights, Experience layout by width and height, tablet vertical centering; every page fits all eight QA viewports
-Files created/changed:
-- types/reveal.ts; lib/reveal.ts; app/globals.css; components/stage/StagePanel.tsx; components/chrome/StatusFooter.tsx; components/ui/{SectionHeader,GlassCard,Spotlight,index}; components/panels/{OverviewPanel,TechStackPanel,ProjectsPanel,ExperiencePanel,ContactPanel,FeaturedProjectCard,ExperienceParts,ExperienceRoleCard,ExperienceShippedCard,ExperienceLearningCard}; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md, WORKFLOW.md)
-Decisions:
-- D58 entrances · D59 spotlight · D60 measured density variants and footer · D61 Overview fit · D62 Experience layout by width and height · D63 vertical alignment by width
-Verified (viewports / devices):
-- Fit table run by Kun at 1920×1080, 1440×900, 1366×768, 1280×720, 1024×768, 768×1024, 390×844 and 360×640, plus a 1536×791 laptop window; every page confirmed good after the fixes
-Known issues:
-- See Known issues above (new schema columns, entrance timing knobs, overflow-clip on carousel slides, tightest Experience fit)
-Next step (ID + one-line goal):
-- P4.1 — Plan chat (no code): finalize the 4-table schema and JSON column shapes
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P4 section of ROADMAP.md, types/profile.ts, types/projects.ts, types/skills.ts, types/experience.ts, data/seed.ts, data/projects.ts, data/skill-groups.ts, data/experience.ts, lib/db/schema.ts, lib/db/index.ts, drizzle.config.ts, lib/env.ts. Phase: P4 — Neon data. Step: P4.1. Mode: Build, but this is a plan chat (ROADMAP P4.1): no code. Follow WORKFLOW.md §11. Goal: Finalize the 4-table schema and the JSON column shapes (profile, skill_groups, projects, experience_items) from the static data types, including the new columns logged in Known issues, settle O4 (bilingual) and O5 (domain) or accept their defaults, then give me the decision table and the exact docs edits (CLAUDE.md §4.4 and §10, PROGRESS.md) and stop for my approval.
+- P3.8–P3.9: entrance choreography, card spotlight and fit QA at all eight viewports; D58–D63.
 
 ### Handoff — 2026-10-09 — P3.7
 - P3.7: Get In Touch page (statement, availability, link cards, live Samarinda time, no form); D57.
