@@ -2,6 +2,7 @@ import type { ExperienceItem } from "@/types/experience";
 
 export const experienceItems: ExperienceItem[] = [
   {
+    slug: "independent-full-stack",
     kind: "work",
     title: "Independent Full Stack Developer",
     organization: "Self-Employed / Personal Projects",
@@ -59,6 +60,7 @@ export const experienceItems: ExperienceItem[] = [
     visible: true,
   },
   {
+    slug: "self-directed-learning",
     kind: "education",
     title: "Computer Science & Web Development",
     organization: "Self-directed",

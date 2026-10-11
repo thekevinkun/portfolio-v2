@@ -3,6 +3,7 @@ import type { SkillGroup } from "@/types/skills";
 // Highlights are written to fit one line in a ~280px card (about 38 characters)
 export const skillGroups: SkillGroup[] = [
   {
+    slug: "frontend",
     indexLabel: "01 / CLIENT & UI",
     title: "Frontend & Client UI",
     subtitle: "Interface layer",
@@ -25,6 +26,7 @@ export const skillGroups: SkillGroup[] = [
     visible: true,
   },
   {
+    slug: "backend",
     indexLabel: "02 / SERVER & APIS",
     title: "Backend & Runtime",
     subtitle: "Services and APIs",
@@ -47,6 +49,7 @@ export const skillGroups: SkillGroup[] = [
     visible: true,
   },
   {
+    slug: "data",
     indexLabel: "03 / DATA & STORAGE",
     title: "Data & Persistence",
     subtitle: "Databases and caching",
@@ -69,6 +72,7 @@ export const skillGroups: SkillGroup[] = [
     visible: true,
   },
   {
+    slug: "ai-cloud",
     indexLabel: "04 / AI & CLOUD",
     title: "AI & Cloud",
     subtitle: "Models and deployment",

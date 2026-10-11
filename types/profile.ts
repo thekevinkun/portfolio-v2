@@ -27,4 +27,6 @@ export interface Profile {
   socials: SocialLink[];
   chips: string[]; // Overview tech chips
   focusAreas: string[]; // Overview focus pills
+  seoTitle: string; // site-wide default <title> (P4.5)
+  seoDescription: string; // site-wide default meta description
 }

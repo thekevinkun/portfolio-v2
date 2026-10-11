@@ -44,6 +44,7 @@ export type SkillItem = {
 };
 
 export type SkillGroup = {
+  slug: string;
   indexLabel: string;
   title: string;
   subtitle: string;

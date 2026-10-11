@@ -12,6 +12,7 @@ export type ExperienceProject = {
 };
 
 export type ExperienceItem = {
+  slug: string;
   kind: ExperienceKind;
   title: string;
   organization: string;
