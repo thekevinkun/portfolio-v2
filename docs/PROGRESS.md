@@ -25,7 +25,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [ ] P5.1 Auth: next-auth@beta, GitHub allowlist, `requireAdmin()`, `proxy.ts`, bare login page
+- [x] P5.1 Auth: next-auth@beta, GitHub allowlist, `requireAdmin()`, `proxy.ts`, bare login page
 - [ ] P5.2 Dashboard shell: own form primitives, layout, nav, overview
 - [ ] P5.3a Action pattern + Profile editor (no uploads)
 - [ ] P5.3b Blob uploads (avatar, portrait, resume)
@@ -88,6 +88,8 @@ None. O4 and O5 settled (D73, D74).
 - Density thresholds (D60) were measured on the eight QA viewports plus one 1536×791 laptop window; if a real device shows a problem, tune the variants in `app/globals.css`
 - The validator limits (5 skill items, 4 highlights of at most 40 characters, 3–5 shipped bullets per project) must be visible in the P5.5 and P5.6 editors
 - Tech Stack cards were fit-tested with 5 items and 4 highlights (P3.9); D98 raises the limits to 7 and 5 in P5.5, which must re-run fit QA with full cards (a short panel such as 1366×768 is the likeliest to overflow)
+- Dashboard sign-in works only on localhost and the production domain (two OAuth apps, D85); preview URLs cannot sign in
+- The login page and the signed-in placeholder are unstyled stand-ins until P5.2
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - Nothing caps `featured` at 3 rows; the P5.4 project actions add the check (D89)
 - A bad row in Neon (for example a live project with no live link) fails the build; whether a failed hourly regeneration keeps serving the last good page was not tested (check before launch, P4.6)
@@ -119,6 +121,22 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-11 — P5.1
+Done:
+- Auth.js (`next-auth@beta`, GitHub, JWT sessions, no adapter) with the numeric-id allowlist, `requireAdmin()` / `getAdminSession()`, the `proxy.ts` guard for `/dashboard`, a bare login page, a signed-in placeholder with sign-out, and `noindex` on the dashboard
+Files created/changed:
+- lib/auth/{env,index,require-admin}.ts; types/next-auth.d.ts; app/api/auth/[...nextauth]/route.ts; proxy.ts; app/dashboard/layout.tsx, login/page.tsx, (admin)/page.tsx; .env.example; package.json; docs (PROGRESS.md)
+Decisions:
+- D82–D85 implemented as planned; no new decisions
+Verified (viewports / devices):
+- Typecheck, lint, build (public routes still static); signed-out redirect; your account in and out; wrong account rejected; revocation by changing `ADMIN_GITHUB_ID`; public site unchanged; preview green; production sign-in
+Known issues:
+- Preview URLs cannot sign in; login and placeholder pages are unstyled until P5.2
+Next step (ID + one-line goal):
+- P5.2 — Dashboard shell: own form primitives, layout, nav, overview with counts
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, tsconfig.json, app/globals.css, lib/cn.ts, components/ui/index.ts, components/ui/Button.tsx, components/ui/GlassCard.tsx, components/ui/Pill.tsx, components/ui/Chip.tsx, lib/auth/index.ts, lib/auth/require-admin.ts, app/dashboard/layout.tsx, app/dashboard/login/page.tsx, app/dashboard/(admin)/page.tsx, lib/db/schema.ts. Phase: P5 — Dashboard. Step: P5.2. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the dashboard shell with its own form primitives (no shadcn): the (admin) layout with sidebar/top-bar nav, the small primitives (Input, Textarea, Select, Switch, ConfirmDialog, FieldRow), sonner toasts, styled login page, and an overview page with counts and links.
 
 ### Handoff — 2026-10-11 — P5 plan chat
 Done:
@@ -155,19 +173,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, next.config.ts, eslint.config.mjs, .env.example, lib/env.ts, lib/db/index.ts, lib/db/schema.ts, lib/db/queries.ts, validators/shared.ts, validators/profile.ts, validators/projects.ts, validators/skills.ts, validators/experience.ts, types/profile.ts, types/projects.ts, types/skills.ts, types/experience.ts, app/layout.tsx, app/(site)/[[...section]]/layout.tsx, app/(site)/[[...section]]/page.tsx, scripts/seed.ts. Phase: P5 — Dashboard. Step: P5 plan chat. Mode: Build, but this is a plan chat: no code. Follow WORKFLOW.md §11. Goal: Plan the whole dashboard before building: auth (Auth.js with GitHub, allowlist, the proxy.ts guard, requireAdmin in every action), the server-action pattern (auth, Zod, write, revalidatePath), shadcn/ui and Vercel Blob setup with their R9 decisions, the editor screens and reorder/visibility behavior, how the P4.3 validators are reused, and the env vars I need to prepare; split P5.1–P5.7 into commit-sized steps if needed, then give me the decision table and the exact docs edits and stop for my approval.
 
 ### Handoff — 2026-10-11 — P4.5
-Done:
-- Per-section titles (Overview uses the SEO title), description, own-URL canonical, Open Graph and twitter card with the 1200×630 image; root metadata with icons; manifest from the profile; robots; sitemap; Person JSON-LD
-- Favicons, touch icon, Android icons and OG image added; the tab title now comes from server-computed titles
-Files created/changed:
-- lib/env.ts, .env.example; lib/stage/section-title.ts, useStageUrl.ts; components/stage/StageUrlSync.tsx; lib/seo/{metadata,person}.ts; app/layout.tsx, manifest.ts, robots.ts, sitemap.ts; app/(site)/[[...section]]/{layout,page}.tsx; app/favicon.ico; public/ (favicons, apple-touch-icon, android-chrome icons, og-image.jpg); docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D80 SEO, icons, manifest, JSON-LD
-Verified (viewports / devices):
-- Typecheck, lint, build (manifest, robots and sitemap are static); curl of every tag, robots, sitemap, manifest and JSON-LD; tab titles and favicon in the browser; manifest in DevTools; theme color matches `--color-canvas`
-Known issues:
-- Social previews not yet checked on the live domain; manifest changes need a redeploy; unused default SVGs
-Next step (ID + one-line goal):
-- P4.6 — launch checklist: re-run the content audit (R4), Lighthouse, production deploy check, update the external links
+- P4.5: per-section metadata, canonical, Open Graph, manifest, robots, sitemap, Person JSON-LD, icons; D80.
 
 ### Handoff — 2026-10-11 — P4.4
 - P4.4: cached query layer, `getStageData()`, `revalidate = 3600`, ESLint guard on `@/data/*`; D79.
