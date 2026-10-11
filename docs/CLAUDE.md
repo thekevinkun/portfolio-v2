@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P3 done; P4.1–P4.2 done, P4.3 next.**
+> Status: **P1–P3 done; P4.1–P4.3 done, P4.4 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -399,6 +399,7 @@ Goal: <one sentence>
 | D75 | `shipped[].name` is free text, not a reference to a project (v1); the P5.6 editor must say so |
 | D76 | Testnet projects (Chainkuns, DarkMint) keep status `live` (deployed and reachable); their summaries say they run on a testnet (R4); no new status value; the wording is applied in the P4.3 seed data |
 | D77 | Schema details settled in P4.2: `lib/db/schema.ts` uses relative imports (drizzle-kit has no `@/` alias); `ProjectLinkKind` and `SocialKind` are tuples too (`PROJECT_LINK_KINDS`, `SOCIAL_KINDS`) for the P4.3 Zod schemas; `icon_key` is `text` typed `TechIconKey`; every `text[]` column except the two `profile` lists defaults to `'{}'`; check constraints are named (`profile_singleton`, `experience_start_format`, `experience_end_format`); the site-wide SEO copy lives on `profile` (`seoTitle`, `seoDescription`); first migration is `drizzle/0000_silly_living_tribunal.sql` |
+| D78 | Validators and seed settled in P4.3: `lib/env.ts` defaults `NODE_ENV` to `development` so tsx scripts can import it; the schemas in `validators/` (`shared`, `profile`, `projects`, `skills`, `experience`) are `z.strictObject` and end in `satisfies z.ZodType<Type>`; rules beyond shape: a `live` project needs a `live` link, a skill group has at most 5 items and 4 highlights of at most 40 characters (D52), shipped bullets number 3–5 (D56), `endDate` is not before `startDate`, the timezone is a real IANA id, link URLs are http(s), asset URLs are a site path or http(s); `scripts/seed.ts` loads `.env.local` and then imports `lib/db` dynamically, validates everything before writing, runs row by row, and has three modes: default (add missing rows by slug), `--update` (overwrite) and `--check` (validate only, no database); run with `npm run db:seed`; Chainkuns and DarkMint summaries say testnet (D76); Neon holds the seeded rows |
 
 ### Open
 

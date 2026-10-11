@@ -80,7 +80,7 @@ export const projects: Project[] = [
     title: "Chainkuns",
     kicker: "WEB3 TICKETING",
     summary:
-      "Event ticketing where tickets are NFTs, with on-chain validation and a resale marketplace with royalties.",
+      "Event tickets as NFTs on testnet, with on-chain validation and a resale marketplace with royalties.",
     filter: "web3",
     status: "live",
     logoUrl: null,
@@ -158,7 +158,7 @@ export const projects: Project[] = [
     title: "DarkMint",
     kicker: "WEB3 CERTIFICATES",
     summary:
-      "AI-generated certificates stored on IPFS and minted as NFTs on the blockchain.",
+      "AI-generated certificates stored on IPFS and minted as NFTs on a testnet.",
     filter: "web3",
     status: "live",
     logoUrl: null,
