@@ -1,6 +1,6 @@
 import type { Profile } from "@/types/profile";
 
-// Mirrors the future `profile` table (P4).
+// Seed input only: scripts/seed.ts loads this into Neon. The site reads the database (D72).
 export const profile: Profile = {
   name: "Kevin Mahendra",
   username: "thekevinkun",

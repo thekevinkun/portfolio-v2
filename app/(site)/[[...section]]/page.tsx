@@ -11,7 +11,7 @@ import {
 } from "@/components/panels";
 import { Stage } from "@/components/stage";
 import { Spotlight } from "@/components/ui";
-import { profile, skillGroups, projects, experienceItems } from "@/data/seed";
+import { getStageData } from "@/lib/db/queries";
 import { getSectionIndex } from "@/lib/stage/section-index";
 import { getSectionTitle } from "@/lib/stage/section-title";
 import { SECTIONS } from "@/lib/stage/sections";
@@ -23,6 +23,10 @@ interface PageProps {
 
 // Only the five known URLs exist; anything else is a 404.
 export const dynamicParams = false;
+
+// Pages are built from Neon and refreshed at most once an hour. The dashboard
+// will revalidate on save in P5 (D69). Next needs a literal value here.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return SECTIONS.map((s) => ({
@@ -43,30 +47,19 @@ export default async function Page({ params }: PageProps) {
   const { section } = await params;
   if (getSectionIndex(section) === -1) notFound();
 
-  // Static data until P4.4
-  const featured = projects
-    .filter((project) => project.featured && project.visible)
-    .sort((a, b) => a.sort - b.sort)
-    .slice(0, 3);
+  // Visible rows, already sorted by the queries
+  const { profile, skillGroups, projects, experienceItems } =
+    await getStageData();
 
-  const groups = skillGroups
-    .filter((group) => group.visible)
-    .sort((a, b) => a.sort - b.sort);
-
-  const visibleProjects = projects
-    .filter((project) => project.visible)
-    .sort((a, b) => a.sort - b.sort);
-
-  const experience = experienceItems
-    .filter((item) => item.visible)
-    .sort((a, b) => a.sort - b.sort);
+  // Overview shows the first three featured projects (D48)
+  const featured = projects.filter((project) => project.featured).slice(0, 3);
 
   // All five pages are real now; PlaceholderPanel stays only as a fallback
   const pages: Partial<Record<SectionId, ReactNode>> = {
     overview: <OverviewPanel profile={profile} featured={featured} />,
-    "tech-stack": <TechStackPanel groups={groups} />,
-    projects: <ProjectsPanel projects={visibleProjects} />,
-    experience: <ExperiencePanel items={experience} />,
+    "tech-stack": <TechStackPanel groups={skillGroups} />,
+    projects: <ProjectsPanel projects={projects} />,
+    experience: <ExperiencePanel items={experienceItems} />,
     contact: <ContactPanel profile={profile} />,
   };
 

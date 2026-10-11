@@ -8,7 +8,7 @@ import {
   StageUrlSync,
 } from "@/components/stage";
 import { StageBackground } from "@/components/ui";
-import { profile } from "@/data/seed";
+import { getProfile } from "@/lib/db/queries";
 import { getSectionIndex } from "@/lib/stage/section-index";
 
 interface SiteLayoutProps {
@@ -24,6 +24,7 @@ export default async function SiteLayout({
 }: SiteLayoutProps) {
   const { section } = await params;
   const initialIndex = Math.max(0, getSectionIndex(section));
+  const profile = await getProfile();
 
   return (
     <StageProvider initialIndex={initialIndex}>

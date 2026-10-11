@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P3 done; P4.1–P4.3 done, P4.4 next.**
+> Status: **P1–P3 done; P4.1–P4.4 done, P4.5 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -273,6 +273,7 @@ portfolio/
 - **Everything that is not a component** (layouts, pages, helpers, config, server actions) uses `export function` / `export default function`.
 - **Barrels:** every folder under `components/` has an `index.ts` that re-exports its components; import through it (`@/components/ui`). Files inside the same folder import each other directly (avoids circular imports). Never create one barrel across folders, and never import `components/dashboard` from public code (keeps admin code out of public bundles, R5).
 - Server Actions for dashboard mutations.
+- **Content:** read it through `lib/db/queries.ts` only; `@/data/*` is blocked by ESLint outside `scripts/` and `data/` (D72).
 - **Lint (React Compiler):** never return a component from a function during render; index a module-level map instead (`TECH_ICONS[key]`, with typed keys). Never set state synchronously inside an effect; use observers or event callbacks.
 - **Gestures:** `data-stage-scroll` only on elements that really scroll; swipeable rows use `components/ui/Carousel` (D51); every new panel states its density tiers with the `tier-regular:` / `tier-spacious:` variants (D47).
 - Components ≲ 150 lines; Conventional Commits.
@@ -400,6 +401,7 @@ Goal: <one sentence>
 | D76 | Testnet projects (Chainkuns, DarkMint) keep status `live` (deployed and reachable); their summaries say they run on a testnet (R4); no new status value; the wording is applied in the P4.3 seed data |
 | D77 | Schema details settled in P4.2: `lib/db/schema.ts` uses relative imports (drizzle-kit has no `@/` alias); `ProjectLinkKind` and `SocialKind` are tuples too (`PROJECT_LINK_KINDS`, `SOCIAL_KINDS`) for the P4.3 Zod schemas; `icon_key` is `text` typed `TechIconKey`; every `text[]` column except the two `profile` lists defaults to `'{}'`; check constraints are named (`profile_singleton`, `experience_start_format`, `experience_end_format`); the site-wide SEO copy lives on `profile` (`seoTitle`, `seoDescription`); first migration is `drizzle/0000_silly_living_tribunal.sql` |
 | D78 | Validators and seed settled in P4.3: `lib/env.ts` defaults `NODE_ENV` to `development` so tsx scripts can import it; the schemas in `validators/` (`shared`, `profile`, `projects`, `skills`, `experience`) are `z.strictObject` and end in `satisfies z.ZodType<Type>`; rules beyond shape: a `live` project needs a `live` link, a skill group has at most 5 items and 4 highlights of at most 40 characters (D52), shipped bullets number 3–5 (D56), `endDate` is not before `startDate`, the timezone is a real IANA id, link URLs are http(s), asset URLs are a site path or http(s); `scripts/seed.ts` loads `.env.local` and then imports `lib/db` dynamically, validates everything before writing, runs row by row, and has three modes: default (add missing rows by slug), `--update` (overwrite) and `--check` (validate only, no database); run with `npm run db:seed`; Chainkuns and DarkMint summaries say testnet (D76); Neon holds the seeded rows |
+| D79 | P4.4 shipped D68, D69 and D72 with these details: `lib/db/queries.ts` has plain `async function` loaders exported through `cache()` (`getProfile`, `getSkillGroups`, `getProjects`, `getExperienceItems`, `getStageData`); rows are filtered by `visible` and ordered by `sort` then `slug` in SQL, `id` is dropped, and each row is parsed by the P4.3 schemas (the error names the table and slug); `null` becomes `undefined` for `summaryShort` and `shipped`; `revalidate = 3600` is a literal in `page.tsx` only; the five pages build as static (SSG) from Neon and a hand edit in Neon appeared after the revalidate window (tested with a 10 s value); the ESLint rule blocks `@/data` and `@/data/*` except in `scripts/` and `data/` (relative imports are not covered); no `server-only` package: `lib/env.ts` throws if `lib/db` reaches a client bundle; `data/` is seed input only |
 
 ### Open
 

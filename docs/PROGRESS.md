@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-11
-**Current phase / step:** P4.4
+**Current phase / step:** P4.5
 **Mode default:** Build
 
 ---
@@ -15,7 +15,7 @@
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
-| P4    | Neon data → LAUNCH       | 🟦 in progress | P4.1–P4.3 done; launch gate                 |
+| P4    | Neon data → LAUNCH       | 🟦 in progress | P4.1–P4.4 done; launch gate                 |
 | P5    | Dashboard                | ⬜ Not started |                                             |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 
@@ -28,7 +28,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P4.1 Plan chat (no code): finalize the 4-table schema and JSON column shapes
 - [x] P4.2 Types as `as const` tuples + `slug` fields; Drizzle schema, `db:*` scripts, migration applied to Neon
 - [x] P4.3 Zod schemas; `scripts/seed.ts` via `tsx`, idempotent; testnet wording for Chainkuns/DarkMint (D76)
-- [ ] P4.4 `getStageData()` queries; swap all panels to DB data; remove static seed from runtime imports
+- [x] P4.4 `getStageData()` queries; swap all panels to DB data; remove static seed from runtime imports
 - [ ] P4.5 SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD `Person`, OG image
 - [ ] P4.6 Launch checklist: re-run content audit (R4), Lighthouse, deploy to production, update LinkedIn/GitHub/Upwork/CV links
 
@@ -50,7 +50,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D47–D50: see CLAUDE.md §10.
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
-- D64–D78: see CLAUDE.md §10.
+- D64–D79: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -87,6 +87,7 @@ None. O4 and O5 settled (D73, D74).
 - The validator limits (5 skill items, 4 highlights of at most 40 characters, 3–5 shipped bullets per project) must be visible in the P5.5 and P5.6 editors
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - Nothing caps `featured` at 3 rows; add the check in the P5.4 validators
+- A bad row in Neon (for example a live project with no live link) fails the build; whether a failed hourly regeneration keeps serving the last good page was not tested (check before launch, P4.6)
 
 ---
 
@@ -111,6 +112,20 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-11 — P4.4
+Done:
+- Cached query layer and `getStageData()`; the layout and page read profile, skill groups, projects and experience from Neon; `revalidate = 3600`; ESLint guard on `@/data/*`; `data/` is seed input only
+Files created/changed:
+- lib/db/queries.ts; app/(site)/[[...section]]/layout.tsx and page.tsx; eslint.config.mjs; data/seed.ts (comment); docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D79 query layer, parsing, revalidate literal, lint guard
+Verified (viewports / devices):
+- Typecheck, lint, build (the five routes are SSG); all five pages unchanged at 1440×900 and 390×844; a Neon edit appeared in the footer in dev; a hand edit appeared after a 10 s revalidate window with `next start`
+Known issues:
+- Failed hourly regeneration not tested; a bad row fails the build
+Next step (ID + one-line goal):
+- P4.5 — SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD Person, OG image
 
 ### Handoff — 2026-10-11 — P4.3
 Done:
@@ -150,20 +165,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: package.json, tsconfig.json, .env.example, lib/env.ts, lib/db/index.ts, lib/db/schema.ts, drizzle.config.ts, types/profile.ts, types/projects.ts, types/skills.ts, types/experience.ts, data/seed.ts, data/projects.ts, data/skill-groups.ts, data/experience.ts, eslint.config.mjs. Phase: P4 — Neon data. Step: P4.3. Mode: Build. Follow WORKFLOW.md §11. Goal: Write the Zod schemas in validators/ (reading the tuples from types/), add scripts/seed.ts run with tsx (add-missing by slug, --update to overwrite, D71), apply the testnet wording (D76), and stop at the verify command for my approval.
 
 ### Handoff — 2026-10-11 — P4.1 (plan chat)
-Done:
-- Planned the 4-table schema and JSON shapes from the real types and data; settled O4 and O5; fixed stale docs (tracker, duplicated §4.4 phrase, stray table cell in D59)
-Files created/changed:
-- docs only: CLAUDE.md, ROADMAP.md, PROGRESS.md
-Decisions:
-- D64–D76 (enum tuples, keys, column types, SEO columns, read path, revalidation, migrations, seed, R3 lint guard, English only, launch domain, free-text shipped names, testnet wording)
-Verified (viewports / devices):
-- n/a (no code)
-Known issues:
-- Seed outside Next needs NODE_ENV (P4.3); `next.config.ts` unseen; nothing caps `featured` at 3 (P5.4)
-Next step (ID + one-line goal):
-- P4.2 — types become `as const` tuples with `slug` fields; Drizzle schema, `db:*` scripts, migration
-Prompt for the next chat:
-  (see the block in the chat)
+- P4.1: planned the four-table schema and JSON shapes; settled O4 and O5; D64–D76.
 
 ### Handoff — 2026-10-10 — P3.8–P3.9 (P3 closed)
 - P3.8–P3.9: entrance choreography, card spotlight and fit QA at all eight viewports; D58–D63.
