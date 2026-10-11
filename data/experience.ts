@@ -5,7 +5,7 @@ export const experienceItems: ExperienceItem[] = [
     slug: "independent-full-stack",
     kind: "work",
     title: "Independent Full Stack Developer",
-    organization: "Self-Employed / Personal Projects",
+    organization: "Independent / Personal Projects",
     startDate: "2019-01",
     endDate: null,
     summary:
@@ -69,7 +69,7 @@ export const experienceItems: ExperienceItem[] = [
     summary:
       "Self-directed study in computer science and modern web development, through structured coursework and hands-on projects.",
     bullets: [
-      "CS50 (Harvard University) — programming, algorithms and data structures in C",
+      "CS50x (Harvard University, free online course) — programming, algorithms and data structures in C",
       "freeCodeCamp — full-stack web development: HTML, CSS, JavaScript, React and backend fundamentals",
       "Modern web stack (self-directed) — Next.js, TypeScript, PostgreSQL and real-world application architecture",
     ],

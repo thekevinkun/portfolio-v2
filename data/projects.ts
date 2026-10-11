@@ -63,7 +63,7 @@ export const projects: Project[] = [
       {
         kind: "live",
         label: "Live Demo",
-        url: "https://kunbookshop.up.railway.app/",
+        url: "http://ec2-18-141-156-176.ap-southeast-1.compute.amazonaws.com/",
       },
       {
         kind: "repo",

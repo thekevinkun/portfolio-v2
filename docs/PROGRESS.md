@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-11
-**Current phase / step:** P4.6
+**Current phase / step:** P5.1
 **Mode default:** Build
 
 ---
@@ -15,7 +15,7 @@
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
-| P4    | Neon data → LAUNCH       | 🟦 in progress | P4.1–P4.5 done; launch gate                 |
+| P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ⬜ Not started |                                             |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 
@@ -25,12 +25,13 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [x] P4.1 Plan chat (no code): finalize the 4-table schema and JSON column shapes
-- [x] P4.2 Types as `as const` tuples + `slug` fields; Drizzle schema, `db:*` scripts, migration applied to Neon
-- [x] P4.3 Zod schemas; `scripts/seed.ts` via `tsx`, idempotent; testnet wording for Chainkuns/DarkMint (D76)
-- [x] P4.4 `getStageData()` queries; swap all panels to DB data; remove static seed from runtime imports
-- [x] P4.5 SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD `Person`, OG image
-- [ ] P4.6 Launch checklist: re-run content audit (R4), Lighthouse, deploy to production, update LinkedIn/GitHub/Upwork/CV links
+- [ ] P5.1 Auth.js + GitHub allowlist; `proxy.ts` guard + `requireAdmin()` re-check in every action
+- [ ] P5.2 Dashboard layout (shadcn/ui, dark) + overview links
+- [ ] P5.3 Profile editor (incl. Blob uploads for avatar/portrait/resume)
+- [ ] P5.4 Projects editor (CRUD, status, links, tags, featured/visible, up/down reorder)
+- [ ] P5.5 Tech Stack editor (groups, items, highlights, icon picker, reorder)
+- [ ] P5.6 Experience editor
+- [ ] P5.7 Cross-cutting: Zod validation on every write, confirm deletes, toasts, `revalidatePath`, "view on site"
 
 ---
 
@@ -50,7 +51,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D47–D50: see CLAUDE.md §10.
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
-- D64–D79: see CLAUDE.md §10.
+- D64–D81: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -63,7 +64,6 @@ None. O4 and O5 settled (D73, D74).
 - A hover lift in progress when the dock ring starts to glide can pop the ring by ~4px
 - TabBar indicator does not glide (static)
 - Heading focus and the live region can both speak (double announce); full screen-reader pass in P6.3
-- Top-bar badge still uses the placeholder avatar SVG, not the portrait
 - Firefox only: a brief white outline flashes around a dock tile while it scales on hover (cosmetic, left unresolved; Chrome is fine)
 - Tech Stack highlights are written for ~280 px cards (≤ ~38 characters); longer text would truncate with "…"
 - Web3, C/C++ and Git no longer appear on the Tech Stack page (strip removed); Projects filters cover Web3 and C/C++
@@ -87,9 +87,10 @@ None. O4 and O5 settled (D73, D74).
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - Nothing caps `featured` at 3 rows; add the check in the P5.4 validators
 - A bad row in Neon (for example a live project with no live link) fails the build; whether a failed hourly regeneration keeps serving the last good page was not tested (check before launch, P4.6)
-- Social previews (LinkedIn, X, WhatsApp) are not checked on the live domain yet; check after the P4.5 merge
 - The manifest is built at deploy time; a profile edit shows after the next redeploy
-- The five default Next SVGs in `public/` (`file`, `globe`, `next`, `vercel`, `window`) are unused; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
+- Unused files in `public/`: the five default Next SVGs (`file`, `globe`, `next`, `vercel`, `window`) and `placeholder/avatar.svg`; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
+- Until P5, content changes go through `data/` and `npm run db:seed -- --update`, which overwrites every row
+- Lighthouse at launch: mobile 92 / 98 / 100 / 100 with LCP 3.1 s and Speed Index 4.2 s red; the Overview portrait fade is the suspect (P6.2); accessibility 98 (P6.3)
 
 ---
 
@@ -114,6 +115,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-11 — P4.6 (P4 closed)
+Done:
+- Launch audit (R4): every claim confirmed with the owner; production smoke test, link check, leftover-claims check and hardcoded-content check all clean
+- Fixes: "CS50x (Harvard University, free online course)", organization "Independent / Personal Projects", portrait as the top-bar avatar; applied to Neon with `db:seed -- --update`
+- Lighthouse on production: desktop 99 / 98 / 100 / 100, mobile 92 / 98 / 100 / 100; real-phone pass clean
+Files created/changed:
+- data/projects.ts, data/experience.ts, data/seed.ts; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
+Decisions:
+- D81 launch audit results, content workflow until the dashboard, launch measurements
+Verified (viewports / devices):
+- Typecheck, lint, build; Overview, Projects and Experience at 1440×900 and 390×844; production five-page smoke test; Lighthouse; real phone
+Known issues:
+- mobile LCP and Speed Index red (P6.2); unused files in `public/`; external links (LinkedIn, GitHub, Upwork, CV) and the resume PDF check are not confirmed done
+Next step (ID + one-line goal):
+- P5 — Dashboard: start with a plan chat (no code), then P5.1 auth
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, next.config.ts, eslint.config.mjs, .env.example, lib/env.ts, lib/db/index.ts, lib/db/schema.ts, lib/db/queries.ts, validators/shared.ts, validators/profile.ts, validators/projects.ts, validators/skills.ts, validators/experience.ts, types/profile.ts, types/projects.ts, types/skills.ts, types/experience.ts, app/layout.tsx, app/(site)/[[...section]]/layout.tsx, app/(site)/[[...section]]/page.tsx, scripts/seed.ts. Phase: P5 — Dashboard. Step: P5 plan chat. Mode: Build, but this is a plan chat: no code. Follow WORKFLOW.md §11. Goal: Plan the whole dashboard before building: auth (Auth.js with GitHub, allowlist, the proxy.ts guard, requireAdmin in every action), the server-action pattern (auth, Zod, write, revalidatePath), shadcn/ui and Vercel Blob setup with their R9 decisions, the editor screens and reorder/visibility behavior, how the P4.3 validators are reused, and the env vars I need to prepare; split P5.1–P5.7 into commit-sized steps if needed, then give me the decision table and the exact docs edits and stop for my approval.
 
 ### Handoff — 2026-10-11 — P4.5
 Done:
@@ -145,23 +164,7 @@ Next step (ID + one-line goal):
 - P4.5 — SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD Person, OG image
 
 ### Handoff — 2026-10-11 — P4.3
-Done:
-- Zod schemas for the four tables in `validators/`, tied to the types with `satisfies` and to the DB through the shared tuples
-- `scripts/seed.ts` (default / `--update` / `--check`), `tsx` added, `db:seed` script; Neon seeded with profile, 4 skill groups, 15 projects and 2 experience items
-- Chainkuns and DarkMint summaries say testnet; `NODE_ENV` defaults to development in `lib/env.ts`
-Files created/changed:
-- lib/env.ts; validators/{shared,profile,projects,skills,experience}.ts (`.gitkeep` removed); scripts/seed.ts; data/projects.ts; package.json and lockfile; docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D78 validators, rules beyond shape, seed modes
-Verified (viewports / devices):
-- Typecheck, lint, build; `--check`, a bad `startDate` refused, two seed runs (first writes, second skips), rows read back in Neon, `--update` contract, Web3 cards at 1440×900 and 390×844
-Known issues:
-- Validator limits must show in the P5.5 and P5.6 editors
-- Nothing caps `featured` at 3 rows (P5.4)
-Next step (ID + one-line goal):
-- P4.4 — `getStageData()` queries, panels read from Neon, `revalidate = 3600`, ESLint guard on `@/data/*`
-Prompt for the next chat:
-  (see the block in the chat)
+- P4.3: Zod validators, idempotent tsx seed script (`--check`, `--update`), testnet wording; D78.
 
 ### Handoff — 2026-10-11 — P4.2
 - P4.2: types as `as const` tuples with `slug` fields, Drizzle schema and first migration applied to Neon; D77.

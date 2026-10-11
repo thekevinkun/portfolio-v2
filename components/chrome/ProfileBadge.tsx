@@ -23,7 +23,7 @@ const ProfileBadge = ({ profile }: ProfileBadgeProps) => {
               alt={profile.name}
               fill
               sizes="40px"
-              className="object-cover object-top grayscale"
+              className="object-cover object-top"
             />
           ) : (
             <span className="flex size-full items-center justify-center text-xs font-bold">
