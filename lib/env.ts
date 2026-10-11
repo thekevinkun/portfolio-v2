@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 const envSchema = z.object({
-  NODE_ENV: z.enum(["development", "test", "production"]),
+  // Scripts run with tsx leave NODE_ENV unset; Next always sets it
+  NODE_ENV: z
+    .enum(["development", "test", "production"])
+    .default("development"),
   DATABASE_URL: z.string().url(),
 });
 
