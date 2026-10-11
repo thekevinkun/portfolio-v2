@@ -12,9 +12,10 @@ import {
 import { Stage } from "@/components/stage";
 import { Spotlight } from "@/components/ui";
 import { getProfile, getStageData } from "@/lib/db/queries";
-import { getSectionMetadata } from "@/lib/seo/metadata";
-import { getSectionIndex } from "@/lib/stage/section-index";
 import { SECTIONS } from "@/lib/stage/sections";
+import { getSectionIndex } from "@/lib/stage/section-index";
+import { getSectionMetadata } from "@/lib/seo/metadata";
+import { buildPersonJsonLd, toJsonLdString } from "@/lib/seo/person";
 import type { SectionId } from "@/types/stage";
 
 interface PageProps {
@@ -73,6 +74,12 @@ export default async function Page({ params }: PageProps) {
     <>
       <Stage panels={panels} />
       <Spotlight />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: toJsonLdString(buildPersonJsonLd(profile)),
+        }}
+      />
     </>
   );
 }
