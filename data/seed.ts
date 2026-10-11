@@ -9,7 +9,7 @@ export const profile: Profile = {
   timezone: "Asia/Makassar",
   availability: "Open to freelance & full-time",
   availabilityShort: "Open to work",
-  avatarUrl: "/placeholder/avatar.svg",
+  avatarUrl: "/images/profile-picture.png",
   roleLabel: "Full Stack Developer",
   headline: "Building real-world web applications from end to end",
   intro:
