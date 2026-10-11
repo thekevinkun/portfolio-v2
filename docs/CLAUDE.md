@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P3 done; P4.1 planned, P4.2 next.**
+> Status: **P1–P3 done; P4.1–P4.2 done, P4.3 next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -267,6 +267,7 @@ portfolio/
 
 - TypeScript strict, zero `any`; shared types in `types/`.
 - Tailwind **tokens only** — no arbitrary hex values.
+- `lib/db/schema.ts` imports from `types/` with relative paths, because drizzle-kit loads it without the `@/` alias (D77).
 - Server Components by default; `"use client"` only for Stage, Dock, carousel, dashboard forms.
 - **Components** are arrow functions with props typed in the parameter (no `React.FC`): `const GlassCard = ({ ... }: GlassCardProps) => { ... }`. One component per file uses `export default`; a file holding several related components (e.g. `Button` + `ButtonLink`) uses named exports.
 - **Everything that is not a component** (layouts, pages, helpers, config, server actions) uses `export function` / `export default function`.
@@ -397,6 +398,7 @@ Goal: <one sentence>
 | D74 | O5 settled for launch: `kevinmahendra.vercel.app`; the site URL comes from a `SITE_URL` env var validated in `lib/env.ts` and feeds canonical, sitemap and JSON-LD in P4.5; the custom domain question returns in P6.4 and needs no schema change |
 | D75 | `shipped[].name` is free text, not a reference to a project (v1); the P5.6 editor must say so |
 | D76 | Testnet projects (Chainkuns, DarkMint) keep status `live` (deployed and reachable); their summaries say they run on a testnet (R4); no new status value; the wording is applied in the P4.3 seed data |
+| D77 | Schema details settled in P4.2: `lib/db/schema.ts` uses relative imports (drizzle-kit has no `@/` alias); `ProjectLinkKind` and `SocialKind` are tuples too (`PROJECT_LINK_KINDS`, `SOCIAL_KINDS`) for the P4.3 Zod schemas; `icon_key` is `text` typed `TechIconKey`; every `text[]` column except the two `profile` lists defaults to `'{}'`; check constraints are named (`profile_singleton`, `experience_start_format`, `experience_end_format`); the site-wide SEO copy lives on `profile` (`seoTitle`, `seoDescription`); first migration is `drizzle/0000_silly_living_tribunal.sql` |
 
 ### Open
 
