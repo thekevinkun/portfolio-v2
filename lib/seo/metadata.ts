@@ -3,7 +3,7 @@ import { getSectionTitle } from "@/lib/stage/section-title";
 import type { Profile } from "@/types/profile";
 import type { Section } from "@/types/stage";
 
-// File in public/
+// File in public/, 1200x630
 const OG_IMAGE_PATH = "/og-image.jpg";
 
 // Metadata for one URL: title, description, canonical (D30) and share tags.
@@ -14,10 +14,7 @@ export function getSectionMetadata(
 ): Metadata {
   const title = getSectionTitle(section, profile);
   const description = profile.seoDescription;
-  const image = {
-    url: OG_IMAGE_PATH,
-    alt: `${profile.name}, ${profile.roleLabel}`,
-  };
+  const alt = `${profile.name}, ${profile.roleLabel}`;
 
   return {
     title,
@@ -29,13 +26,13 @@ export function getSectionMetadata(
       siteName: profile.name,
       title,
       description,
-      images: [image],
+      images: [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt }],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [image],
+      images: [{ url: OG_IMAGE_PATH, alt }],
     },
   };
 }

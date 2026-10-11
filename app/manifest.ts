@@ -11,6 +11,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     name: profile.name,
     short_name: profile.name,
     description: profile.seoDescription,
+    id: "/",
     start_url: "/",
     display: "standalone",
     background_color: THEME_COLOR,
