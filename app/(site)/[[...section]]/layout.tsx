@@ -10,6 +10,7 @@ import {
 import { StageBackground } from "@/components/ui";
 import { getProfile } from "@/lib/db/queries";
 import { getSectionIndex } from "@/lib/stage/section-index";
+import { getSectionTitles } from "@/lib/stage/section-title";
 
 interface SiteLayoutProps {
   children: ReactNode;
@@ -29,7 +30,7 @@ export default async function SiteLayout({
   return (
     <StageProvider initialIndex={initialIndex}>
       <StageInputs />
-      <StageUrlSync />
+      <StageUrlSync titles={getSectionTitles(profile)} />
       <StageFocus />
       <StageLiveRegion />
       <StageBackground />
