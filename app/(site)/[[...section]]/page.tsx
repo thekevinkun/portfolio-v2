@@ -11,10 +11,11 @@ import {
 } from "@/components/panels";
 import { Stage } from "@/components/stage";
 import { Spotlight } from "@/components/ui";
-import { getStageData } from "@/lib/db/queries";
-import { getSectionIndex } from "@/lib/stage/section-index";
-import { getSectionTitle } from "@/lib/stage/section-title";
+import { getProfile, getStageData } from "@/lib/db/queries";
 import { SECTIONS } from "@/lib/stage/sections";
+import { getSectionIndex } from "@/lib/stage/section-index";
+import { getSectionMetadata } from "@/lib/seo/metadata";
+import { buildPersonJsonLd, toJsonLdString } from "@/lib/seo/person";
 import type { SectionId } from "@/types/stage";
 
 interface PageProps {
@@ -34,13 +35,14 @@ export function generateStaticParams() {
   }));
 }
 
-// Each URL gets its own title in the server-rendered HTML
+// Each URL gets its own title, description, canonical and share tags (D30)
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { section } = await params;
   const current = SECTIONS[getSectionIndex(section)];
-  return current ? { title: getSectionTitle(current) } : {};
+  if (!current) return {};
+  return getSectionMetadata(current, await getProfile());
 }
 
 export default async function Page({ params }: PageProps) {
@@ -72,6 +74,12 @@ export default async function Page({ params }: PageProps) {
     <>
       <Stage panels={panels} />
       <Spotlight />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: toJsonLdString(buildPersonJsonLd(profile)),
+        }}
+      />
     </>
   );
 }

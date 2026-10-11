@@ -6,6 +6,11 @@ const envSchema = z.object({
     .enum(["development", "test", "production"])
     .default("development"),
   DATABASE_URL: z.string().url(),
+  // Public origin without a trailing slash: canonical, sitemap and JSON-LD (D74)
+  SITE_URL: z
+    .string()
+    .url()
+    .transform((url) => url.replace(/\/+$/, "")),
 });
 
 const parsed = envSchema.safeParse(process.env);

@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-11
-**Current phase / step:** P4.5
+**Current phase / step:** P4.6
 **Mode default:** Build
 
 ---
@@ -15,7 +15,7 @@
 | P1    | Setup, tokens & chrome   | ✅ Done        |                                             |
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
-| P4    | Neon data → LAUNCH       | 🟦 in progress | P4.1–P4.4 done; launch gate                 |
+| P4    | Neon data → LAUNCH       | 🟦 in progress | P4.1–P4.5 done; launch gate                 |
 | P5    | Dashboard                | ⬜ Not started |                                             |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 
@@ -29,7 +29,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P4.2 Types as `as const` tuples + `slug` fields; Drizzle schema, `db:*` scripts, migration applied to Neon
 - [x] P4.3 Zod schemas; `scripts/seed.ts` via `tsx`, idempotent; testnet wording for Chainkuns/DarkMint (D76)
 - [x] P4.4 `getStageData()` queries; swap all panels to DB data; remove static seed from runtime imports
-- [ ] P4.5 SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD `Person`, OG image
+- [x] P4.5 SEO basics: per-section metadata, canonical, sitemap, robots, JSON-LD `Person`, OG image
 - [ ] P4.6 Launch checklist: re-run content audit (R4), Lighthouse, deploy to production, update LinkedIn/GitHub/Upwork/CV links
 
 ---
@@ -63,7 +63,6 @@ None. O4 and O5 settled (D73, D74).
 - A hover lift in progress when the dock ring starts to glide can pop the ring by ~4px
 - TabBar indicator does not glide (static)
 - Heading focus and the live region can both speak (double announce); full screen-reader pass in P6.3
-- Canonical, sitemap and descriptions wait for P4.5 (domain, O5)
 - Top-bar badge still uses the placeholder avatar SVG, not the portrait
 - Firefox only: a brief white outline flashes around a dock tile while it scales on hover (cosmetic, left unresolved; Chrome is fine)
 - Tech Stack highlights are written for ~280 px cards (≤ ~38 characters); longer text would truncate with "…"
@@ -88,6 +87,9 @@ None. O4 and O5 settled (D73, D74).
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - Nothing caps `featured` at 3 rows; add the check in the P5.4 validators
 - A bad row in Neon (for example a live project with no live link) fails the build; whether a failed hourly regeneration keeps serving the last good page was not tested (check before launch, P4.6)
+- Social previews (LinkedIn, X, WhatsApp) are not checked on the live domain yet; check after the P4.5 merge
+- The manifest is built at deploy time; a profile edit shows after the next redeploy
+- The five default Next SVGs in `public/` (`file`, `globe`, `next`, `vercel`, `window`) are unused; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
 
 ---
 
@@ -112,6 +114,21 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-11 — P4.5
+Done:
+- Per-section titles (Overview uses the SEO title), description, own-URL canonical, Open Graph and twitter card with the 1200×630 image; root metadata with icons; manifest from the profile; robots; sitemap; Person JSON-LD
+- Favicons, touch icon, Android icons and OG image added; the tab title now comes from server-computed titles
+Files created/changed:
+- lib/env.ts, .env.example; lib/stage/section-title.ts, useStageUrl.ts; components/stage/StageUrlSync.tsx; lib/seo/{metadata,person}.ts; app/layout.tsx, manifest.ts, robots.ts, sitemap.ts; app/(site)/[[...section]]/{layout,page}.tsx; app/favicon.ico; public/ (favicons, apple-touch-icon, android-chrome icons, og-image.jpg); docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D80 SEO, icons, manifest, JSON-LD
+Verified (viewports / devices):
+- Typecheck, lint, build (manifest, robots and sitemap are static); curl of every tag, robots, sitemap, manifest and JSON-LD; tab titles and favicon in the browser; manifest in DevTools; theme color matches `--color-canvas`
+Known issues:
+- Social previews not yet checked on the live domain; manifest changes need a redeploy; unused default SVGs
+Next step (ID + one-line goal):
+- P4.6 — launch checklist: re-run the content audit (R4), Lighthouse, production deploy check, update the external links
 
 ### Handoff — 2026-10-11 — P4.4
 Done:
@@ -147,22 +164,7 @@ Prompt for the next chat:
   (see the block in the chat)
 
 ### Handoff — 2026-10-11 — P4.2
-Done:
-- Types now derive their unions from `as const` tuples; `slug` added to skill groups and experience items; `seoTitle` and `seoDescription` added to profile (seed carries proposed copy)
-- Drizzle schema for the four tables, `db:generate` and `db:migrate` scripts, first migration generated, reviewed and applied to Neon
-Files created/changed:
-- types/{profile,projects,skills,experience}.ts; data/{seed,skill-groups,experience}.ts; lib/db/schema.ts; package.json; drizzle/0000_silly_living_tribunal.sql and drizzle/meta/; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D77 schema details (relative imports, extra tuples, array defaults, named checks)
-Verified (viewports / devices):
-- Typecheck, lint, build; generated SQL reviewed against the schema; table, constraint and enum check in the Neon SQL editor
-Known issues:
-- Seed outside Next: `lib/env.ts` requires `NODE_ENV`, which `tsx` usually leaves unset (P4.3)
-- Nothing caps `featured` at 3 rows (P5.4)
-Next step (ID + one-line goal):
-- P4.3 — Zod schemas in `validators/` and an idempotent `scripts/seed.ts`
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: package.json, tsconfig.json, .env.example, lib/env.ts, lib/db/index.ts, lib/db/schema.ts, drizzle.config.ts, types/profile.ts, types/projects.ts, types/skills.ts, types/experience.ts, data/seed.ts, data/projects.ts, data/skill-groups.ts, data/experience.ts, eslint.config.mjs. Phase: P4 — Neon data. Step: P4.3. Mode: Build. Follow WORKFLOW.md §11. Goal: Write the Zod schemas in validators/ (reading the tuples from types/), add scripts/seed.ts run with tsx (add-missing by slug, --update to overwrite, D71), apply the testnet wording (D76), and stop at the verify command for my approval.
+- P4.2: types as `as const` tuples with `slug` fields, Drizzle schema and first migration applied to Neon; D77.
 
 ### Handoff — 2026-10-11 — P4.1 (plan chat)
 - P4.1: planned the four-table schema and JSON shapes; settled O4 and O5; D64–D76.
