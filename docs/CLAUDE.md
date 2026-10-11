@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P3 done; P4.1–P4.5 done, P4.6 (launch checklist) next.**
+> Status: **P1–P4 done (launched); P5 (dashboard) next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -299,7 +299,7 @@ portfolio/
 Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
 Also pasted: <the files this step builds on, listed in the previous handoff>
-Phase: P4 — Neon data. Step: P4.1.
+Phase: P5 — Dashboard. Step: P5.1.
 Mode: Build. Follow WORKFLOW.md §11.
 Goal: <one sentence>
 ```
@@ -403,6 +403,7 @@ Goal: <one sentence>
 | D78 | Validators and seed settled in P4.3: `lib/env.ts` defaults `NODE_ENV` to `development` so tsx scripts can import it; the schemas in `validators/` (`shared`, `profile`, `projects`, `skills`, `experience`) are `z.strictObject` and end in `satisfies z.ZodType<Type>`; rules beyond shape: a `live` project needs a `live` link, a skill group has at most 5 items and 4 highlights of at most 40 characters (D52), shipped bullets number 3–5 (D56), `endDate` is not before `startDate`, the timezone is a real IANA id, link URLs are http(s), asset URLs are a site path or http(s); `scripts/seed.ts` loads `.env.local` and then imports `lib/db` dynamically, validates everything before writing, runs row by row, and has three modes: default (add missing rows by slug), `--update` (overwrite) and `--check` (validate only, no database); run with `npm run db:seed`; Chainkuns and DarkMint summaries say testnet (D76); Neon holds the seeded rows |
 | D79 | P4.4 shipped D68, D69 and D72 with these details: `lib/db/queries.ts` has plain `async function` loaders exported through `cache()` (`getProfile`, `getSkillGroups`, `getProjects`, `getExperienceItems`, `getStageData`); rows are filtered by `visible` and ordered by `sort` then `slug` in SQL, `id` is dropped, and each row is parsed by the P4.3 schemas (the error names the table and slug); `null` becomes `undefined` for `summaryShort` and `shipped`; `revalidate = 3600` is a literal in `page.tsx` only; the five pages build as static (SSG) from Neon and a hand edit in Neon appeared after the revalidate window (tested with a 10 s value); the ESLint rule blocks `@/data` and `@/data/*` except in `scripts/` and `data/` (relative imports are not covered); no `server-only` package: `lib/env.ts` throws if `lib/db` reaches a client bundle; `data/` is seed input only |
 | D80 | P4.5 shipped D67 and D74 with these details: `SITE_URL` is a required env var (trailing slash stripped), the same production value in every Vercel environment; the root layout's `generateMetadata` supplies `metadataBase`, the default title and description, and the icons (`app/favicon.ico`, 16 and 32 px favicons and the apple-touch-icon from `public/`); `getSectionMetadata` (`lib/seo/metadata.ts`) gives each URL its title (Overview = `profile.seoTitle`, the others `<Label> \| <name>`), the `profile.seoDescription`, its own canonical (D30), Open Graph tags and a `summary_large_image` twitter card using `public/og-image.jpg` (1200×630); the five titles are computed on the server (`getSectionTitles`) and passed to `StageUrlSync`, so the tab title matches the server title; `app/manifest.ts` builds the manifest from the profile (theme color `#050505`, keep it in step with `--color-canvas`; a profile edit shows after the next redeploy); `app/robots.ts` disallows `/dashboard` and links the sitemap; `app/sitemap.ts` lists the five URLs with no `lastModified`; JSON-LD `Person` (name, url, jobTitle, description, image, `sameAs`; no email, no address) comes from `lib/seo/person.ts` with `<` escaped and renders on every URL |
+| D81 | P4.6 launch audit (R4): every claim on the site was checked against the owner's project facts and confirmed; the Work card organization reads "Independent / Personal Projects" (not "Self-Employed"); the CS50 line reads "CS50x (Harvard University, free online course)"; the top-bar avatar is the portrait (`/images/profile-picture.png`); until the dashboard exists, content changes are made in `data/` and applied with `npm run db:seed -- --update` (overwrites every row); launch measurements: Lighthouse desktop 99 / 98 / 100 / 100, mobile 92 / 98 / 100 / 100 (mobile LCP 3.1 s, Speed Index 4.2 s); production smoke test passed (five pages 200, unknown paths and `/dashboard` 404) |
 
 ### Open
 

@@ -100,8 +100,8 @@
 | P5.1 | Auth.js + GitHub allowlist; `proxy.ts` guard + `requireAdmin()` re-check in every action. |
 | P5.2 | Dashboard layout (shadcn/ui, dark) + overview links. |
 | P5.3 | Profile editor (incl. Blob uploads for avatar/portrait/resume). |
-| P5.4 | Projects editor (CRUD, status, links, tags, featured/visible, up/down reorder). |
-| P5.5 | Tech Stack editor (groups, items, highlights, strip, icon picker, reorder). |
+| P5.4 | Projects editor (CRUD, status, links, tags, featured/visible, up/down reorder); at most 3 featured (not enforced yet); a `live` project needs a live link (D78). |
+| P5.5 | Tech Stack editor (groups, items, highlights, icon picker, reorder; limits from the D78 validators). |
 | P5.6 | Experience editor. |
 | P5.7 | Cross-cutting: Zod validation on every write, confirm deletes, toasts, `revalidatePath`, "view on site". |
 
@@ -114,7 +114,7 @@
 | Step | Task |
 |---|---|
 | P6.1 | Remaining animations: carousel counter + filter reflow (E), live clock digits (F), ambient background (G); optional boot intro and portrait parallax. |
-| P6.2 | Perf pass at 4× throttle; confirm `LazyMotion`, no unused icons, dashboard code not in public chunks; image sizes/priority for the LCP image. |
+| P6.2 | Perf pass at 4× throttle; confirm `LazyMotion`, no unused icons, dashboard code not in public chunks; image sizes/priority for the LCP image. Launch measurement: mobile LCP 3.1 s, Speed Index 4.2 s; check whether the Overview portrait fade is the LCP element. |
 | P6.3 | Quick a11y pass (keyboard, contrast, screen-reader spot check). |
 | P6.4 | Final content review (R4) and project status check; optional `@vercel/analytics`; domain decision (O5). |
 | P6.5 | Short `README.md`; update `PROGRESS.md` to complete. |
