@@ -1,4 +1,10 @@
-export type ExperienceKind = "work" | "freelance" | "education" | "milestone";
+export const EXPERIENCE_KINDS = [
+  "work",
+  "freelance",
+  "education",
+  "milestone",
+] as const;
+export type ExperienceKind = (typeof EXPERIENCE_KINDS)[number];
 
 export type ExperienceProject = {
   name: string;

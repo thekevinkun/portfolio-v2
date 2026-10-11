@@ -1,5 +1,8 @@
+export const SOCIAL_KINDS = ["linkedin", "github"] as const;
+export type SocialKind = (typeof SOCIAL_KINDS)[number];
+
 export interface SocialLink {
-  kind: "linkedin" | "github";
+  kind: SocialKind;
   label: string;
   url: string;
 }
