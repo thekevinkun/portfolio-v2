@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-11
-**Current phase / step:** P5.1
+**Last updated:** 2026-10-12
+**Current phase / step:** P5.2
 **Mode default:** Build
 
 ---
@@ -16,7 +16,7 @@
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
-| P5    | Dashboard                | 🟦 In progress | Plan approved (D82–D98); building from P5.1 |
+| P5    | Dashboard                | 🟦 In progress | P5.1–P5.2 done (D82–D99) |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
@@ -26,7 +26,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Current phase checklist
 
 - [x] P5.1 Auth: next-auth@beta, GitHub allowlist, `requireAdmin()`, `proxy.ts`, bare login page
-- [ ] P5.2 Dashboard shell: own form primitives, layout, nav, overview
+- [x] P5.2 Dashboard shell: own form primitives, layout, nav, overview
 - [ ] P5.3a Action pattern + Profile editor (no uploads)
 - [ ] P5.3b Blob uploads (avatar, portrait, resume)
 - [ ] P5.4a Projects list: visibility, reorder, delete, featured cap
@@ -54,7 +54,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
-- D82–D98: see CLAUDE.md §10.
+- D82–D99: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -89,6 +89,8 @@ None. O4 and O5 settled (D73, D74).
 - The validator limits (5 skill items, 4 highlights of at most 40 characters, 3–5 shipped bullets per project) must be visible in the P5.5 and P5.6 editors
 - Tech Stack cards were fit-tested with 5 items and 4 highlights (P3.9); D98 raises the limits to 7 and 5 in P5.5, which must re-run fit QA with full cards (a short panel such as 1366×768 is the likeliest to overflow)
 - Dashboard sign-in works only on localhost and the production domain (two OAuth apps, D85); preview URLs cannot sign in
+- Dashboard: `app/dashboard/(admin)/[area]/page.tsx` is a temporary stub for the editors that don't exist yet; delete it in P5.7
+- Dashboard: the open `Select` list is drawn by the browser, so its look can differ between browsers (options carry their own colors, D99); spot-check in P5.4b where the selects are used
 - The login page and the signed-in placeholder are unstyled stand-ins until P5.2
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - Nothing caps `featured` at 3 rows; the P5.4 project actions add the check (D89)
@@ -121,6 +123,25 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-12 — P5.2
+Done:
+- Dashboard shell: `(admin)` layout with `requireAdmin()`, sticky top bar on phones and fixed sidebar from `lg`, nav with active state, sign-out, sonner Toaster
+- Own form primitives (Input, Textarea, Select, Switch, FieldRow, ConfirmDialog), no shadcn
+- Styled login page; overview with live counts, per-area cards and "View site"; temporary stub for the editor routes
+- Fixes after review: `ConfirmDialog` `onConfirm` accepts any return value; readable `Select` options; danger button colors
+Files created/changed:
+- components/dashboard/{DashboardShell,DashboardNav,SignOutForm,nav-items,index}; components/dashboard/ui/{Input,Textarea,Select,Switch,FieldRow,ConfirmDialog,Toaster,field-styles,index}; app/dashboard/(admin)/{layout,page}.tsx and [area]/page.tsx; app/dashboard/login/page.tsx; lib/db/admin-queries.ts; types/admin.ts; app/globals.css (danger tokens); package.json (sonner); docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D99
+Verified (viewports / devices):
+- Typecheck, lint, build; overview, nav, stubs, styled login, guards and the primitives (temporary preview page, deleted) at 1440×900 and 390×844; keyboard focus; dialog centered, Esc and backdrop close; public site unchanged
+Known issues:
+- Editor stub to delete in P5.7; open `Select` list is browser-drawn
+Next step (ID + one-line goal):
+- P5.3a — action pattern and the Profile editor (no uploads)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, next.config.ts, eslint.config.mjs, lib/env.ts, lib/auth/index.ts, lib/auth/require-admin.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, types/profile.ts, validators/shared.ts, validators/profile.ts, data/seed.ts, app/manifest.ts, app/dashboard/(admin)/layout.tsx, app/dashboard/(admin)/page.tsx, components/dashboard/index.ts, components/dashboard/ui/index.ts and every file in components/dashboard/ui/. Phase: P5 — Dashboard. Step: P5.3a. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the server-action pattern (adminAction, ActionResult, revalidateSite, form field primitives for string lists and socials) and the Profile editor without uploads, verifying that the helper compiles as a "use server" export and whether a profile edit refreshes the manifest.
 
 ### Handoff — 2026-10-11 — P5.1
 Done:
@@ -155,22 +176,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, next.config.ts, eslint.config.mjs, .env.example, .gitignore, tsconfig.json, lib/env.ts, app/layout.tsx, app/robots.ts. Phase: P5 — Dashboard. Step: P5.1. Mode: Build. Follow WORKFLOW.md §11. Goal: Add Auth.js with the GitHub provider and the numeric-id allowlist, `requireAdmin()`, the `proxy.ts` guard for `/dashboard`, a bare login page and a signed-in placeholder, verifying the Next 16 `proxy` export first.
 
 ### Handoff — 2026-10-11 — P4.6 (P4 closed)
-Done:
-- Launch audit (R4): every claim confirmed with the owner; production smoke test, link check, leftover-claims check and hardcoded-content check all clean
-- Fixes: "CS50x (Harvard University, free online course)", organization "Independent / Personal Projects", portrait as the top-bar avatar; applied to Neon with `db:seed -- --update`
-- Lighthouse on production: desktop 99 / 98 / 100 / 100, mobile 92 / 98 / 100 / 100; real-phone pass clean
-Files created/changed:
-- data/projects.ts, data/experience.ts, data/seed.ts; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D81 launch audit results, content workflow until the dashboard, launch measurements
-Verified (viewports / devices):
-- Typecheck, lint, build; Overview, Projects and Experience at 1440×900 and 390×844; production five-page smoke test; Lighthouse; real phone
-Known issues:
-- mobile LCP and Speed Index red (P6.2); unused files in `public/`; external links (LinkedIn, GitHub, Upwork, CV) and the resume PDF check are not confirmed done
-Next step (ID + one-line goal):
-- P5 — Dashboard: start with a plan chat (no code), then P5.1 auth
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, next.config.ts, eslint.config.mjs, .env.example, lib/env.ts, lib/db/index.ts, lib/db/schema.ts, lib/db/queries.ts, validators/shared.ts, validators/profile.ts, validators/projects.ts, validators/skills.ts, validators/experience.ts, types/profile.ts, types/projects.ts, types/skills.ts, types/experience.ts, app/layout.tsx, app/(site)/[[...section]]/layout.tsx, app/(site)/[[...section]]/page.tsx, scripts/seed.ts. Phase: P5 — Dashboard. Step: P5 plan chat. Mode: Build, but this is a plan chat: no code. Follow WORKFLOW.md §11. Goal: Plan the whole dashboard before building: auth (Auth.js with GitHub, allowlist, the proxy.ts guard, requireAdmin in every action), the server-action pattern (auth, Zod, write, revalidatePath), shadcn/ui and Vercel Blob setup with their R9 decisions, the editor screens and reorder/visibility behavior, how the P4.3 validators are reused, and the env vars I need to prepare; split P5.1–P5.7 into commit-sized steps if needed, then give me the decision table and the exact docs edits and stop for my approval.
+- P4.6: launch audit (R4), content fixes, Lighthouse and production smoke test; P4 closed; D81.
 
 ### Handoff — 2026-10-11 — P4.5
 - P4.5: per-section metadata, canonical, Open Graph, manifest, robots, sitemap, Person JSON-LD, icons; D80.
