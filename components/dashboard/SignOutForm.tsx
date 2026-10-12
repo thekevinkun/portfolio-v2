@@ -1,14 +1,9 @@
 import { Button } from "@/components/ui";
-import { signOut } from "@/lib/auth";
+import { signOutAdmin } from "@/lib/dashboard/actions/auth";
 
 const SignOutForm = () => {
-  async function signOutAction() {
-    "use server";
-    await signOut({ redirectTo: "/dashboard/login" });
-  }
-
   return (
-    <form action={signOutAction}>
+    <form action={signOutAdmin}>
       <Button type="submit" variant="secondary" size="sm">
         Sign out
       </Button>
