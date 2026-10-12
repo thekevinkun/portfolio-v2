@@ -3,21 +3,29 @@
 import { useState, useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui";
+import AssetField from "@/components/dashboard/AssetField";
 import FormSection from "@/components/dashboard/FormSection";
 import TextField from "@/components/dashboard/TextField";
-import { updateProfile } from "@/lib/dashboard/actions/profile";
-import { joinLines, readLines, readText } from "@/lib/dashboard/form-data";
-import { toFormErrors } from "@/lib/dashboard/form-errors";
-import { SOCIAL_KINDS, type Profile, type SocialKind } from "@/types/profile";
 import {
   PRIMARY_SECTIONS,
   SECONDARY_SECTIONS,
   type FieldSection,
 } from "./profile-fields";
+import { updateProfile } from "@/lib/dashboard/actions/profile";
+import { joinLines, readLines, readText } from "@/lib/dashboard/form-data";
+import { toFormErrors } from "@/lib/dashboard/form-errors";
+import { ASSET_KINDS, type AssetKind } from "@/types/assets";
+import { SOCIAL_KINDS, type Profile, type SocialKind } from "@/types/profile";
 
 const SOCIAL_LABELS: Record<SocialKind, string> = {
   linkedin: "LinkedIn",
   github: "GitHub",
+};
+
+const ASSET_LABELS: Record<AssetKind, string> = {
+  avatar: "Avatar",
+  portrait: "Portrait",
+  resume: "Resume (PDF)",
 };
 
 // Server paths ("socials.1.url", "chips.2") to the control that shows them
@@ -34,6 +42,18 @@ function renameKey(key: string): string {
 const ProfileForm = ({ profile }: { profile: Profile }) => {
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
+  // File URLs live in state because an upload changes them before Save
+  const [files, setFiles] = useState<Record<AssetKind, string | null>>({
+    avatar: profile.avatarUrl,
+    portrait: profile.portraitUrl,
+    resume: profile.resumeUrl,
+  });
+
+  const saved: Record<AssetKind, string | null> = {
+    avatar: profile.avatarUrl,
+    portrait: profile.portraitUrl,
+    resume: profile.resumeUrl,
+  };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -78,10 +98,9 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
       availabilityShort: text("availabilityShort"),
       seoTitle: text("seoTitle"),
       seoDescription: text("seoDescription"),
-      // Files are read-only until P5.3b
-      avatarUrl: profile.avatarUrl,
-      portraitUrl: profile.portraitUrl,
-      resumeUrl: profile.resumeUrl,
+      avatarUrl: files.avatar,
+      portraitUrl: files.portrait,
+      resumeUrl: files.resume,
     };
 
     startTransition(async () => {
@@ -113,12 +132,6 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
     </FormSection>
   );
 
-  const files = [
-    ["Avatar", profile.avatarUrl],
-    ["Portrait", profile.portraitUrl],
-    ["Resume", profile.resumeUrl],
-  ] as const;
-
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
       {PRIMARY_SECTIONS.map(renderSection)}
@@ -147,17 +160,22 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
 
       {SECONDARY_SECTIONS.map(renderSection)}
 
-      <FormSection title="Files" description="Uploads arrive in the next step.">
-        <dl className="space-y-3 text-sm">
-          {files.map(([label, url]) => (
-            <div key={label}>
-              <dt className="text-fg-low">{label}</dt>
-              <dd className="font-mono text-xs break-all text-fg-medium">
-                {url ?? "None"}
-              </dd>
-            </div>
-          ))}
-        </dl>
+      <FormSection
+        title="Files"
+        description="An upload goes live when you save the profile."
+      >
+        {ASSET_KINDS.map((kind) => (
+          <AssetField
+            key={kind}
+            kind={kind}
+            label={ASSET_LABELS[kind]}
+            value={files[kind]}
+            savedValue={saved[kind]}
+            onChange={(url) =>
+              setFiles((previous) => ({ ...previous, [kind]: url }))
+            }
+          />
+        ))}
       </FormSection>
 
       <div className="sticky bottom-0 -mx-6 flex items-center justify-end border-t border-glass-border bg-obsidian px-6 py-3 lg:-mx-10 lg:px-10">
