@@ -1,4 +1,6 @@
+import { eq } from "drizzle-orm";
 import type { AdminCounts } from "@/types/admin";
+import type { Profile } from "@/types/profile";
 import { db } from "./index";
 import * as t from "./schema";
 
@@ -25,4 +27,15 @@ export async function getAdminCounts(): Promise<AdminCounts> {
     },
     experience: { total: experience.length, hidden: hiddenCount(experience) },
   };
+}
+
+// Not parsed with the strict schema on purpose (D90): a hand-broken row must
+// still open in the editor so it can be fixed.
+export async function getAdminProfile(): Promise<Profile> {
+  const [row] = await db.select().from(t.profile).where(eq(t.profile.id, 1));
+  if (!row) throw new Error("The profile row is missing. Run npm run db:seed.");
+
+  const { id, ...profile } = row;
+  void id;
+  return profile;
 }
