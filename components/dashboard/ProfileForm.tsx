@@ -3,21 +3,31 @@
 import { useState, useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui";
+import AssetField from "@/components/dashboard/AssetField";
 import FormSection from "@/components/dashboard/FormSection";
 import TextField from "@/components/dashboard/TextField";
-import { updateProfile } from "@/lib/dashboard/actions/profile";
-import { joinLines, readLines, readText } from "@/lib/dashboard/form-data";
-import { toFormErrors } from "@/lib/dashboard/form-errors";
-import { SOCIAL_KINDS, type Profile, type SocialKind } from "@/types/profile";
 import {
   PRIMARY_SECTIONS,
   SECONDARY_SECTIONS,
   type FieldSection,
 } from "./profile-fields";
+import { toFormErrors } from "@/lib/dashboard/form-errors";
+import { updateProfile } from "@/lib/dashboard/actions/profile";
+import { joinLines, readLines, readText } from "@/lib/dashboard/form-data";
+import { revokePending } from "@/lib/dashboard/pending-asset";
+import { discardAsset, uploadAsset } from "@/lib/dashboard/actions/assets";
+import { ASSET_KINDS, type AssetChange, type AssetKind } from "@/types/assets";
+import { SOCIAL_KINDS, type Profile, type SocialKind } from "@/types/profile";
 
 const SOCIAL_LABELS: Record<SocialKind, string> = {
   linkedin: "LinkedIn",
   github: "GitHub",
+};
+
+const ASSET_LABELS: Record<AssetKind, string> = {
+  avatar: "Avatar",
+  portrait: "Portrait",
+  resume: "Resume (PDF)",
 };
 
 // Server paths ("socials.1.url", "chips.2") to the control that shows them
@@ -31,9 +41,25 @@ function renameKey(key: string): string {
   return list?.[1] ?? key;
 }
 
+// Deletes files uploaded during a save that then failed. The server refuses
+// to delete anything a saved row uses, so this is safe.
+async function rollbackUploads(urls: string[]) {
+  await Promise.all(urls.map((url) => discardAsset({ url }).catch(() => {})));
+}
+
 const ProfileForm = ({ profile }: { profile: Profile }) => {
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
+  // What the database holds for each file
+  const [saved, setSaved] = useState<Record<AssetKind, string | null>>({
+    avatar: profile.avatarUrl,
+    portrait: profile.portraitUrl,
+    resume: profile.resumeUrl,
+  });
+  // Files picked but not uploaded yet; nothing leaves the browser until Save
+  const [changes, setChanges] = useState<
+    Partial<Record<AssetKind, AssetChange>>
+  >({});
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -55,7 +81,7 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
       return;
     }
 
-    const input: Profile = {
+    const textInput = {
       name: text("name"),
       username: text("username"),
       handle: text("handle"),
@@ -78,21 +104,65 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
       availabilityShort: text("availabilityShort"),
       seoTitle: text("seoTitle"),
       seoDescription: text("seoDescription"),
-      // Files are read-only until P5.3b
-      avatarUrl: profile.avatarUrl,
-      portraitUrl: profile.portraitUrl,
-      resumeUrl: profile.resumeUrl,
     };
 
     startTransition(async () => {
-      const result = await updateProfile(input);
-      if (result.ok) {
+      const urls: Record<AssetKind, string | null> = { ...saved };
+      const uploaded: string[] = [];
+
+      try {
+        // 1. Upload only the files that changed, one request each
+        for (const kind of ASSET_KINDS) {
+          const change = changes[kind];
+          if (change === undefined) continue;
+          if (change === null) {
+            urls[kind] = null;
+            continue;
+          }
+
+          const body = new FormData();
+          body.set("kind", kind);
+          body.set("file", change.file);
+          const upload = await uploadAsset(body);
+
+          if (!upload.ok) {
+            await rollbackUploads(uploaded);
+            toast.error(`${ASSET_LABELS[kind]}: ${upload.error}`);
+            return;
+          }
+          uploaded.push(upload.data.url);
+          urls[kind] = upload.data.url;
+        }
+
+        // 2. Save the profile with the final URLs
+        const result = await updateProfile({
+          ...textInput,
+          avatarUrl: urls.avatar,
+          portraitUrl: urls.portrait,
+          resumeUrl: urls.resume,
+        });
+
+        if (!result.ok) {
+          // The database was not changed, so the new files must not stay
+          await rollbackUploads(uploaded);
+          setErrors(toFormErrors(result.fieldErrors, renameKey));
+          toast.error(result.error);
+          return;
+        }
+
         setErrors({});
-        toast.success("Profile saved");
-        return;
+        for (const kind of ASSET_KINDS) revokePending(changes[kind]);
+        setChanges({});
+        setSaved(urls);
+        if (result.data.cleanupFailed) {
+          toast.warning("Saved, but an old file could not be deleted.");
+        } else {
+          toast.success("Profile saved");
+        }
+      } catch {
+        await rollbackUploads(uploaded);
+        toast.error("Something went wrong. Please try again.");
       }
-      setErrors(toFormErrors(result.fieldErrors, renameKey));
-      toast.error(result.error);
     });
   };
 
@@ -112,12 +182,6 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
       })}
     </FormSection>
   );
-
-  const files = [
-    ["Avatar", profile.avatarUrl],
-    ["Portrait", profile.portraitUrl],
-    ["Resume", profile.resumeUrl],
-  ] as const;
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
@@ -147,17 +211,23 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
 
       {SECONDARY_SECTIONS.map(renderSection)}
 
-      <FormSection title="Files" description="Uploads arrive in the next step.">
-        <dl className="space-y-3 text-sm">
-          {files.map(([label, url]) => (
-            <div key={label}>
-              <dt className="text-fg-low">{label}</dt>
-              <dd className="font-mono text-xs break-all text-fg-medium">
-                {url ?? "None"}
-              </dd>
-            </div>
-          ))}
-        </dl>
+      <FormSection
+        title="Files"
+        description="Files are uploaded only when you press Save changes."
+      >
+        {ASSET_KINDS.map((kind) => (
+          <AssetField
+            key={kind}
+            kind={kind}
+            label={ASSET_LABELS[kind]}
+            savedUrl={saved[kind]}
+            change={changes[kind]}
+            disabled={pending}
+            onChange={(change) =>
+              setChanges((previous) => ({ ...previous, [kind]: change }))
+            }
+          />
+        ))}
       </FormSection>
 
       <div className="sticky bottom-0 -mx-6 flex items-center justify-end border-t border-glass-border bg-obsidian px-6 py-3 lg:-mx-10 lg:px-10">
