@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { Button, GlassCard } from "@/components/ui";
 import { signIn } from "@/lib/auth";
 import { getAdminSession } from "@/lib/auth/require-admin";
 
@@ -27,26 +28,30 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center px-6">
-      <div className="w-full max-w-sm space-y-6 text-center">
-        <h1 className="text-2xl font-semibold text-fg-high">Dashboard</h1>
-        <p className="text-sm text-fg-low">
-          Sign in with the admin GitHub account.
-        </p>
+    <main className="flex min-h-dvh items-center justify-center bg-obsidian px-6">
+      <GlassCard
+        spotlight={false}
+        className="w-full max-w-sm space-y-6 p-8 text-center"
+      >
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold tracking-tight text-fg-high">
+            Dashboard
+          </h1>
+          <p className="text-sm text-fg-low">
+            Sign in with the admin GitHub account.
+          </p>
+        </div>
         {message ? (
-          <p role="alert" className="text-sm text-fg-high">
+          <p role="alert" className="text-sm text-danger">
             {message}
           </p>
         ) : null}
         <form action={signInWithGitHub}>
-          <button
-            type="submit"
-            className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-on-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >
+          <Button type="submit" className="w-full">
             Continue with GitHub
-          </button>
+          </Button>
         </form>
-      </div>
+      </GlassCard>
     </main>
   );
 }
