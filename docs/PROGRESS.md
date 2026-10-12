@@ -16,7 +16,7 @@
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
-| P5    | Dashboard                | 🟦 In progress | P5.1–P5.2 done (D82–D99) |
+| P5    | Dashboard                | 🟦 In progress | P5.1–P5.3a done (D82–D100) |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
@@ -27,7 +27,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 - [x] P5.1 Auth: next-auth@beta, GitHub allowlist, `requireAdmin()`, `proxy.ts`, bare login page
 - [x] P5.2 Dashboard shell: own form primitives, layout, nav, overview
-- [ ] P5.3a Action pattern + Profile editor (no uploads)
+- [x] P5.3a Action pattern + Profile editor (no uploads)
 - [ ] P5.3b Blob uploads (avatar, portrait, resume)
 - [ ] P5.4a Projects list: visibility, reorder, delete, featured cap
 - [ ] P5.4b Projects create/edit form
@@ -54,7 +54,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
-- D82–D99: see CLAUDE.md §10.
+- D82–D100: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -81,7 +81,7 @@ None. O4 and O5 settled (D73, D74).
 - Experience at 2-up: the last carousel page holds a single card (Bookshop)
 - Experience at 1366×768 (panel 511) is the tightest wide layout; if the Learning band ever touches the footer, hide its tag chips in that range with a dedicated variant
 - Experience: `--i-wide` (entrance order) follows viewport width ≥ 1280 px, while the wide layout also needs 500 px of height, so a wide but short window shows the carousel animating in wide order (harmless)
-- Get In Touch: the UTC offset label is computed at build time (fine for Asia/Makassar, no DST); revisit if the timezone becomes editable in P5.3
+- Get In Touch: the UTC offset label is computed when the page is generated, so it refreshes on each dashboard save and hourly; the timezone is editable since P5.3a, and a DST timezone could show a wrong offset for up to an hour around a clock change
 - Entrance timing is tuned by feel: default 650 ms / 55 ms step / 300 ms wait after a turn (`:root` in globals.css); Overview 800 ms / 110 ms (`[data-section="overview"]`), featured cards offset 850 ms / step 220 ms / 900 ms, portrait 1600 ms (OverviewPanel.tsx)
 - Carousel slides must keep `overflow-clip`: animated cards would otherwise change the track's scroll size and break Carousel's page measurement and the wheel guard
 - Spotlight border sheen uses `mask-composite`; spot-check Safari and Firefox in P6.2, and check entrances plus spotlight at 4× CPU throttle there
@@ -91,11 +91,11 @@ None. O4 and O5 settled (D73, D74).
 - Dashboard sign-in works only on localhost and the production domain (two OAuth apps, D85); preview URLs cannot sign in
 - Dashboard: `app/dashboard/(admin)/[area]/page.tsx` is a temporary stub for the editors that don't exist yet; delete it in P5.7
 - Dashboard: the open `Select` list is drawn by the browser, so its look can differ between browsers (options carry their own colors, D99); spot-check in P5.4b where the selects are used
+- Profile editor: socials are always exactly LinkedIn and GitHub, both required (D57); adding another kind needs a form and layout change
 - The login page and the signed-in placeholder are unstyled stand-ins until P5.2
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - Nothing caps `featured` at 3 rows; the P5.4 project actions add the check (D89)
 - A bad row in Neon (for example a live project with no live link) fails the build; whether a failed hourly regeneration keeps serving the last good page was not tested (check before launch, P4.6)
-- The manifest is built at deploy time; a profile edit shows after the next redeploy
 - Unused files in `public/`: the five default Next SVGs (`file`, `globe`, `next`, `vercel`, `window`) and `placeholder/avatar.svg`; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
 - Until P5, content changes go through `data/` and `npm run db:seed -- --update`, which overwrites every row
 - Lighthouse at launch: mobile 92 / 98 / 100 / 100 with LCP 3.1 s and Speed Index 4.2 s red; the Overview portrait fade is the suspect (P6.2); accessibility 98 (P6.3)
@@ -123,6 +123,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-12 — P5.3a
+Done:
+- Server-action pattern: `adminAction`, `ActionResult`, field errors keyed by path, `revalidateSite()`; form helpers (`readText`, `readLines`, `toFormErrors`), `FormSection`, `TextField`
+- Profile editor without uploads: admin query (unparsed, D90), `updateProfile` action using the P4.3 schema, form with Identity, Overview, Get In Touch, Links, Location & availability and SEO sections, sticky save bar
+- Fix: sign-out moved to `lib/dashboard/actions/auth.ts`; the dashboard barrel now exports server components only
+Files created/changed:
+- types/action.ts; lib/dashboard/{admin-action,revalidate,form-data,form-errors}.ts; lib/dashboard/actions/{profile,auth}.ts; lib/db/admin-queries.ts; components/dashboard/{FormSection,TextField,ProfileForm,profile-fields,SignOutForm,index}; app/dashboard/(admin)/profile/page.tsx; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D100 (amends D87)
+Verified (viewports / devices):
+- Typecheck, lint, build and `npm run start` on the Neon dev branch; save shows on the public site immediately; chips and focus pills; SEO description reaches page metadata; invalid email, timezone, empty name, empty and unsafe URLs are rejected with nothing saved; saving after sign-out redirects to login; 390×844; sign-out in sidebar and top bar; no auth code in client bundles
+Known issues:
+- Socials fixed to LinkedIn and GitHub; Get In Touch UTC label vs DST timezones
+Next step (ID + one-line goal):
+- P5.3b — Vercel Blob uploads for avatar, portrait and resume
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, next.config.ts, lib/env.ts, lib/auth/require-admin.ts, lib/dashboard/admin-action.ts, lib/dashboard/revalidate.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/actions/profile.ts, types/action.ts, types/profile.ts, validators/shared.ts, validators/profile.ts, lib/db/admin-queries.ts, components/dashboard/ProfileForm.tsx, TextField.tsx, FormSection.tsx, every file in components/dashboard/ui/, and the components that show the three files (components/chrome/ProfileBadge.tsx, components/panels/OverviewPanel.tsx, components/panels/ContactPanel.tsx). Phase: P5 — Dashboard. Step: P5.3b. Mode: Build. Follow WORKFLOW.md §11. Goal: Add Vercel Blob uploads for avatar, portrait and resume through a server action (D94): `lib/blob/env.ts`, the `next.config.ts` changes (bodySizeLimit, remotePatterns), an AssetField component, and wiring into the profile form with cleanup of replaced blobs.
 
 ### Handoff — 2026-10-12 — P5.2
 Done:
@@ -160,20 +178,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, tsconfig.json, app/globals.css, lib/cn.ts, components/ui/index.ts, components/ui/Button.tsx, components/ui/GlassCard.tsx, components/ui/Pill.tsx, components/ui/Chip.tsx, lib/auth/index.ts, lib/auth/require-admin.ts, app/dashboard/layout.tsx, app/dashboard/login/page.tsx, app/dashboard/(admin)/page.tsx, lib/db/schema.ts. Phase: P5 — Dashboard. Step: P5.2. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the dashboard shell with its own form primitives (no shadcn): the (admin) layout with sidebar/top-bar nav, the small primitives (Input, Textarea, Select, Switch, ConfirmDialog, FieldRow), sonner toasts, styled login page, and an overview page with counts and links.
 
 ### Handoff — 2026-10-11 — P5 plan chat
-Done:
-- Planned the whole dashboard: Auth.js (JWT, GitHub id allowlist), proxy guard plus `requireAdmin()` everywhere, server-action pattern, own form primitives (no shadcn), Blob uploads, editor scope, reorder and visibility behavior, validator reuse, env vars, Neon dev branch; P5.1–P5.7 split into commit-sized steps
-Files created/changed:
-- docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D82–D98
-Verified (viewports / devices):
-- Plan only. Not verified: `"use server"` wrapper exports, `db.batch` atomicity, manifest revalidation, Zod 4 `.omit()` on refined objects, GitHub `providerAccountId` as the numeric id
-Known issues:
-- Experience and Tech Stack editors are edit-only in v1 (D92); local `.env.local` must point at the Neon dev branch before the first dashboard write (D86)
-Next step (ID + one-line goal):
-- P5.1 — Auth: sign in with GitHub, only your account, guarded `/dashboard`
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, next.config.ts, eslint.config.mjs, .env.example, .gitignore, tsconfig.json, lib/env.ts, app/layout.tsx, app/robots.ts. Phase: P5 — Dashboard. Step: P5.1. Mode: Build. Follow WORKFLOW.md §11. Goal: Add Auth.js with the GitHub provider and the numeric-id allowlist, `requireAdmin()`, the `proxy.ts` guard for `/dashboard`, a bare login page and a signed-in placeholder, verifying the Next 16 `proxy` export first.
+- P5 plan: dashboard auth, action pattern, own primitives, Blob uploads, editor scope, Neon dev branch; P5.1–P5.7 split; D82–D98.
 
 ### Handoff — 2026-10-11 — P4.6 (P4 closed)
 - P4.6: launch audit (R4), content fixes, Lighthouse and production smoke test; P4 closed; D81.
