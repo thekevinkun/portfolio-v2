@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-12
-**Current phase / step:** P5.2
+**Current phase / step:** P5.4a
 **Mode default:** Build
 
 ---
@@ -16,7 +16,7 @@
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
-| P5    | Dashboard                | 🟦 In progress | P5.1–P5.3a done (D82–D100) |
+| P5    | Dashboard                | 🟦 In progress | P5.1–P5.3b done (D82–D101) |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
@@ -28,7 +28,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P5.1 Auth: next-auth@beta, GitHub allowlist, `requireAdmin()`, `proxy.ts`, bare login page
 - [x] P5.2 Dashboard shell: own form primitives, layout, nav, overview
 - [x] P5.3a Action pattern + Profile editor (no uploads)
-- [ ] P5.3b Blob uploads (avatar, portrait, resume)
+- [x] P5.3b Blob uploads (avatar, portrait, resume)
 - [ ] P5.4a Projects list: visibility, reorder, delete, featured cap
 - [ ] P5.4b Projects create/edit form
 - [ ] P5.5 Tech Stack editor
@@ -54,7 +54,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
-- D82–D100: see CLAUDE.md §10.
+- D82–D101: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -92,6 +92,10 @@ None. O4 and O5 settled (D73, D74).
 - Dashboard: `app/dashboard/(admin)/[area]/page.tsx` is a temporary stub for the editors that don't exist yet; delete it in P5.7
 - Dashboard: the open `Select` list is drawn by the browser, so its look can differ between browsers (options carry their own colors, D99); spot-check in P5.4b where the selects are used
 - Profile editor: socials are always exactly LinkedIn and GitHub, both required (D57); adding another kind needs a form and layout change
+- A tab closed during the few seconds of a profile save can leave one orphan file in the Blob store; a failed save uploads the new files and deletes them again (validating the text fields on the server first would avoid that)
+- P5.4b must add project logos to `lib/blob/references.ts`, so `discardAsset` never deletes a logo a saved project uses
+- The Vercel Blob list can lag after a delete; confirm a delete with `curl -sI "<url>?check=1"` (404 = gone)
+- Next's dev warning flags the Overview portrait as the LCP image and suggests `priority`; fold it into the P6.2 LCP check (a blanket `priority` would preload the portrait on every landing page)
 - The login page and the signed-in placeholder are unstyled stand-ins until P5.2
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - Nothing caps `featured` at 3 rows; the P5.4 project actions add the check (D89)
@@ -123,6 +127,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-12 — P5.3b
+Done:
+- Vercel Blob uploads for avatar, portrait and resume: `uploadAsset` server action with size limit and magic-byte check (PNG, JPEG, WebP, PDF, no SVG); `AssetField` with local preview, Replace, Remove and Undo
+- Files upload only when Save changes is pressed (one request per changed file); a failed save deletes the files uploaded during it; replaced files are deleted after a successful save (logged, warning toast on failure)
+- Two Blob stores (dev and production), `bodySizeLimit` 4.5mb, `remotePatterns` for Blob
+Files created/changed:
+- lib/blob/{env,sniff,url,cleanup,references}.ts; types/assets.ts; lib/dashboard/{admin-action,pending-asset}.ts; lib/dashboard/actions/{assets,profile}.ts; components/dashboard/{AssetField,ProfileForm}.tsx; next.config.ts; .env.example; package.json (@vercel/blob); docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D101 (amends D94)
+Verified (viewports / devices):
+- Typecheck, lint, build and `npm run start` on the dev branch and dev store; picking, replacing and undoing a file stores nothing; Save uploads exactly the changed files and deletes the replaced ones (server log, 404 on the old URL with the cache-bust curl, gone from the Vercel list); avatar, portrait and resume, also all three at once; Remove; oversize, text-as-png, SVG and wrong-type files rejected; signed-out save redirects to login; Overview, top bar and Get In Touch render after Remove and Replace; JSON-LD image is an absolute Blob URL; no token in client bundles
+Known issues:
+- A tab closed mid-save can leave one orphan file; P5.4b must add project logos to `lib/blob/references.ts`; the portrait LCP warning goes to P6.2
+Next step (ID + one-line goal):
+- P5.4a — Projects list: visibility, reorder within a filter, delete with confirm, featured cap
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/projects.ts, validators/projects.ts, validators/shared.ts, lib/db/schema.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/revalidate.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/actions/profile.ts, lib/blob/references.ts, data/projects.ts, lib/projects/filters.ts, components/panels/ProjectsPanel.tsx, components/panels/ProjectCard.tsx, components/panels/FeaturedProjectCard.tsx, components/dashboard/index.ts, every file in components/dashboard/ui/, and app/dashboard/(admin)/page.tsx. Phase: P5 — Dashboard. Step: P5.4a. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Projects list at /dashboard/projects: split the project validator into base shape and refinement and add types/limits.ts (D89), admin projects query, visibility switch, up/down reorder within a filter group with sort renumbering in one db.batch (D91), delete with ConfirmDialog, and the featured-visible cap of 3 checked in the actions.
 
 ### Handoff — 2026-10-12 — P5.3a
 Done:
@@ -162,20 +184,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, next.config.ts, eslint.config.mjs, lib/env.ts, lib/auth/index.ts, lib/auth/require-admin.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, types/profile.ts, validators/shared.ts, validators/profile.ts, data/seed.ts, app/manifest.ts, app/dashboard/(admin)/layout.tsx, app/dashboard/(admin)/page.tsx, components/dashboard/index.ts, components/dashboard/ui/index.ts and every file in components/dashboard/ui/. Phase: P5 — Dashboard. Step: P5.3a. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the server-action pattern (adminAction, ActionResult, revalidateSite, form field primitives for string lists and socials) and the Profile editor without uploads, verifying that the helper compiles as a "use server" export and whether a profile edit refreshes the manifest.
 
 ### Handoff — 2026-10-11 — P5.1
-Done:
-- Auth.js (`next-auth@beta`, GitHub, JWT sessions, no adapter) with the numeric-id allowlist, `requireAdmin()` / `getAdminSession()`, the `proxy.ts` guard for `/dashboard`, a bare login page, a signed-in placeholder with sign-out, and `noindex` on the dashboard
-Files created/changed:
-- lib/auth/{env,index,require-admin}.ts; types/next-auth.d.ts; app/api/auth/[...nextauth]/route.ts; proxy.ts; app/dashboard/layout.tsx, login/page.tsx, (admin)/page.tsx; .env.example; package.json; docs (PROGRESS.md)
-Decisions:
-- D82–D85 implemented as planned; no new decisions
-Verified (viewports / devices):
-- Typecheck, lint, build (public routes still static); signed-out redirect; your account in and out; wrong account rejected; revocation by changing `ADMIN_GITHUB_ID`; public site unchanged; preview green; production sign-in
-Known issues:
-- Preview URLs cannot sign in; login and placeholder pages are unstyled until P5.2
-Next step (ID + one-line goal):
-- P5.2 — Dashboard shell: own form primitives, layout, nav, overview with counts
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, tsconfig.json, app/globals.css, lib/cn.ts, components/ui/index.ts, components/ui/Button.tsx, components/ui/GlassCard.tsx, components/ui/Pill.tsx, components/ui/Chip.tsx, lib/auth/index.ts, lib/auth/require-admin.ts, app/dashboard/layout.tsx, app/dashboard/login/page.tsx, app/dashboard/(admin)/page.tsx, lib/db/schema.ts. Phase: P5 — Dashboard. Step: P5.2. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the dashboard shell with its own form primitives (no shadcn): the (admin) layout with sidebar/top-bar nav, the small primitives (Input, Textarea, Select, Switch, ConfirmDialog, FieldRow), sonner toasts, styled login page, and an overview page with counts and links.
+- P5.1: Auth.js GitHub sign-in with numeric-id allowlist, `requireAdmin()`, `proxy.ts` guard, bare login page; D82–D85.
 
 ### Handoff — 2026-10-11 — P5 plan chat
 - P5 plan: dashboard auth, action pattern, own primitives, Blob uploads, editor scope, Neon dev branch; P5.1–P5.7 split; D82–D98.
