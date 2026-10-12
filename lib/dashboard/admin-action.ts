@@ -28,9 +28,15 @@ function toFieldErrors(error: z.ZodError): FieldErrors {
 
 // Every dashboard mutation goes through here (D87): admin check, Zod parse,
 // the write, then revalidation. User mistakes come back as a result, never a throw.
+interface AdminActionOptions {
+  // Off for actions that change no site content (uploads)
+  revalidate?: boolean;
+}
+
 export function adminAction<TInput, TOutput, TData = undefined>(
   schema: z.ZodType<TOutput, TInput>,
   handler: (input: TOutput) => Promise<ActionResult<TData>>,
+  { revalidate = true }: AdminActionOptions = {},
 ) {
   return async (input: TInput): Promise<ActionResult<TData>> => {
     // Outside the try: a redirect to the login page must not be swallowed
@@ -46,7 +52,7 @@ export function adminAction<TInput, TOutput, TData = undefined>(
 
     try {
       const result = await handler(parsed.data);
-      if (result.ok) revalidateSite();
+      if (result.ok && revalidate) revalidateSite();
       return result;
     } catch (error) {
       console.error("Dashboard action failed:", error);
