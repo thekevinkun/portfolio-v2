@@ -2,8 +2,11 @@
 
 import { put } from "@vercel/blob";
 import { z } from "zod";
+import { deleteBlobs } from "@/lib/blob/cleanup";
 import { blobEnv } from "@/lib/blob/env";
+import { isReferenced } from "@/lib/blob/references";
 import { sniffMime } from "@/lib/blob/sniff";
+import { isBlobUrl } from "@/lib/blob/url";
 import {
   ASSET_RULES,
   BYTES_PER_MB,
@@ -47,6 +50,21 @@ export const uploadAsset = adminAction(
     });
 
     return ok({ url: blob.url });
+  },
+  { revalidate: false },
+);
+
+// Deletes an upload that was never saved (the user uploaded again or pressed
+// Remove). Only files under profile/, and never one a saved row uses.
+export const discardAsset = adminAction(
+  z.object({ url: z.string() }),
+  async ({ url }) => {
+    if (!isBlobUrl(url) || !new URL(url).pathname.startsWith("/profile/")) {
+      return fail("Not an uploaded file.");
+    }
+    if (await isReferenced(url)) return fail("That file is in use.");
+    await deleteBlobs([url]);
+    return ok();
   },
   { revalidate: false },
 );

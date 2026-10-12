@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef, useState, useTransition, type ChangeEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui";
-import { uploadAsset } from "@/lib/dashboard/actions/assets";
+import { discardAsset, uploadAsset } from "@/lib/dashboard/actions/assets";
 import { ASSET_RULES, BYTES_PER_MB, type AssetKind } from "@/types/assets";
 
 interface AssetFieldProps {
@@ -30,6 +30,12 @@ const AssetField = ({
   const rule = ASSET_RULES[kind];
   const isImage = kind !== "resume";
 
+  // An earlier upload that was never saved is clutter in the store. The server
+  // refuses to delete anything a saved row uses, so this is safe to call.
+  const discardUnsaved = (url: string | null) => {
+    if (url && url !== savedValue) void discardAsset({ url }).catch(() => {});
+  };
+
   const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files?.[0];
     // Reset so picking the same file again still fires onChange
@@ -51,6 +57,7 @@ const AssetField = ({
         const result = await uploadAsset(data);
         if (result.ok) {
           setError(null);
+          discardUnsaved(value);
           onChange(result.data.url);
           toast.success(`${label} uploaded. Save changes to apply it.`);
           return;
@@ -100,6 +107,7 @@ const AssetField = ({
                 className="disabled:opacity-50"
                 onClick={() => {
                   setError(null);
+                  discardUnsaved(value);
                   onChange(null);
                 }}
               >

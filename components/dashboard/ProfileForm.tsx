@@ -107,7 +107,11 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
       const result = await updateProfile(input);
       if (result.ok) {
         setErrors({});
-        toast.success("Profile saved");
+        if (result.data.cleanupFailed) {
+          toast.warning("Saved, but an old file could not be deleted.");
+        } else {
+          toast.success("Profile saved");
+        }
         return;
       }
       setErrors(toFormErrors(result.fieldErrors, renameKey));

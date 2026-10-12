@@ -1,7 +1,8 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { deleteBlobs, isBlobUrl } from "@/lib/blob/cleanup";
+import { deleteBlobs } from "@/lib/blob/cleanup";
+import { isBlobUrl } from "@/lib/blob/url";
 import { db } from "@/lib/db";
 import * as t from "@/lib/db/schema";
 import { profileSchema } from "@/validators/profile";
@@ -30,6 +31,7 @@ export const updateProfile = adminAction(profileSchema, async (input) => {
   }
 
   // Delete only after the save succeeded (D94)
+  let cleanupFailed = false;
   if (before) {
     const pairs: [string | null, string | null][] = [
       [before.avatarUrl, input.avatarUrl],
@@ -39,8 +41,11 @@ export const updateProfile = adminAction(profileSchema, async (input) => {
     const replaced = pairs.flatMap(([old, next]) =>
       old !== null && old !== next && isBlobUrl(old) ? [old] : [],
     );
-    await deleteBlobs(replaced);
+    if (replaced.length > 0) {
+      cleanupFailed = !(await deleteBlobs(replaced));
+      if (!cleanupFailed) console.info("Deleted replaced blobs:", replaced);
+    }
   }
 
-  return ok();
+  return ok({ cleanupFailed });
 });
