@@ -1,6 +1,4 @@
+// Server components only. Client components (ProfileForm and the later
+// editors) are imported by file path so this barrel never enters a client
+// bundle.
 export { default as DashboardShell } from "./DashboardShell";
-export { default as DashboardNav } from "./DashboardNav";
-export { default as SignOutForm } from "./SignOutForm";
-export { default as ProfileForm } from "./ProfileForm";
-export { default as FormSection } from "./FormSection";
-export { default as TextField } from "./TextField";

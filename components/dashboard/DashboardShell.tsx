@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { DashboardNav, SignOutForm } from "./";
+import DashboardNav from "@/components/dashboard/DashboardNav";
+import SignOutForm from "@/components/dashboard/SignOutForm";
 
 interface DashboardShellProps {
   userName: string;

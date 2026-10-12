@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ButtonLink } from "@/components/ui";
-import { ProfileForm } from "@/components/dashboard";
+import ProfileForm from "@/components/dashboard/ProfileForm";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { getAdminProfile } from "@/lib/db/admin-queries";
 

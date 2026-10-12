@@ -3,7 +3,8 @@
 import { useState, useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui";
-import { FormSection, TextField } from "./";
+import FormSection from "@/components/dashboard/FormSection";
+import TextField from "@/components/dashboard/TextField";
 import { updateProfile } from "@/lib/dashboard/actions/profile";
 import { joinLines, readLines, readText } from "@/lib/dashboard/form-data";
 import { toFormErrors } from "@/lib/dashboard/form-errors";
