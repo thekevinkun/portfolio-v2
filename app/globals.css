@@ -94,6 +94,8 @@
 
   /* Errors and destructive actions (dashboard) */
   --color-danger: #f87171;
+  /* Solid danger buttons: dark enough for white text (about 4.8:1) */
+  --color-danger-solid: #dc2626;
 
   /* Backdrop gradient stops (from the reference's ps5-bg) */
   --color-backdrop-1: #1a1a1a;

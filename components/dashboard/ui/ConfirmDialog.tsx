@@ -68,7 +68,7 @@ const ConfirmDialog = ({
             </Button>
             <Button
               size="sm"
-              className="bg-danger hover:shadow-none"
+              className="bg-danger-solid text-fg-high hover:shadow-none hover:brightness-110 disabled:opacity-50"
               disabled={pending}
               onClick={confirm}
             >
