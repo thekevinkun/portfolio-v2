@@ -11,10 +11,12 @@ import {
   SECONDARY_SECTIONS,
   type FieldSection,
 } from "./profile-fields";
+import { toFormErrors } from "@/lib/dashboard/form-errors";
 import { updateProfile } from "@/lib/dashboard/actions/profile";
 import { joinLines, readLines, readText } from "@/lib/dashboard/form-data";
-import { toFormErrors } from "@/lib/dashboard/form-errors";
-import { ASSET_KINDS, type AssetKind } from "@/types/assets";
+import { revokePending } from "@/lib/dashboard/pending-asset";
+import { discardAsset, uploadAsset } from "@/lib/dashboard/actions/assets";
+import { ASSET_KINDS, type AssetChange, type AssetKind } from "@/types/assets";
 import { SOCIAL_KINDS, type Profile, type SocialKind } from "@/types/profile";
 
 const SOCIAL_LABELS: Record<SocialKind, string> = {
@@ -39,21 +41,25 @@ function renameKey(key: string): string {
   return list?.[1] ?? key;
 }
 
+// Deletes files uploaded during a save that then failed. The server refuses
+// to delete anything a saved row uses, so this is safe.
+async function rollbackUploads(urls: string[]) {
+  await Promise.all(urls.map((url) => discardAsset({ url }).catch(() => {})));
+}
+
 const ProfileForm = ({ profile }: { profile: Profile }) => {
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
-  // File URLs live in state because an upload changes them before Save
-  const [files, setFiles] = useState<Record<AssetKind, string | null>>({
+  // What the database holds for each file
+  const [saved, setSaved] = useState<Record<AssetKind, string | null>>({
     avatar: profile.avatarUrl,
     portrait: profile.portraitUrl,
     resume: profile.resumeUrl,
   });
-
-  const saved: Record<AssetKind, string | null> = {
-    avatar: profile.avatarUrl,
-    portrait: profile.portraitUrl,
-    resume: profile.resumeUrl,
-  };
+  // Files picked but not uploaded yet; nothing leaves the browser until Save
+  const [changes, setChanges] = useState<
+    Partial<Record<AssetKind, AssetChange>>
+  >({});
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,7 +81,7 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
       return;
     }
 
-    const input: Profile = {
+    const textInput = {
       name: text("name"),
       username: text("username"),
       handle: text("handle"),
@@ -98,24 +104,65 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
       availabilityShort: text("availabilityShort"),
       seoTitle: text("seoTitle"),
       seoDescription: text("seoDescription"),
-      avatarUrl: files.avatar,
-      portraitUrl: files.portrait,
-      resumeUrl: files.resume,
     };
 
     startTransition(async () => {
-      const result = await updateProfile(input);
-      if (result.ok) {
+      const urls: Record<AssetKind, string | null> = { ...saved };
+      const uploaded: string[] = [];
+
+      try {
+        // 1. Upload only the files that changed, one request each
+        for (const kind of ASSET_KINDS) {
+          const change = changes[kind];
+          if (change === undefined) continue;
+          if (change === null) {
+            urls[kind] = null;
+            continue;
+          }
+
+          const body = new FormData();
+          body.set("kind", kind);
+          body.set("file", change.file);
+          const upload = await uploadAsset(body);
+
+          if (!upload.ok) {
+            await rollbackUploads(uploaded);
+            toast.error(`${ASSET_LABELS[kind]}: ${upload.error}`);
+            return;
+          }
+          uploaded.push(upload.data.url);
+          urls[kind] = upload.data.url;
+        }
+
+        // 2. Save the profile with the final URLs
+        const result = await updateProfile({
+          ...textInput,
+          avatarUrl: urls.avatar,
+          portraitUrl: urls.portrait,
+          resumeUrl: urls.resume,
+        });
+
+        if (!result.ok) {
+          // The database was not changed, so the new files must not stay
+          await rollbackUploads(uploaded);
+          setErrors(toFormErrors(result.fieldErrors, renameKey));
+          toast.error(result.error);
+          return;
+        }
+
         setErrors({});
+        for (const kind of ASSET_KINDS) revokePending(changes[kind]);
+        setChanges({});
+        setSaved(urls);
         if (result.data.cleanupFailed) {
           toast.warning("Saved, but an old file could not be deleted.");
         } else {
           toast.success("Profile saved");
         }
-        return;
+      } catch {
+        await rollbackUploads(uploaded);
+        toast.error("Something went wrong. Please try again.");
       }
-      setErrors(toFormErrors(result.fieldErrors, renameKey));
-      toast.error(result.error);
     });
   };
 
@@ -166,17 +213,18 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
 
       <FormSection
         title="Files"
-        description="An upload goes live when you save the profile."
+        description="Files are uploaded only when you press Save changes."
       >
         {ASSET_KINDS.map((kind) => (
           <AssetField
             key={kind}
             kind={kind}
             label={ASSET_LABELS[kind]}
-            value={files[kind]}
-            savedValue={saved[kind]}
-            onChange={(url) =>
-              setFiles((previous) => ({ ...previous, [kind]: url }))
+            savedUrl={saved[kind]}
+            change={changes[kind]}
+            disabled={pending}
+            onChange={(change) =>
+              setChanges((previous) => ({ ...previous, [kind]: change }))
             }
           />
         ))}

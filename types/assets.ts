@@ -51,3 +51,12 @@ export const ASSET_RULES: Record<AssetKind, AssetRule> = {
     description: "PDF, up to 4 MB",
   },
 };
+
+// A file picked in the form but not uploaded yet. It uploads on Save (D101).
+export interface PendingAsset {
+  file: File;
+  previewUrl: string;
+}
+
+// undefined = unchanged · null = remove on save · PendingAsset = new file on save
+export type AssetChange = PendingAsset | null | undefined;

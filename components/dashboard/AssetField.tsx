@@ -1,40 +1,47 @@
 "use client";
 
-import Image from "next/image";
-import { useRef, useState, useTransition, type ChangeEvent } from "react";
-import { toast } from "sonner";
+import { useRef, useState, type ChangeEvent } from "react";
 import { Button } from "@/components/ui";
-import { discardAsset, uploadAsset } from "@/lib/dashboard/actions/assets";
-import { ASSET_RULES, BYTES_PER_MB, type AssetKind } from "@/types/assets";
+import { createPending, revokePending } from "@/lib/dashboard/pending-asset";
+import {
+  ASSET_RULES,
+  BYTES_PER_MB,
+  type AssetChange,
+  type AssetKind,
+} from "@/types/assets";
 
 interface AssetFieldProps {
   kind: AssetKind;
   label: string;
-  // What the form holds now (may be an unsaved upload)
-  value: string | null;
   // What the database holds now
-  savedValue: string | null;
-  onChange: (url: string | null) => void;
+  savedUrl: string | null;
+  // What the user changed in the form; nothing is uploaded until Save
+  change: AssetChange;
+  disabled?: boolean;
+  onChange: (change: AssetChange) => void;
 }
 
 const AssetField = ({
   kind,
   label,
-  value,
-  savedValue,
+  savedUrl,
+  change,
+  disabled = false,
   onChange,
 }: AssetFieldProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const rule = ASSET_RULES[kind];
   const isImage = kind !== "resume";
 
-  // An earlier upload that was never saved is clutter in the store. The server
-  // refuses to delete anything a saved row uses, so this is safe to call.
-  const discardUnsaved = (url: string | null) => {
-    if (url && url !== savedValue) void discardAsset({ url }).catch(() => {});
-  };
+  const imageSrc = change === undefined ? savedUrl : change?.previewUrl;
+  const description =
+    change === undefined
+      ? (savedUrl ?? "None")
+      : change === null
+        ? "Will be removed"
+        : change.file.name;
+  const hasValue = change === undefined ? savedUrl !== null : change !== null;
 
   const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.currentTarget.files?.[0];
@@ -42,76 +49,83 @@ const AssetField = ({
     event.currentTarget.value = "";
     if (!file) return;
 
-    // Quick check before sending; the server checks again
+    // Quick checks only; the server checks the real file header on Save
     if (file.size > rule.maxMb * BYTES_PER_MB) {
       setError(`The file is too large (max ${rule.maxMb} MB).`);
       return;
     }
+    if (!(rule.mimes as readonly string[]).includes(file.type)) {
+      setError(`Unsupported file. Use: ${rule.description}.`);
+      return;
+    }
 
-    const data = new FormData();
-    data.set("kind", kind);
-    data.set("file", file);
+    setError(null);
+    revokePending(change);
+    onChange(createPending(file));
+  };
 
-    startTransition(async () => {
-      try {
-        const result = await uploadAsset(data);
-        if (result.ok) {
-          setError(null);
-          discardUnsaved(value);
-          onChange(result.data.url);
-          toast.success(`${label} uploaded. Save changes to apply it.`);
-          return;
-        }
-        setError(result.error);
-        toast.error(result.error);
-      } catch {
-        setError("Upload failed. Please try again.");
-        toast.error("Upload failed. Please try again.");
-      }
-    });
+  const remove = () => {
+    setError(null);
+    revokePending(change);
+    // Nothing saved yet means nothing to remove: just drop the pending file
+    onChange(savedUrl === null ? undefined : null);
+  };
+
+  const undo = () => {
+    setError(null);
+    revokePending(change);
+    onChange(undefined);
   };
 
   return (
     <div className="space-y-2">
       <p className="text-sm font-medium text-fg-high">{label}</p>
       <div className="flex flex-wrap items-center gap-4">
-        {isImage && value ? (
-          <Image
-            src={value}
+        {isImage && imageSrc ? (
+          // A plain img: the source can be a local blob: preview
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imageSrc}
             alt=""
             width={64}
             height={64}
-            unoptimized
             className="size-16 rounded-lg border border-glass-border object-cover"
           />
         ) : null}
         <div className="min-w-0 flex-1 space-y-2">
           <p className="font-mono text-xs break-all text-fg-medium">
-            {value ?? "None"}
+            {description}
           </p>
           <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
               variant="secondary"
-              disabled={pending}
+              disabled={disabled}
               className="disabled:opacity-50"
               onClick={() => inputRef.current?.click()}
             >
-              {pending ? "Uploading…" : value ? "Replace" : "Upload"}
+              {hasValue ? "Replace" : "Upload"}
             </Button>
-            {value ? (
+            {hasValue ? (
               <Button
                 size="sm"
                 variant="secondary"
-                disabled={pending}
+                disabled={disabled}
                 className="disabled:opacity-50"
-                onClick={() => {
-                  setError(null);
-                  discardUnsaved(value);
-                  onChange(null);
-                }}
+                onClick={remove}
               >
                 Remove
+              </Button>
+            ) : null}
+            {change !== undefined ? (
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={disabled}
+                className="disabled:opacity-50"
+                onClick={undo}
+              >
+                Undo change
               </Button>
             ) : null}
           </div>
@@ -125,9 +139,9 @@ const AssetField = ({
         onChange={handleFile}
       />
       <p className="text-xs text-fg-low">{rule.description}</p>
-      {value !== savedValue ? (
+      {change !== undefined ? (
         <p className="text-xs text-fg-medium">
-          Not saved yet: press Save changes to apply it.
+          Not saved yet: nothing is uploaded until you press Save changes.
         </p>
       ) : null}
       {error ? (
