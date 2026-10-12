@@ -9,7 +9,7 @@ interface ConfirmDialogProps {
   description: ReactNode;
   confirmLabel?: string;
   pending?: boolean;
-  onConfirm: () => void | Promise<void>;
+  onConfirm: () => unknown;
 }
 
 // Delete confirmation on the native <dialog>: focus trap, Esc and focus
