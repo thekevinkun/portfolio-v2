@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P4 done (launched); P5 (dashboard) planned (D82–D97), building from P5.1.**
+> Status: **P1–P4 done (launched); P5 (dashboard) in progress (D82–D99): P5.1–P5.2 done.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -423,6 +423,7 @@ Goal: <one sentence>
 | D96 | R9 log for P5: new dependencies `next-auth@beta`, `@vercel/blob` and `sonner`; not added: shadcn/ui and Radix, auto-animate (stays P6.1), dnd-kit, react-hook-form, TanStack Table, an auth adapter |
 | D97 | Seed after the dashboard: default `db:seed` (add missing rows) stays safe; `--update` overwrites dashboard edits, so P5.7 makes it require `--yes-overwrite`; content changes go through the dashboard from P5.3 on |
 | D98 | Tech Stack card limits go from 5 items and 4 highlights to 7 items and 5 highlights per group (highlights stay at most 40 characters) so new skills can be added; amends D52 and D78; the numbers live in `types/limits.ts` (D89) and change in P5.5, not earlier; P3.9 fit QA was done at 5 and 4, so P5.5 starts from measured panel heights, re-runs fit QA at all eight viewports with a full card (7 items, 5 highlights), and may tune the density tiers in `TechStackPanel` or lower the limits if a viewport overflows (R1) |
+| D99 | P5.2 shell details: the `(admin)` layout calls `requireAdmin()` and mounts the sonner `Toaster`; one `<aside>` is a sticky top bar on phones and a fixed 16rem sidebar from `lg`; the primitives in `components/dashboard/ui` (Input, Textarea, Select, Switch, FieldRow, ConfirmDialog, Toaster) are thin wrappers over native elements sharing `field-styles.ts`, with `ref` as an ordinary prop (no `forwardRef`); `Select` options carry their own dark colors because the browser draws the open list; `ConfirmDialog` is a native `<dialog>` whose `onConfirm` may return any value; two new tokens: `--color-danger` (`#f87171`: errors and outlines) and `--color-danger-solid` (`#dc2626`: solid red buttons with white text); overview counts are computed in JS in `lib/db/admin-queries.ts` (`getAdminCounts`); `app/dashboard/(admin)/[area]/page.tsx` is a temporary "arrives in P5.x" stub that P5.7 deletes |
 
 ### Open
 
