@@ -1,8 +1,8 @@
-import { eq } from "drizzle-orm";
-import type { AdminCounts } from "@/types/admin";
-import type { Profile } from "@/types/profile";
-import { db } from "./index";
+import { asc, eq } from "drizzle-orm";
 import * as t from "./schema";
+import { db } from "./index";
+import type { AdminCounts, AdminProject } from "@/types/admin";
+import type { Profile } from "@/types/profile";
 
 const hiddenCount = (rows: { visible: boolean }[]) =>
   rows.filter((row) => !row.visible).length;
@@ -38,4 +38,12 @@ export async function getAdminProfile(): Promise<Profile> {
   const { id, ...profile } = row;
   void id;
   return profile;
+}
+
+// Every project, hidden ones too, in the same order the public site uses
+export async function getAdminProjects(): Promise<AdminProject[]> {
+  return db
+    .select()
+    .from(t.projects)
+    .orderBy(asc(t.projects.sort), asc(t.projects.slug));
 }
