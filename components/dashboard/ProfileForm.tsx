@@ -16,8 +16,13 @@ import { updateProfile } from "@/lib/dashboard/actions/profile";
 import { joinLines, readLines, readText } from "@/lib/dashboard/form-data";
 import { revokePending } from "@/lib/dashboard/pending-asset";
 import { discardAsset, uploadAsset } from "@/lib/dashboard/actions/assets";
-import { ASSET_KINDS, type AssetChange, type AssetKind } from "@/types/assets";
 import { SOCIAL_KINDS, type Profile, type SocialKind } from "@/types/profile";
+// The profile form edits the three profile files; the logo belongs to projects
+import {
+  PROFILE_ASSET_KINDS as ASSET_KINDS,
+  type AssetChange,
+  type ProfileAssetKind as AssetKind,
+} from "@/types/assets";
 
 const SOCIAL_LABELS: Record<SocialKind, string> = {
   linkedin: "LinkedIn",

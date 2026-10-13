@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ButtonLink, Chip, GlassCard, Pill } from "@/components/ui";
 import { PROJECT_STATUS_LABELS } from "@/lib/projects/filters";
 import type { Project } from "@/types/projects";
@@ -34,13 +35,22 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
 
         <div className="flex items-start gap-3">
-          {/* logoUrl renders here in P5 (Blob uploads); initial until then */}
-          <div
-            aria-hidden="true"
-            className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-glass-border bg-glass-fill text-lg font-bold text-fg-high"
-          >
-            {project.title.charAt(0)}
-          </div>
+          {project.logoUrl ? (
+            <Image
+              src={project.logoUrl}
+              alt=""
+              width={48}
+              height={48}
+              className="size-12 shrink-0 rounded-xl border border-glass-border bg-glass-fill object-contain"
+            />
+          ) : (
+            <div
+              aria-hidden="true"
+              className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-glass-border bg-glass-fill text-lg font-bold text-fg-high"
+            >
+              {project.title.charAt(0)}
+            </div>
+          )}
           <div className="min-w-0">
             <h3 className="text-base font-bold tracking-tight text-fg-high">
               {project.title}
