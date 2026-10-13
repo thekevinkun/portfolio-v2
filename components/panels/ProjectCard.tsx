@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ButtonLink, Chip, GlassCard, Pill } from "@/components/ui";
 import { PROJECT_STATUS_LABELS } from "@/lib/projects/filters";
+import { MAX_CARD_TECH } from "@/types/limits";
 import type { Project } from "@/types/projects";
 
 interface ProjectCardProps {
@@ -35,9 +36,9 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
 
         <div className="flex items-start gap-3">
-          {project.logoUrl ? (
+          {project.iconUrl ? (
             <Image
-              src={project.logoUrl}
+              src={project.iconUrl}
               alt=""
               width={48}
               height={48}
@@ -62,11 +63,19 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         </div>
 
         <ul aria-label="Technologies" className="flex flex-wrap gap-1.5">
-          {project.tech.map((tech) => (
+          {project.tech.slice(0, MAX_CARD_TECH).map((tech) => (
             <li key={tech}>
               <Chip>{tech}</Chip>
             </li>
           ))}
+          {project.tech.length > MAX_CARD_TECH && (
+            <li>
+              <Chip>
+                +{project.tech.length - MAX_CARD_TECH}
+                <span className="sr-only"> more technologies</span>
+              </Chip>
+            </li>
+          )}
         </ul>
       </div>
 

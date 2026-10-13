@@ -53,9 +53,9 @@ const FeaturedProjectCard = ({ project }: FeaturedProjectCardProps) => {
       </div>
 
       <div className="flex items-start gap-3">
-        {project.logoUrl ? (
+        {project.iconUrl ? (
           <Image
-            src={project.logoUrl}
+            src={project.iconUrl}
             alt=""
             width={44}
             height={44}

@@ -4,6 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Button, ButtonLink } from "@/components/ui";
+import AssetField from "./AssetField";
+import FormSection from "./FormSection";
+import TextField from "./TextField";
+import { FieldRow, Select } from "./ui";
 import { discardAsset, uploadAsset } from "@/lib/dashboard/actions/assets";
 import { createProject, updateProject } from "@/lib/dashboard/actions/projects";
 import {
@@ -17,17 +21,18 @@ import { revokePending } from "@/lib/dashboard/pending-asset";
 import { slugify } from "@/lib/dashboard/slugify";
 import { PROJECT_FILTERS, PROJECT_STATUS_LABELS } from "@/lib/projects/filters";
 import type { AdminProject } from "@/types/admin";
-import type { AssetChange } from "@/types/assets";
+import {
+  PROJECT_ASSET_KINDS,
+  type AssetChange,
+  type ProjectAssetKind,
+} from "@/types/assets";
+import { MAX_CARD_TECH } from "@/types/limits";
 import {
   PROJECT_LINK_KINDS,
   PROJECT_STATUSES,
   type ProjectLink,
   type ProjectLinkKind,
 } from "@/types/projects";
-import AssetField from "./AssetField";
-import FormSection from "./FormSection";
-import TextField from "./TextField";
-import { FieldRow, Select } from "./ui";
 
 const LINK_TITLES: Record<ProjectLinkKind, string> = {
   live: "Live demo",
@@ -39,11 +44,22 @@ const LINK_DEFAULT_LABELS: Record<ProjectLinkKind, string> = {
   repo: "Repo",
 };
 
+const IMAGE_LABELS: Record<ProjectAssetKind, string> = {
+  icon: "Icon",
+  logo: "Logo",
+};
+
 const FILTER_IDS = PROJECT_FILTERS.map((filter) => filter.id);
 
 // aria-describedby for a select that has a hint and maybe an error
 const describedBy = (name: string, hasError: boolean) =>
   hasError ? `${name}-hint ${name}-error` : `${name}-hint`;
+
+// Deletes files uploaded during a save that then failed. The server refuses
+// to delete anything a saved row uses, so this is safe.
+async function rollbackUploads(urls: string[]) {
+  await Promise.all(urls.map((url) => discardAsset({ url }).catch(() => {})));
+}
 
 // Edit mode when a project is given, create mode otherwise
 const ProjectForm = ({ project }: { project?: AdminProject }) => {
@@ -51,11 +67,15 @@ const ProjectForm = ({ project }: { project?: AdminProject }) => {
   const editing = project !== undefined;
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [savedLogo, setSavedLogo] = useState<string | null>(
-    project?.logoUrl ?? null,
-  );
-  // A picked logo stays in the browser until Save (D101)
-  const [logoChange, setLogoChange] = useState<AssetChange>(undefined);
+  // What the database holds for each image
+  const [saved, setSaved] = useState<Record<ProjectAssetKind, string | null>>({
+    icon: project?.iconUrl ?? null,
+    logo: project?.logoUrl ?? null,
+  });
+  // Picked images stay in the browser until Save (D101)
+  const [changes, setChanges] = useState<
+    Partial<Record<ProjectAssetKind, AssetChange>>
+  >({});
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -101,49 +121,55 @@ const ProjectForm = ({ project }: { project?: AdminProject }) => {
         const field = link[2] === "label" ? "label" : "url";
         return kind ? `link.${kind}.${field}` : "links";
       }
-      if (/^tech\.\d+$/.test(key)) return "tech";
-      return key === "logoUrl" ? "logo" : key;
+      return /^tech\.\d+$/.test(key) ? "tech" : key;
     };
 
     startTransition(async () => {
-      let uploaded: string | null = null;
+      const urls: Record<ProjectAssetKind, string | null> = { ...saved };
+      const uploaded: string[] = [];
       let step = "save the project";
 
       try {
-        // 1. Upload the logo only if it changed (D101)
-        let logoUrl = savedLogo;
-        if (logoChange === null) {
-          logoUrl = null;
-        } else if (logoChange) {
-          step = "upload the logo";
+        // 1. Upload only the images that changed, one request each (D101)
+        for (const kind of PROJECT_ASSET_KINDS) {
+          const change = changes[kind];
+          if (change === undefined) continue;
+          if (change === null) {
+            urls[kind] = null;
+            continue;
+          }
+
+          step = `upload the ${kind}`;
           const body = new FormData();
-          body.set("kind", "logo");
-          body.set("file", logoChange.file);
+          body.set("kind", kind);
+          body.set("file", change.file);
           const upload = await uploadAsset(body);
+
           if (!upload.ok) {
-            toast.error(`Logo: ${upload.error}`);
+            await rollbackUploads(uploaded);
+            toast.error(`${IMAGE_LABELS[kind]}: ${upload.error}`);
             return;
           }
-          uploaded = upload.data.url;
-          logoUrl = uploaded;
-          step = "save the project";
+          uploaded.push(upload.data.url);
+          urls[kind] = upload.data.url;
         }
 
-        // 2. Save the project with the final logo URL
-        const content = { ...fields, logoUrl };
+        // 2. Save the project with the final image URLs
+        step = "save the project";
+        const content = { ...fields, iconUrl: urls.icon, logoUrl: urls.logo };
         const result = editing
           ? await updateProject(content)
           : await createProject(content);
 
         if (!result.ok) {
-          // The database was not changed, so the new file must not stay
-          if (uploaded) await discardAsset({ url: uploaded }).catch(() => {});
+          // The database was not changed, so the new files must not stay
+          await rollbackUploads(uploaded);
           setErrors(toFormErrors(result.fieldErrors, rename));
           toast.error(result.error);
           return;
         }
 
-        revokePending(logoChange);
+        for (const kind of PROJECT_ASSET_KINDS) revokePending(changes[kind]);
         if (!editing) {
           toast.success(`${title} created`);
           router.push("/dashboard/projects");
@@ -151,17 +177,17 @@ const ProjectForm = ({ project }: { project?: AdminProject }) => {
         }
 
         setErrors({});
-        setLogoChange(undefined);
-        setSavedLogo(logoUrl);
-        // updateProject also reports whether the old logo could be deleted
+        setChanges({});
+        setSaved(urls);
+        // updateProject also reports whether an old image could be deleted
         if (result.data?.cleanupFailed) {
-          toast.warning("Saved, but the old logo could not be deleted.");
+          toast.warning("Saved, but an old image could not be deleted.");
         } else {
           toast.success("Project saved");
         }
       } catch (error) {
         console.error(`Could not ${step}:`, error);
-        if (uploaded) await discardAsset({ url: uploaded }).catch(() => {});
+        await rollbackUploads(uploaded);
         toast.error(`Could not ${step}. Check your connection and try again.`);
       }
     });
@@ -252,9 +278,9 @@ const ProjectForm = ({ project }: { project?: AdminProject }) => {
         <TextField
           name="tech"
           label="Tech tags"
-          rows={5}
+          rows={6}
           defaultValue={joinLines(project?.tech ?? [])}
-          hint="One per line, in the order they appear on the card. At least one."
+          hint={`One per line, at least one, as many as you like. Put the most important first: the cards show the first ${MAX_CARD_TECH} and a "+N" chip for the rest.`}
           error={errors.tech}
         />
       </FormSection>
@@ -290,17 +316,22 @@ const ProjectForm = ({ project }: { project?: AdminProject }) => {
       </FormSection>
 
       <FormSection
-        title="Logo"
-        description="Shown beside the title on the cards. Without one, the first letter of the title is used."
+        title="Images"
+        description="The icon is the small square on the cards; without one, the first letter of the title is used. The logo is the large image for the project details, which arrive later."
       >
-        <AssetField
-          kind="logo"
-          label="Logo"
-          savedUrl={savedLogo}
-          change={logoChange}
-          disabled={pending}
-          onChange={(change) => setLogoChange(change)}
-        />
+        {PROJECT_ASSET_KINDS.map((kind) => (
+          <AssetField
+            key={kind}
+            kind={kind}
+            label={IMAGE_LABELS[kind]}
+            savedUrl={saved[kind]}
+            change={changes[kind]}
+            disabled={pending}
+            onChange={(change) =>
+              setChanges((previous) => ({ ...previous, [kind]: change }))
+            }
+          />
+        ))}
       </FormSection>
 
       <div className="sticky bottom-0 -mx-6 flex items-center justify-end gap-3 border-t border-glass-border bg-obsidian px-6 py-3 lg:-mx-10 lg:px-10">
