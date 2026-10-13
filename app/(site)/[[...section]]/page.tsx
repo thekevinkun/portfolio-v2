@@ -50,7 +50,7 @@ export default async function Page({ params }: PageProps) {
   if (getSectionIndex(section) === -1) notFound();
 
   // Visible rows, already sorted by the queries
-  const { profile, skillGroups, projects, experienceItems } =
+  const { profile, skillGroups, categories, projects, experienceItems } =
     await getStageData();
 
   // Overview shows the first three featured projects (D48)
@@ -60,7 +60,7 @@ export default async function Page({ params }: PageProps) {
   const pages: Partial<Record<SectionId, ReactNode>> = {
     overview: <OverviewPanel profile={profile} featured={featured} />,
     "tech-stack": <TechStackPanel groups={skillGroups} />,
-    projects: <ProjectsPanel projects={projects} />,
+    projects: <ProjectsPanel projects={projects} categories={categories} />,
     experience: <ExperiencePanel items={experienceItems} />,
     contact: <ContactPanel profile={profile} />,
   };

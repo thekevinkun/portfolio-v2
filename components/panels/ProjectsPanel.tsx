@@ -4,12 +4,13 @@ import { useState } from "react";
 import { Button, Carousel, SectionHeader } from "@/components/ui";
 import { ProjectCard } from "./";
 import { cn } from "@/lib/cn";
-import { PROJECT_FILTERS } from "@/lib/projects/filters";
 import { reveal } from "@/lib/reveal";
-import type { Project, ProjectFilter } from "@/types/projects";
+import type { Project, ProjectCategory } from "@/types/projects";
 
 interface ProjectsPanelProps {
   projects: Project[];
+  // Visible categories in tab order (D105)
+  categories: ProjectCategory[];
 }
 
 // Paging by width (gap-3 = 0.75rem); snap points sit on the first card of
@@ -25,14 +26,19 @@ const SLIDE =
 // panel (my-auto, which falls back to top-aligned if the group is too tall).
 // On phones and from 1024px the group fills the panel: header on top, cards
 // centered in the space below.
-const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
-  // Only filters that have projects, in the canonical order
-  const filters = PROJECT_FILTERS.filter((filter) =>
-    projects.some((project) => project.filter === filter.id),
-  );
-  const [active, setActive] = useState<ProjectFilter>(
-    filters[0]?.id ?? "full-stack",
-  );
+const ProjectsPanel = ({ projects, categories }: ProjectsPanelProps) => {
+  // Only categories that have projects, in the dashboard order
+  const filters = categories
+    .filter((category) =>
+      projects.some((project) => project.filter === category.slug),
+    )
+    .map((category) => ({ id: category.slug, label: category.label }));
+
+  const [selected, setSelected] = useState(filters[0]?.id ?? "");
+  // The chosen tab may vanish when the data changes; fall back to the first
+  const active = filters.some((filter) => filter.id === selected)
+    ? selected
+    : (filters[0]?.id ?? "");
   // After the first filter click the new cards cascade in with no wait
   const [switched, setSwitched] = useState(false);
 
@@ -59,23 +65,23 @@ const ProjectsPanel = ({ projects }: ProjectsPanelProps) => {
             className="flex shrink-0 flex-wrap items-center gap-1.5 tier-regular:gap-2"
           >
             {filters.map((filter) => {
-              const selected = filter.id === active;
+              const isSelected = filter.id === active;
               return (
                 <Button
                   key={filter.id}
-                  variant={selected ? "primary" : "secondary"}
+                  variant={isSelected ? "primary" : "secondary"}
                   size="sm"
-                  aria-pressed={selected}
+                  aria-pressed={isSelected}
                   onClick={() => {
-                    setActive(filter.id);
+                    setSelected(filter.id);
                     setSwitched(true);
                   }}
                   className={cn(
                     "gap-1.5 px-3 py-1 text-[11px] uppercase tier-regular:px-4 tier-regular:py-1.5 tier-regular:text-xs",
-                    !selected && "font-medium",
+                    !isSelected && "font-medium",
                   )}
                 >
-                  {selected && (
+                  {isSelected && (
                     <span
                       aria-hidden="true"
                       className="size-1.5 rounded-full bg-on-accent"

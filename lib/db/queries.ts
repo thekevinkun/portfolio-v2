@@ -6,10 +6,11 @@ import { db } from "./index";
 import { profileSchema } from "@/validators/profile";
 import { projectSchema } from "@/validators/projects";
 import { skillGroupSchema } from "@/validators/skills";
+import { categorySchema } from "@/validators/categories";
 import { experienceItemSchema } from "@/validators/experience";
 import type { ExperienceItem } from "@/types/experience";
 import type { Profile } from "@/types/profile";
-import type { Project } from "@/types/projects";
+import type { Project, ProjectCategory } from "@/types/projects";
 import type { SkillGroup } from "@/types/skills";
 
 // The strict schemas have no id field, so it is dropped before parsing
@@ -85,20 +86,40 @@ async function loadExperienceItems(): Promise<ExperienceItem[]> {
   });
 }
 
+// Visible categories in tab order; the Projects page keeps those with projects
+async function loadCategories(): Promise<ProjectCategory[]> {
+  const rows = await db
+    .select()
+    .from(t.projectCategories)
+    .where(eq(t.projectCategories.visible, true))
+    .orderBy(asc(t.projectCategories.sort), asc(t.projectCategories.slug));
+
+  return rows.map((row) =>
+    parseOrThrow(
+      `project_categories[${row.slug}]`,
+      categorySchema,
+      withoutId(row),
+    ),
+  );
+}
+
 async function loadStageData() {
-  const [profile, skillGroups, projects, experienceItems] = await Promise.all([
-    getProfile(),
-    getSkillGroups(),
-    getProjects(),
-    getExperienceItems(),
-  ]);
-  return { profile, skillGroups, projects, experienceItems };
+  const [profile, skillGroups, categories, projects, experienceItems] =
+    await Promise.all([
+      getProfile(),
+      getSkillGroups(),
+      getCategories(),
+      getProjects(),
+      getExperienceItems(),
+    ]);
+  return { profile, skillGroups, categories, projects, experienceItems };
 }
 
 // cache() shares one query per request, so the layout and the page don't
 // each hit the database for the profile
 export const getProfile = cache(loadProfile);
 export const getSkillGroups = cache(loadSkillGroups);
+export const getCategories = cache(loadCategories);
 export const getProjects = cache(loadProjects);
 export const getExperienceItems = cache(loadExperienceItems);
 export const getStageData = cache(loadStageData);
