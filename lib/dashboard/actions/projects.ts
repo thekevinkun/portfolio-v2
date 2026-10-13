@@ -12,6 +12,10 @@ import { adminAction, fail, ok } from "../admin-action";
 
 const CAP_MESSAGE = `Overview shows ${MAX_FEATURED_PROJECTS} featured projects. Turn off Featured on another visible project first.`;
 
+// Blob files among some URLs; site paths are never deleted
+const blobFiles = (...urls: (string | null)[]) =>
+  urls.filter((url): url is string => url !== null && isBlobUrl(url));
+
 // Visible and featured is what Overview shows (D48), so only those count
 async function countFeaturedVisible(): Promise<number> {
   const [row] = await db
@@ -125,15 +129,15 @@ export const deleteProject = adminAction(
   z.object({ id: z.uuid() }),
   async ({ id }) => {
     const [row] = await db
-      .select({ logoUrl: t.projects.logoUrl })
+      .select({ iconUrl: t.projects.iconUrl, logoUrl: t.projects.logoUrl })
       .from(t.projects)
       .where(eq(t.projects.id, id));
     if (!row) return fail("Project not found.");
 
     await db.delete(t.projects).where(eq(t.projects.id, id));
 
-    // The logo file goes with the project (nothing uploads logos before P5.4b)
-    if (row.logoUrl && isBlobUrl(row.logoUrl)) await deleteBlobs([row.logoUrl]);
+    // The icon and logo files go with the project
+    await deleteBlobs(blobFiles(row.iconUrl, row.logoUrl));
     return ok();
   },
 );
@@ -169,21 +173,19 @@ export const createProject = adminAction(projectFormSchema, async (input) => {
 // are not touched here
 export const updateProject = adminAction(projectFormSchema, async (input) => {
   const [before] = await db
-    .select({ logoUrl: t.projects.logoUrl })
+    .select({ iconUrl: t.projects.iconUrl, logoUrl: t.projects.logoUrl })
     .from(t.projects)
     .where(eq(t.projects.slug, input.slug));
   if (!before) return fail("Project not found.");
 
   await db.update(t.projects).set(input).where(eq(t.projects.slug, input.slug));
 
-  // A replaced or removed logo file goes after the save succeeded (D101)
-  let cleanupFailed = false;
-  if (
-    before.logoUrl &&
-    before.logoUrl !== input.logoUrl &&
-    isBlobUrl(before.logoUrl)
-  ) {
-    cleanupFailed = !(await deleteBlobs([before.logoUrl]));
-  }
+  // Replaced or removed image files go after the save succeeded (D101)
+  const cleanupFailed = !(await deleteBlobs(
+    blobFiles(
+      before.iconUrl !== input.iconUrl ? before.iconUrl : null,
+      before.logoUrl !== input.logoUrl ? before.logoUrl : null,
+    ),
+  ));
   return ok({ cleanupFailed });
 });

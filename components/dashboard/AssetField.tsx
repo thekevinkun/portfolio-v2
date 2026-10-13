@@ -89,7 +89,7 @@ const AssetField = ({
             alt=""
             width={64}
             height={64}
-            className="size-16 rounded-lg border border-glass-border object-cover"
+            className="size-16 rounded-lg border border-glass-border bg-glass-fill object-contain"
           />
         ) : null}
         <div className="min-w-0 flex-1 space-y-2">
