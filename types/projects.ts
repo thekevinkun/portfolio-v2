@@ -33,6 +33,9 @@ export type Project = {
   summary: string;
   filter: ProjectFilter;
   status: ProjectStatus;
+  // iconUrl: the small square on the cards; logoUrl: the large image for the
+  // project details
+  iconUrl: string | null;
   logoUrl: string | null;
   tech: string[];
   links: ProjectLink[];
@@ -40,3 +43,7 @@ export type Project = {
   sort: number;
   visible: boolean;
 };
+
+// What the dashboard form edits. Featured, visible and order have their own
+// controls in the list (D102).
+export type ProjectContent = Omit<Project, "featured" | "sort" | "visible">;

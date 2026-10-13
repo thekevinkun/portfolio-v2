@@ -13,6 +13,7 @@
 | P3 | Five pages (static data) | L | Every page fits one screen at every QA viewport |
 | P4 | Neon data → **LAUNCH** | M | Site fully database-driven and live |
 | P5 | Dashboard | M | Secure admin to edit all content |
+| P7 | Project details | L | Full-screen project overlay with a structured write-up; built after P5, before P6 |
 | P6 | Polish & finish | S–M | Remaining animations, perf pass, OG images, final content check |
 
 ---
@@ -104,12 +105,29 @@ Plan locked in the P5 plan chat (D82–D97). 🎨 steps are visual: they stop at
 | P5.3a | Action pattern (`adminAction`, `ActionResult`, `revalidateSite`, field primitives; D87, D88) and the Profile editor without uploads; admin profile query (D90) |
 | P5.3b 🎨 | Vercel Blob uploads for avatar, portrait and resume (D94); delete replaced blobs; `next.config.ts` changes |
 | P5.4a 🎨 | Projects list: `types/limits.ts` (featured cap), admin query, visibility, reorder within a filter, delete with confirm, featured cap of 3 (D91) |
-| P5.4b 🎨 | Projects create/edit form (with the validator base split, D89): status, filter, tags, two link slots, logo upload; slug set at creation |
+| P5.4b 🎨 | Projects create/edit form (with the validator base split, D89): status, filter, tags (any number), two link slots, icon and logo upload; slug set at creation (D103, D104) |
+| P5.4c 🎨 | Project categories: `project_categories` table, categories editor, the project form reads it, public pills come from visible categories (D105); migration dev then production; fit check with more pills |
 | P5.5 🎨 | Tech Stack editor: edit, reorder and hide groups; items (up to 7) with icon picker; highlights (up to 5); limits visible; fit QA with full cards at all eight viewports (D92, D98) |
 | P5.6 🎨 | Experience editor: Work and Learning items, shipped projects (max 3), three core bullets kept first (D92) |
 | P5.7 | Hardening: `--yes-overwrite` guard on the seed (D97); empty-state test; every route and action tried signed out; revoke test; "view on site" links; Known issues cleanup |
 
 **Acceptance:** unauthenticated access is rejected everywhere; only the allowlisted account signs in; create/edit/reorder/hide/delete each reflect on the public site on next load.
+
+---
+
+## P7 — Project details (L) — built after P5 and before P6
+
+Decided in the P5.4b discussion (D106). Numbered P7 so the P6 references in PROGRESS.md stay valid; Polish (P6) stays last.
+
+| Step | Task |
+|---|---|
+| P7.1 | **Plan chat (no code):** content model and limits, animation choice, history and Back behavior, Stage guard, mobile layout, data size |
+| P7.2 | Data: `details` columns (migration dev, then production), types, Zod schemas, seed |
+| P7.3 | Dashboard editor: sections, features, engineering notes, screenshots (upload on Save, up to 8, captions and alt text), video id |
+| P7.4 | Public overlay: native `<dialog>`, open animation from the card, two-column layout, Stage key guard, `data-stage-scroll`, history entry, focus return, reduced motion |
+| P7.5 | Look button and title trigger on Projects and Overview cards; YouTube click-to-load; fit and performance pass at all QA viewports |
+
+**Acceptance:** a card opens its project details without leaving `/projects`; Esc, Back and the close button close it; the Stage does not turn behind it; Lighthouse mobile stays ≥ 90.
 
 ---
 

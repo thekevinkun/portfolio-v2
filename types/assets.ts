@@ -1,4 +1,14 @@
-export const ASSET_KINDS = ["avatar", "portrait", "resume"] as const;
+export const PROFILE_ASSET_KINDS = ["avatar", "portrait", "resume"] as const;
+export type ProfileAssetKind = (typeof PROFILE_ASSET_KINDS)[number];
+
+// The two images a project has: a small card icon and a large logo
+export const PROJECT_ASSET_KINDS = ["icon", "logo"] as const;
+export type ProjectAssetKind = (typeof PROJECT_ASSET_KINDS)[number];
+
+export const ASSET_KINDS = [
+  ...PROFILE_ASSET_KINDS,
+  ...PROJECT_ASSET_KINDS,
+] as const;
 export type AssetKind = (typeof ASSET_KINDS)[number];
 
 export function isAssetKind(value: unknown): value is AssetKind {
@@ -49,6 +59,16 @@ export const ASSET_RULES: Record<AssetKind, AssetRule> = {
     mimes: ["application/pdf"],
     maxMb: 4,
     description: "PDF, up to 4 MB",
+  },
+  icon: {
+    mimes: IMAGE_MIMES,
+    maxMb: 1,
+    description: "Square PNG, JPEG or WebP, up to 1 MB",
+  },
+  logo: {
+    mimes: IMAGE_MIMES,
+    maxMb: 2,
+    description: "PNG, JPEG or WebP, up to 2 MB",
   },
 };
 

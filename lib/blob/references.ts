@@ -1,10 +1,11 @@
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { db } from "@/lib/db";
 import * as t from "@/lib/db/schema";
 
-// True when a saved row points at this file. Project logos join in P5.4b.
+// True when a saved row points at this file: a profile file or a project
+// icon or logo
 export async function isReferenced(url: string): Promise<boolean> {
-  const [row] = await db
+  const [profileRow] = await db
     .select({
       avatarUrl: t.profile.avatarUrl,
       portraitUrl: t.profile.portraitUrl,
@@ -13,8 +14,21 @@ export async function isReferenced(url: string): Promise<boolean> {
     .from(t.profile)
     .where(eq(t.profile.id, 1));
 
-  return (
-    row !== undefined &&
-    [row.avatarUrl, row.portraitUrl, row.resumeUrl].includes(url)
-  );
+  if (
+    profileRow &&
+    [
+      profileRow.avatarUrl,
+      profileRow.portraitUrl,
+      profileRow.resumeUrl,
+    ].includes(url)
+  ) {
+    return true;
+  }
+
+  const [project] = await db
+    .select({ id: t.projects.id })
+    .from(t.projects)
+    .where(or(eq(t.projects.iconUrl, url), eq(t.projects.logoUrl, url)))
+    .limit(1);
+  return project !== undefined;
 }

@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { ConfirmDialog, Switch } from "@/components/dashboard/ui";
-import { Button, Pill } from "@/components/ui";
+import { Button, ButtonLink, Pill } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import {
   deleteProject,
@@ -115,6 +115,14 @@ const ProjectRow = ({ project, isFirst, isLast }: ProjectRowProps) => {
       </div>
 
       <div className="flex items-center gap-2">
+        <ButtonLink
+          href={`/dashboard/projects/${project.slug}`}
+          variant="secondary"
+          size="sm"
+          aria-label={`Edit ${project.title}`}
+        >
+          Edit
+        </ButtonLink>
         <Button
           size="sm"
           variant="secondary"

@@ -36,22 +36,25 @@ export default async function ProjectsPage() {
             a project only reorders it within its filter.
           </p>
         </div>
-        <ButtonLink
-          href="/projects"
-          variant="secondary"
-          size="sm"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          View site ↗
-        </ButtonLink>
+        <div className="flex flex-wrap items-center gap-2">
+          <ButtonLink href="/dashboard/projects/new" size="sm">
+            New project
+          </ButtonLink>
+          <ButtonLink
+            href="/projects"
+            variant="secondary"
+            size="sm"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View site ↗
+          </ButtonLink>
+        </div>
       </header>
 
       {groups.length === 0 ? (
         <p className="text-sm text-fg-low">
-          No projects yet. Run{" "}
-          <code className="font-mono">npm run db:seed</code> or add one when the
-          form arrives in the next step.
+          No projects yet. Use New project to add the first one.
         </p>
       ) : (
         groups.map((group) => (

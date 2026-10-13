@@ -1,15 +1,20 @@
 "use server";
 
-import { and, asc, count, eq } from "drizzle-orm";
+import { and, asc, count, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { deleteBlobs } from "@/lib/blob/cleanup";
 import { isBlobUrl } from "@/lib/blob/url";
 import { db } from "@/lib/db";
 import * as t from "@/lib/db/schema";
 import { MAX_FEATURED_PROJECTS } from "@/types/limits";
+import { projectFormSchema } from "@/validators/projects";
 import { adminAction, fail, ok } from "../admin-action";
 
 const CAP_MESSAGE = `Overview shows ${MAX_FEATURED_PROJECTS} featured projects. Turn off Featured on another visible project first.`;
+
+// Blob files among some URLs; site paths are never deleted
+const blobFiles = (...urls: (string | null)[]) =>
+  urls.filter((url): url is string => url !== null && isBlobUrl(url));
 
 // Visible and featured is what Overview shows (D48), so only those count
 async function countFeaturedVisible(): Promise<number> {
@@ -124,15 +129,63 @@ export const deleteProject = adminAction(
   z.object({ id: z.uuid() }),
   async ({ id }) => {
     const [row] = await db
-      .select({ logoUrl: t.projects.logoUrl })
+      .select({ iconUrl: t.projects.iconUrl, logoUrl: t.projects.logoUrl })
       .from(t.projects)
       .where(eq(t.projects.id, id));
     if (!row) return fail("Project not found.");
 
     await db.delete(t.projects).where(eq(t.projects.id, id));
 
-    // The logo file goes with the project (nothing uploads logos before P5.4b)
-    if (row.logoUrl && isBlobUrl(row.logoUrl)) await deleteBlobs([row.logoUrl]);
+    // The icon and logo files go with the project
+    await deleteBlobs(blobFiles(row.iconUrl, row.logoUrl));
     return ok();
   },
 );
+
+// A new project is visible, not featured, and last in order (D89)
+export const createProject = adminAction(projectFormSchema, async (input) => {
+  const [existing] = await db
+    .select({ id: t.projects.id })
+    .from(t.projects)
+    .where(eq(t.projects.slug, input.slug));
+  if (existing) {
+    return fail("Please fix the highlighted fields.", {
+      slug: ["This slug is already used."],
+    });
+  }
+
+  const [last] = await db
+    .select({ sort: t.projects.sort })
+    .from(t.projects)
+    .orderBy(desc(t.projects.sort))
+    .limit(1);
+
+  await db.insert(t.projects).values({
+    ...input,
+    featured: false,
+    visible: true,
+    sort: (last?.sort ?? -1) + 1,
+  });
+  return ok();
+});
+
+// The slug identifies the row and never changes; featured, visible and sort
+// are not touched here
+export const updateProject = adminAction(projectFormSchema, async (input) => {
+  const [before] = await db
+    .select({ iconUrl: t.projects.iconUrl, logoUrl: t.projects.logoUrl })
+    .from(t.projects)
+    .where(eq(t.projects.slug, input.slug));
+  if (!before) return fail("Project not found.");
+
+  await db.update(t.projects).set(input).where(eq(t.projects.slug, input.slug));
+
+  // Replaced or removed image files go after the save succeeded (D101)
+  const cleanupFailed = !(await deleteBlobs(
+    blobFiles(
+      before.iconUrl !== input.iconUrl ? before.iconUrl : null,
+      before.logoUrl !== input.logoUrl ? before.logoUrl : null,
+    ),
+  ));
+  return ok({ cleanupFailed });
+});
