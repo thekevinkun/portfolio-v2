@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P4 done (launched); P5 (dashboard) in progress (D82–D106): P5.1–P5.4b done.**
+> Status: **P1–P4 done (launched); P5 (dashboard) in progress (D82–D106): P5.1–P5.4c done.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -167,13 +167,14 @@ Until P5, `export const revalidate = 3600` on the route refreshes the pages from
 
 Every dashboard mutation: **auth check → Zod validate → write → revalidate.** No exceptions.
 
-### 4.4 Data model (4 tables)
+### 4.4 Data model (5 tables)
 
 | Table               | Contents                                                                                                                                                                                                                                  |
 | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `profile` (one row, `id` fixed to 1) | name, username, handle, role label, headline, intro, contact headline + intro, location label, timezone, email, availability + short availability, avatar/portrait/resume URLs (nullable), socials (JSON: kind, label, url), Overview chips (text array), focus areas (text array), SEO title + description |
+| `project_categories` | slug (unique), label, sort, visible; the tabs on the Projects page (D105) |
 | `skill_groups`      | slug (unique), index label, title, subtitle, badge text, icon key, **items** (JSON: name, icon key, `used`/`learning`), **highlights** (text array), sort, visible                                                                         |
-| `projects`          | slug (unique), title, kicker label, summary, filter type (enum: `full-stack`, `frontend`, `game`, `web3`, `systems`), **status** (enum: live, in-progress, planned, completed), icon URL, logo URL, tech tags (text array, any number), **links** (JSON: kind `live`/`repo`, label, url), featured flag, sort, visible |
+| `projects`          | slug (unique), title, kicker label, summary, category slug (text, foreign key to `project_categories`, D105), **status** (enum: live, in-progress, planned, completed), icon URL, logo URL, tech tags (text array, any number), **links** (JSON: kind `live`/`repo`, label, url), featured flag, sort, visible |
 | `experience_items`  | slug (unique), kind (enum: `work`, `freelance`, `education`, `milestone`), title, organization, start/end (`YYYY-MM` text, end null = present), summary, optional short summary, bullets (text array), **shipped** (optional JSON: project name + bullets), tags (text array), sort, visible |
 
 All list tables also carry a uuid `id`. Auth uses JWT sessions, so there are no auth tables (D82).
@@ -188,6 +189,7 @@ Private `/dashboard`, single admin. Routes: `/dashboard/login` (public) and an `
 | Profile    | Identity, intro, contact copy, availability, socials, chips, focus areas, SEO; upload avatar, portrait, resume   |
 | Tech Stack | Edit, reorder, hide the groups; items (≤ 7) with icon picker and used/learning; highlights (≤ 5, ≤ 40 chars)     |
 | Projects   | Create/edit/delete, status, filter type, two link slots, tags, icon and logo, featured (≤ 3 visible) + visible, up/down reorder within a filter |
+| Categories | Add, rename, reorder, hide the Projects page tabs; delete only when it has no projects (D105) |
 | Experience | Edit the Work and Learning items; shipped projects add/remove/reorder (≤ 3); no create/delete of top-level items |
 
 Principles: confirm deletes (and suggest hiding), toasts for results, slug read-only after creation, every write validated by the P4.3 schemas on the server (D89).
@@ -431,6 +433,7 @@ Goal: <one sentence>
 | D104 | Project images and tags: `projects.icon_url` (new, nullable) is the small square on the cards (PNG, JPEG or WebP, up to 1 MB) and `projects.logo_url` is the large image for the project details (up to 2 MB); cards use the icon only and show the first letter without one, never the logo; tech tags have no maximum, the Projects card shows the first `MAX_CARD_TECH` (5, `types/limits.ts`) and a "+N" chip (amends D54) and the details will show all of them; the Projects card pins the tags and the link buttons to the bottom so they line up across cards whatever the summary length; the migration `ADD COLUMN icon_url` is applied to the dev branch, then to production before the code merges (D86) |
 | D105 | Project categories (planned, P5.4c): the `project_filter` enum becomes a `project_categories` table (slug, label, sort, visible; amends D3, D64 and D66) and `projects.filter_type` becomes text matching a category slug, checked in the action; a project has one category; the dashboard gets a categories editor (add, rename, reorder, hide; no delete while projects use it; a warning when hiding a category that has visible projects, because they leave the public site, D54); the Projects page builds its pills from visible categories that have visible projects; the migration copies the five current filters and goes to dev, then to production before the code merges; the step includes a fit check with more pills |
 | D106 | Project details (planned, phase P7, built after P5 and before P6): the title or a Look button on a project card opens a full-width, full-height overlay on the same `/projects` URL (no navigation) with an open animation, scrolling like a normal page; text on the left, the demo video and small facts on the right (stacked on phones); content is structured, not free markdown: header, summary, links, problem, features, engineering notes as titled sections you write, the full tech list, up to 8 screenshots with captions, and an optional YouTube video stored as an 11-character id and played from youtube-nocookie after a click; a section shows only when filled in; no deep link at first (the data model allows adding it); a history entry on open so Back closes it (only while it is open, D22); a native `<dialog>` with `showModal()`, a modal-open guard for the Stage keys and `data-stage-scroll` on the scroller; a deliberate exception to R2 and D50 because it is an overlay, not a page; every claim in it follows R4 |
+| D105 | Project categories (amends D3, D54, D64, D66): the `project_filter` enum became the `project_categories` table (slug unique, label, sort, visible) and `projects.filter_type` is text with a foreign key to the category slug; a project has one category; the migration creates the table, inserts the five original filters, converts the column with `USING "filter_type"::text`, adds the foreign key and drops the enum (generated SQL edited by hand for the order and the cast), applied to dev, then to production before the code merged, with a backup branch; `slug` is made from the label when a category is added and never changes, labels are at most `MAX_CATEGORY_LABEL` (20) characters; the Projects page shows a tab only for a visible category with at least one visible project, in `sort` order, and the first tab opens by default; hiding a category removes its tab only: its projects stay visible, so a featured one still shows on Overview and the featured cap stays correct; a category with projects cannot be deleted and the last category cannot be deleted; `/dashboard/categories` adds, renames, reorders (swap and renumber in one `db.batch`, D91), hides and deletes; the project form's Filter select lists every category, hidden ones marked; `createProject` and `updateProject` check that the category exists; `ProjectsPanel` takes the categories as props and `lib/projects/filters.ts` keeps only the status labels; `data/categories.ts` seeds the five originals |
 
 ### Open
 
