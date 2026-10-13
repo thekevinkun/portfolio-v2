@@ -1,7 +1,7 @@
 import { asc, eq } from "drizzle-orm";
 import * as t from "./schema";
 import { db } from "./index";
-import type { AdminCounts, AdminProject } from "@/types/admin";
+import type { AdminCategory, AdminCounts, AdminProject } from "@/types/admin";
 import type { Profile } from "@/types/profile";
 
 const hiddenCount = (rows: { visible: boolean }[]) =>
@@ -56,4 +56,26 @@ export async function getAdminProjectBySlug(
     .from(t.projects)
     .where(eq(t.projects.slug, slug));
   return row ?? null;
+}
+
+// Every category, hidden ones too, with how many projects use it
+export async function getAdminCategories(): Promise<AdminCategory[]> {
+  const [categories, projects] = await Promise.all([
+    db
+      .select()
+      .from(t.projectCategories)
+      .orderBy(asc(t.projectCategories.sort), asc(t.projectCategories.slug)),
+    db
+      .select({ filter: t.projects.filter, visible: t.projects.visible })
+      .from(t.projects),
+  ]);
+
+  return categories.map((category) => {
+    const own = projects.filter((project) => project.filter === category.slug);
+    return {
+      ...category,
+      projectCount: own.length,
+      visibleProjectCount: own.filter((project) => project.visible).length,
+    };
+  });
 }

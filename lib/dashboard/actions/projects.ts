@@ -16,6 +16,16 @@ const CAP_MESSAGE = `Overview shows ${MAX_FEATURED_PROJECTS} featured projects. 
 const blobFiles = (...urls: (string | null)[]) =>
   urls.filter((url): url is string => url !== null && isBlobUrl(url));
 
+// The filter must be an existing category (the foreign key enforces it too)
+const categoryMissing = async (slug: string) => {
+  const [row] = await db
+    .select({ id: t.projectCategories.id })
+    .from(t.projectCategories)
+    .where(eq(t.projectCategories.slug, slug));
+  return row === undefined;
+};
+const CATEGORY_ERRORS = { filter: ["This category does not exist."] };
+
 // Visible and featured is what Overview shows (D48), so only those count
 async function countFeaturedVisible(): Promise<number> {
   const [row] = await db
@@ -153,6 +163,9 @@ export const createProject = adminAction(projectFormSchema, async (input) => {
       slug: ["This slug is already used."],
     });
   }
+  if (await categoryMissing(input.filter)) {
+    return fail("Please fix the highlighted fields.", CATEGORY_ERRORS);
+  }
 
   const [last] = await db
     .select({ sort: t.projects.sort })
@@ -177,6 +190,9 @@ export const updateProject = adminAction(projectFormSchema, async (input) => {
     .from(t.projects)
     .where(eq(t.projects.slug, input.slug));
   if (!before) return fail("Project not found.");
+  if (await categoryMissing(input.filter)) {
+    return fail("Please fix the highlighted fields.", CATEGORY_ERRORS);
+  }
 
   await db.update(t.projects).set(input).where(eq(t.projects.slug, input.slug));
 

@@ -3,7 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProjectForm from "@/components/dashboard/ProjectForm";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { getAdminProjectBySlug } from "@/lib/db/admin-queries";
+import {
+  getAdminCategories,
+  getAdminProjectBySlug,
+} from "@/lib/db/admin-queries";
 
 export const metadata: Metadata = { title: "Edit project" };
 
@@ -14,7 +17,10 @@ export default async function EditProjectPage({
 }) {
   await requireAdmin();
   const { slug } = await params;
-  const project = await getAdminProjectBySlug(slug);
+  const [project, categories] = await Promise.all([
+    getAdminProjectBySlug(slug),
+    getAdminCategories(),
+  ]);
   if (!project) notFound();
 
   return (
@@ -30,7 +36,7 @@ export default async function EditProjectPage({
           {project.title}
         </h1>
       </header>
-      <ProjectForm project={project} />
+      <ProjectForm project={project} categories={categories} />
     </div>
   );
 }

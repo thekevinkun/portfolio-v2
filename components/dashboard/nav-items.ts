@@ -10,5 +10,6 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/dashboard/profile", label: "Profile" },
   { href: "/dashboard/tech-stack", label: "Tech Stack" },
   { href: "/dashboard/projects", label: "Projects" },
+  { href: "/dashboard/categories", label: "Categories" },
   { href: "/dashboard/experience", label: "Experience" },
 ];

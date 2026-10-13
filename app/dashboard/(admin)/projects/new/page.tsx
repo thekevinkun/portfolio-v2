@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ProjectForm from "@/components/dashboard/ProjectForm";
 import { requireAdmin } from "@/lib/auth/require-admin";
+import { getAdminCategories } from "@/lib/db/admin-queries";
 
 export const metadata: Metadata = { title: "New project" };
 
 export default async function NewProjectPage() {
   await requireAdmin();
+  const categories = await getAdminCategories();
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-8 lg:px-10 lg:py-12">
@@ -25,7 +27,7 @@ export default async function NewProjectPage() {
           list.
         </p>
       </header>
-      <ProjectForm />
+      <ProjectForm categories={categories} />
     </div>
   );
 }
