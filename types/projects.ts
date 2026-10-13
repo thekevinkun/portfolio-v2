@@ -40,3 +40,7 @@ export type Project = {
   sort: number;
   visible: boolean;
 };
+
+// What the dashboard form edits. Featured, visible and order have their own
+// controls in the list (D102).
+export type ProjectContent = Omit<Project, "featured" | "sort" | "visible">;
