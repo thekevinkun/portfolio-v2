@@ -10,11 +10,14 @@ const hiddenCount = (rows: { visible: boolean }[]) =>
 // Admin reads see every row, hidden ones too (D90). The tables hold about a
 // dozen rows each, so counting in JS beats three aggregate queries.
 export async function getAdminCounts(): Promise<AdminCounts> {
-  const [groups, projects, experience] = await Promise.all([
+  const [groups, projects, categories, experience] = await Promise.all([
     db.select({ visible: t.skillGroups.visible }).from(t.skillGroups),
     db
       .select({ visible: t.projects.visible, featured: t.projects.featured })
       .from(t.projects),
+    db
+      .select({ visible: t.projectCategories.visible })
+      .from(t.projectCategories),
     db.select({ visible: t.experienceItems.visible }).from(t.experienceItems),
   ]);
 
@@ -24,6 +27,10 @@ export async function getAdminCounts(): Promise<AdminCounts> {
       total: projects.length,
       hidden: hiddenCount(projects),
       featuredVisible: projects.filter((p) => p.visible && p.featured).length,
+    },
+    categories: {
+      total: categories.length,
+      hidden: hiddenCount(categories),
     },
     experience: { total: experience.length, hidden: hiddenCount(experience) },
   };

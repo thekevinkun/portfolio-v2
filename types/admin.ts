@@ -3,6 +3,7 @@ import type { Project, ProjectCategory } from "@/types/projects";
 export interface AdminCounts {
   skillGroups: { total: number; hidden: number };
   projects: { total: number; hidden: number; featuredVisible: number };
+  categories: { total: number; hidden: number };
   experience: { total: number; hidden: number };
 }
 
