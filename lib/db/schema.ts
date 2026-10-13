@@ -15,14 +15,9 @@ import {
   type ExperienceProject,
 } from "../../types/experience";
 import type { SocialLink } from "../../types/profile";
-import {
-  PROJECT_FILTERS,
-  PROJECT_STATUSES,
-  type ProjectLink,
-} from "../../types/projects";
+import { PROJECT_STATUSES, type ProjectLink } from "../../types/projects";
 import type { SkillItem, TechIconKey } from "../../types/skills";
 
-export const projectFilterEnum = pgEnum("project_filter", PROJECT_FILTERS);
 export const projectStatusEnum = pgEnum("project_status", PROJECT_STATUSES);
 export const experienceKindEnum = pgEnum("experience_kind", EXPERIENCE_KINDS);
 
@@ -82,13 +77,25 @@ export const skillGroups = pgTable("skill_groups", {
   visible: visible(),
 });
 
+// The tabs on the Projects page (D105)
+export const projectCategories = pgTable("project_categories", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  slug: text("slug").notNull().unique(),
+  label: text("label").notNull(),
+  sort: sort(),
+  visible: visible(),
+});
+
 export const projects = pgTable("projects", {
   id: uuid("id").primaryKey().defaultRandom(),
   slug: text("slug").notNull().unique(),
   title: text("title").notNull(),
   kicker: text("kicker").notNull(),
   summary: text("summary").notNull(),
-  filter: projectFilterEnum("filter_type").notNull(),
+  // A category slug; the foreign key keeps it valid
+  filter: text("filter_type")
+    .notNull()
+    .references(() => projectCategories.slug),
   status: projectStatusEnum("status").notNull(),
   iconUrl: text("icon_url"),
   logoUrl: text("logo_url"),
