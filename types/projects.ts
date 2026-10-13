@@ -1,12 +1,13 @@
-// One source for the DB enums, the Zod schemas and the TS unions (D64)
-export const PROJECT_FILTERS = [
-  "full-stack",
-  "frontend",
-  "game",
-  "web3",
-  "systems",
-] as const;
-export type ProjectFilter = (typeof PROJECT_FILTERS)[number];
+// A category slug. Categories are rows in `project_categories` (D105), so the
+// list is no longer fixed in code.
+export type ProjectFilter = string;
+
+export type ProjectCategory = {
+  slug: string;
+  label: string;
+  sort: number;
+  visible: boolean;
+};
 
 // live = deployed and reachable · completed = finished, repo only
 export const PROJECT_STATUSES = [

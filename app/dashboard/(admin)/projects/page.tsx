@@ -3,25 +3,30 @@ import FormSection from "@/components/dashboard/FormSection";
 import ProjectRow from "@/components/dashboard/ProjectRow";
 import { ButtonLink } from "@/components/ui";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { getAdminProjects } from "@/lib/db/admin-queries";
-import { PROJECT_FILTERS } from "@/lib/projects/filters";
+import { getAdminCategories, getAdminProjects } from "@/lib/db/admin-queries";
 import { MAX_FEATURED_PROJECTS } from "@/types/limits";
 
 export const metadata: Metadata = { title: "Projects" };
 
 export default async function ProjectsPage() {
   await requireAdmin();
-  const projects = await getAdminProjects();
+  const [projects, categories] = await Promise.all([
+    getAdminProjects(),
+    getAdminCategories(),
+  ]);
   const featuredVisible = projects.filter(
     (project) => project.featured && project.visible,
   ).length;
 
-  // Same pill order and labels as the public Projects page; empty groups are skipped
-  const groups = PROJECT_FILTERS.map(({ id, label }) => ({
-    id,
-    label,
-    items: projects.filter((project) => project.filter === id),
-  })).filter((group) => group.items.length > 0);
+  // Same order and labels as the public tabs; empty categories are skipped
+  const groups = categories
+    .map((category) => ({
+      slug: category.slug,
+      label: category.label,
+      visible: category.visible,
+      items: projects.filter((project) => project.filter === category.slug),
+    }))
+    .filter((group) => group.items.length > 0);
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 px-6 py-8 lg:px-10 lg:py-12">
@@ -33,12 +38,19 @@ export default async function ProjectsPage() {
           <p className="mt-1 max-w-xl text-sm text-fg-low">
             Overview shows the first {MAX_FEATURED_PROJECTS} featured, visible
             projects ({featuredVisible} of {MAX_FEATURED_PROJECTS} now). Moving
-            a project only reorders it within its filter.
+            a project only reorders it within its category.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <ButtonLink href="/dashboard/projects/new" size="sm">
             New project
+          </ButtonLink>
+          <ButtonLink
+            href="/dashboard/categories"
+            variant="secondary"
+            size="sm"
+          >
+            Categories
           </ButtonLink>
           <ButtonLink
             href="/projects"
@@ -59,9 +71,9 @@ export default async function ProjectsPage() {
       ) : (
         groups.map((group) => (
           <FormSection
-            key={group.id}
+            key={group.slug}
             title={group.label}
-            description={`${group.items.length} ${group.items.length === 1 ? "project" : "projects"}`}
+            description={`${group.items.length} ${group.items.length === 1 ? "project" : "projects"}${group.visible ? "" : " · category hidden on the Projects page"}`}
           >
             <ul className="divide-y divide-glass-border">
               {group.items.map((project, index) => (

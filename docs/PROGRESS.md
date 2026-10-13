@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-13
-**Current phase / step:** P5.4c
+**Current phase / step:** P5.5
 **Mode default:** Build
 
 ---
@@ -16,7 +16,7 @@
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
-| P5    | Dashboard                | 🟦 In progress | P5.1–P5.4b done (D82–D106) |
+| P5    | Dashboard                | 🟦 In progress | P5.1–P5.4c done (D82–D106) |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 | P7    | Project details          | ⬜ Not started | Planned after P5, before P6 (D106)          |
 
@@ -32,7 +32,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P5.3b Blob uploads (avatar, portrait, resume)
 - [x] P5.4a Projects list: visibility, reorder, delete, featured cap
 - [x] P5.4b Projects create/edit form
-- [ ] P5.4c Project categories: table, categories editor, public pills from the table
+- [x] P5.4c Project categories: table, categories editor, public pills from the table
 - [ ] P5.5 Tech Stack editor
 - [ ] P5.6 Experience editor
 - [ ] P5.7 Hardening and cleanup
@@ -104,8 +104,8 @@ None. O4 and O5 settled (D73, D74).
 - Unused files in `public/`: the five default Next SVGs (`file`, `globe`, `next`, `vercel`, `window`) and `placeholder/avatar.svg`; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
 - Until P5, content changes go through `data/` and `npm run db:seed -- --update`, which overwrites every row
 - Lighthouse at launch: mobile 92 / 98 / 100 / 100 with LCP 3.1 s and Speed Index 4.2 s red; the Overview portrait fade is the suspect (P6.2); accessibility 98 (P6.3)
-- Project filters are still the fixed enum until P5.4c (D105)
 - The project logo (the large image) is stored but shown nowhere until P7 (D104, D106)
+- Categories: hiding one removes its tab only, its projects stay visible (D105); the tabs wrap onto more lines and were fit-checked with eight tabs at the five QA viewports, more than that is untested
 
 ---
 
@@ -130,6 +130,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-14 — P5.4c
+Done:
+- `project_categories` table replaces the filter enum; migration copies the five originals, converts the column and drops the enum (applied to dev and production)
+- Categories editor at `/dashboard/categories`: add, rename, reorder, hide, delete (only when empty); Categories card on the overview and in the nav
+- The project form's Filter select reads the categories; the Projects page tabs are built from visible categories that have visible projects
+Files created/changed:
+- types/{projects,limits,admin}.ts; validators/{categories,projects}.ts; lib/db/{schema,queries,admin-queries}.ts; drizzle/ (categories migration); data/{categories,seed}.ts; scripts/seed.ts; lib/dashboard/actions/{categories,projects}.ts; lib/projects/filters.ts; components/dashboard/{CategoryAddForm,CategoryRow,ProjectForm,nav-items}; components/panels/ProjectsPanel.tsx; app/dashboard/(admin)/{categories/page,projects/page,projects/new/page,projects/[slug]/page,page}.tsx; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D105 (implemented; amends D3, D54, D64, D66)
+Verified (viewports / devices):
+- Typecheck, lint, build and `npm run start` on the Neon dev branch; same five tabs after the migration; rename, add, hide, reorder and delete rules; a new category and a moved project show on the public site; featured project in a hidden category still shows on Overview; errors save nothing; eight tabs at 1440×900, 1366×768, 1024×768, 390×844 and 360×640; seed `--check`; signed-out rename redirects to login; migration applied to production with the checks and the live site still working
+Known issues:
+- More than eight tabs untested; hiding a category removes only its tab
+Next step (ID + one-line goal):
+- P5.5 — Tech Stack editor (items up to 7, highlights up to 5, D98, with a fit QA)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/skills.ts, types/limits.ts, types/action.ts, types/admin.ts, validators/skills.ts, validators/shared.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/actions/categories.ts, data/skill-groups.ts, components/panels/TechStackPanel.tsx, SkillGroupCard.tsx, tech-icons.ts, components/dashboard/CategoryRow.tsx, ProjectForm.tsx, TextField.tsx, FormSection.tsx, nav-items.ts, every file in components/dashboard/ui/, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/categories/page.tsx. Phase: P5 — Dashboard. Step: P5.5. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Tech Stack editor (D92, D98): edit, reorder and hide the groups (no create or delete), items up to 7 with an icon picker and used/learning, highlights up to 5 of at most 40 characters, with limits in types/limits.ts used by the validator, and a fit QA of full cards at all eight viewports before the limits go up.
 
 ### Handoff — 2026-10-13 — P5.4b
 Done:
@@ -169,22 +187,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/projects.ts, types/assets.ts, types/limits.ts, types/admin.ts, validators/projects.ts, validators/shared.ts, lib/db/schema.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/pending-asset.ts, lib/dashboard/actions/projects.ts, lib/dashboard/actions/assets.ts, lib/dashboard/actions/profile.ts, lib/blob/references.ts, lib/blob/cleanup.ts, lib/blob/url.ts, lib/projects/filters.ts, data/projects.ts, components/panels/ProjectCard.tsx, components/panels/FeaturedProjectCard.tsx, components/dashboard/AssetField.tsx, ProfileForm.tsx, TextField.tsx, FormSection.tsx, ProjectRow.tsx, every file in components/dashboard/ui/, and app/dashboard/(admin)/projects/page.tsx. Phase: P5 — Dashboard. Step: P5.4b. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the project create/edit form: split validators/projects.ts into base shape and refinement (D89) so the form omits sort and visible, add the new project and edit routes, a slug generated at creation and read-only afterwards, status and filter selects, tech tags, two fixed link slots (Live and Repo), a logo upload that reuses the upload-on-Save flow from P5.3b, and add project logos to lib/blob/references.ts.
 
 ### Handoff — 2026-10-12 — P5.3b
-Done:
-- Vercel Blob uploads for avatar, portrait and resume: `uploadAsset` server action with size limit and magic-byte check (PNG, JPEG, WebP, PDF, no SVG); `AssetField` with local preview, Replace, Remove and Undo
-- Files upload only when Save changes is pressed (one request per changed file); a failed save deletes the files uploaded during it; replaced files are deleted after a successful save (logged, warning toast on failure)
-- Two Blob stores (dev and production), `bodySizeLimit` 4.5mb, `remotePatterns` for Blob
-Files created/changed:
-- lib/blob/{env,sniff,url,cleanup,references}.ts; types/assets.ts; lib/dashboard/{admin-action,pending-asset}.ts; lib/dashboard/actions/{assets,profile}.ts; components/dashboard/{AssetField,ProfileForm}.tsx; next.config.ts; .env.example; package.json (@vercel/blob); docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D101 (amends D94)
-Verified (viewports / devices):
-- Typecheck, lint, build and `npm run start` on the dev branch and dev store; picking, replacing and undoing a file stores nothing; Save uploads exactly the changed files and deletes the replaced ones (server log, 404 on the old URL with the cache-bust curl, gone from the Vercel list); avatar, portrait and resume, also all three at once; Remove; oversize, text-as-png, SVG and wrong-type files rejected; signed-out save redirects to login; Overview, top bar and Get In Touch render after Remove and Replace; JSON-LD image is an absolute Blob URL; no token in client bundles
-Known issues:
-- A tab closed mid-save can leave one orphan file; P5.4b must add project logos to `lib/blob/references.ts`; the portrait LCP warning goes to P6.2
-Next step (ID + one-line goal):
-- P5.4a — Projects list: visibility, reorder within a filter, delete with confirm, featured cap
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/projects.ts, validators/projects.ts, validators/shared.ts, lib/db/schema.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/revalidate.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/actions/profile.ts, lib/blob/references.ts, data/projects.ts, lib/projects/filters.ts, components/panels/ProjectsPanel.tsx, components/panels/ProjectCard.tsx, components/panels/FeaturedProjectCard.tsx, components/dashboard/index.ts, every file in components/dashboard/ui/, and app/dashboard/(admin)/page.tsx. Phase: P5 — Dashboard. Step: P5.4a. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Projects list at /dashboard/projects: split the project validator into base shape and refinement and add types/limits.ts (D89), admin projects query, visibility switch, up/down reorder within a filter group with sort renumbering in one db.batch (D91), delete with ConfirmDialog, and the featured-visible cap of 3 checked in the actions.
+- P5.3b: Vercel Blob uploads on Save for avatar, portrait and resume, two stores, magic-byte check; D101.
 
 ### Handoff — 2026-10-12 — P5.3a
 - P5.3a: action pattern (`adminAction`, `ActionResult`, `revalidateSite`) and the Profile editor without uploads; D100.

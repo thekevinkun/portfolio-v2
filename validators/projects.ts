@@ -1,6 +1,5 @@
 import { z } from "zod";
 import {
-  PROJECT_FILTERS,
   PROJECT_LINK_KINDS,
   PROJECT_STATUSES,
   type Project,
@@ -26,7 +25,7 @@ const contentShape = {
   title: nonEmpty,
   kicker: nonEmpty,
   summary: nonEmpty,
-  filter: z.enum(PROJECT_FILTERS),
+  filter: slugSchema,
   status: z.enum(PROJECT_STATUSES),
   iconUrl: assetUrl.nullable(),
   logoUrl: assetUrl.nullable(),

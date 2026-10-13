@@ -52,6 +52,7 @@ export const profile: Profile = {
     "Self-taught full stack developer building production-grade web apps: payments, booking flows and backend reliability. Next.js, React, TypeScript, PostgreSQL.",
 };
 
+export { categories } from "./categories";
 export { projects } from "./projects";
 export { skillGroups } from "./skill-groups";
 export { experienceItems } from "./experience";

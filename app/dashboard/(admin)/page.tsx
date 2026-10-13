@@ -22,7 +22,7 @@ interface OverviewCard {
 export default async function DashboardOverview() {
   const session = await requireAdmin();
   const counts = await getAdminCounts();
-  const { skillGroups, projects, experience } = counts;
+  const { skillGroups, projects, categories, experience } = counts;
 
   const cards: OverviewCard[] = [
     {
@@ -51,6 +51,14 @@ export default async function DashboardOverview() {
         projects.featuredVisible === 3
           ? undefined
           : `Overview shows the first 3 featured projects; you have ${projects.featuredVisible}.`,
+    },
+    {
+      href: "/dashboard/categories",
+      title: "Categories",
+      summary: join([
+        `${categories.total} ${categories.total === 1 ? "category" : "categories"}`,
+        categories.hidden > 0 && `${categories.hidden} hidden`,
+      ]),
     },
     {
       href: "/dashboard/experience",

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
@@ -19,8 +20,8 @@ import {
 import { toFormErrors } from "@/lib/dashboard/form-errors";
 import { revokePending } from "@/lib/dashboard/pending-asset";
 import { slugify } from "@/lib/dashboard/slugify";
-import { PROJECT_FILTERS, PROJECT_STATUS_LABELS } from "@/lib/projects/filters";
-import type { AdminProject } from "@/types/admin";
+import { PROJECT_STATUS_LABELS } from "@/lib/projects/filters";
+import type { AdminCategory, AdminProject } from "@/types/admin";
 import {
   PROJECT_ASSET_KINDS,
   type AssetChange,
@@ -49,8 +50,6 @@ const IMAGE_LABELS: Record<ProjectAssetKind, string> = {
   logo: "Logo",
 };
 
-const FILTER_IDS = PROJECT_FILTERS.map((filter) => filter.id);
-
 // aria-describedby for a select that has a hint and maybe an error
 const describedBy = (name: string, hasError: boolean) =>
   hasError ? `${name}-hint ${name}-error` : `${name}-hint`;
@@ -62,9 +61,16 @@ async function rollbackUploads(urls: string[]) {
 }
 
 // Edit mode when a project is given, create mode otherwise
-const ProjectForm = ({ project }: { project?: AdminProject }) => {
+const ProjectForm = ({
+  project,
+  categories,
+}: {
+  project?: AdminProject;
+  categories: AdminCategory[];
+}) => {
   const router = useRouter();
   const editing = project !== undefined;
+  const categoryIds = categories.map((category) => category.slug);
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
   // What the database holds for each image
@@ -100,9 +106,9 @@ const ProjectForm = ({ project }: { project?: AdminProject }) => {
       kicker: text("kicker"),
       summary: text("summary"),
       filter: oneOf(
-        FILTER_IDS,
+        categoryIds,
         text("filter"),
-        project?.filter ?? "full-stack",
+        project?.filter ?? categoryIds[0] ?? "",
       ),
       status: oneOf(
         PROJECT_STATUSES,
@@ -235,19 +241,30 @@ const ProjectForm = ({ project }: { project?: AdminProject }) => {
         <FieldRow
           label="Filter"
           htmlFor="filter"
-          hint="Which tab on the Projects page shows it."
+          hint={
+            <>
+              Which tab on the Projects page shows it.{" "}
+              <Link
+                href="/dashboard/categories"
+                className="underline hover:text-fg-high"
+              >
+                Manage categories
+              </Link>
+            </>
+          }
           error={errors.filter}
         >
           <Select
             id="filter"
             name="filter"
-            defaultValue={project?.filter ?? "full-stack"}
+            defaultValue={project?.filter ?? categoryIds[0]}
             aria-invalid={errors.filter ? true : undefined}
             aria-describedby={describedBy("filter", Boolean(errors.filter))}
           >
-            {PROJECT_FILTERS.map((filter) => (
-              <option key={filter.id} value={filter.id}>
-                {filter.label}
+            {categories.map((category) => (
+              <option key={category.slug} value={category.slug}>
+                {category.label}
+                {category.visible ? "" : " (hidden)"}
               </option>
             ))}
           </Select>

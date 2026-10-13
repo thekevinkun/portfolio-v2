@@ -2,6 +2,7 @@ import { loadEnvConfig } from "@next/env";
 import type { z } from "zod";
 import * as seed from "@/data/seed";
 import * as t from "@/lib/db/schema";
+import { categorySchema } from "@/validators/categories";
 import { experienceItemSchema } from "@/validators/experience";
 import { profileSchema } from "@/validators/profile";
 import { projectSchema } from "@/validators/projects";
@@ -84,12 +85,28 @@ async function main() {
     seed.skillGroups,
     errors,
   );
+  const categoryRows = validateRows(
+    "project_categories",
+    categorySchema,
+    seed.categories,
+    errors,
+  );
   const projectRows = validateRows(
     "projects",
     projectSchema,
     seed.projects,
     errors,
   );
+
+  // A project's filter must be one of the seeded categories
+  const categorySlugs = new Set(categoryRows.map((category) => category.slug));
+  for (const project of projectRows) {
+    if (!categorySlugs.has(project.filter)) {
+      errors.push(
+        `projects[${project.slug}] filter "${project.filter}" is not a category`,
+      );
+    }
+  }
   const experienceRows = validateRows(
     "experience_items",
     experienceItemSchema,
@@ -105,7 +122,7 @@ async function main() {
   }
 
   console.log(
-    `Valid: profile 1, skill_groups ${skillRows.length}, projects ${projectRows.length}, experience_items ${experienceRows.length}`,
+    `Valid: profile 1, skill_groups ${skillRows.length}, project_categories ${categoryRows.length}, projects ${projectRows.length}, experience_items ${experienceRows.length}`,
   );
   if (checkOnly) return;
 
@@ -139,6 +156,18 @@ async function main() {
       : await insert
           .onConflictDoNothing({ target: t.skillGroups.slug })
           .returning({ id: t.skillGroups.id });
+    return done.length > 0;
+  });
+
+  await run("project_categories", categoryRows, async (row) => {
+    const insert = db.insert(t.projectCategories).values(row);
+    const done = update
+      ? await insert
+          .onConflictDoUpdate({ target: t.projectCategories.slug, set: row })
+          .returning({ id: t.projectCategories.id })
+      : await insert
+          .onConflictDoNothing({ target: t.projectCategories.slug })
+          .returning({ id: t.projectCategories.id });
     return done.length > 0;
   });
 
