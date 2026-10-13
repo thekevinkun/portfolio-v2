@@ -8,6 +8,13 @@
       "when": 1791680379957,
       "tag": "0000_silly_living_tribunal",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791884769227,
+      "tag": "0001_magenta_plazm",
+      "breakpoints": true
     }
   ]
 }

@@ -28,6 +28,7 @@ const contentShape = {
   summary: nonEmpty,
   filter: z.enum(PROJECT_FILTERS),
   status: z.enum(PROJECT_STATUSES),
+  iconUrl: assetUrl.nullable(),
   logoUrl: assetUrl.nullable(),
   tech: z.array(nonEmpty).min(1),
   links: z.array(projectLinkSchema),

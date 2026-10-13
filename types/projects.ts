@@ -33,6 +33,9 @@ export type Project = {
   summary: string;
   filter: ProjectFilter;
   status: ProjectStatus;
+  // iconUrl: the small square on the cards; logoUrl: the large image for the
+  // project details
+  iconUrl: string | null;
   logoUrl: string | null;
   tech: string[];
   links: ProjectLink[];

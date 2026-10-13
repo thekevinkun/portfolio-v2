@@ -90,6 +90,7 @@ export const projects = pgTable("projects", {
   summary: text("summary").notNull(),
   filter: projectFilterEnum("filter_type").notNull(),
   status: projectStatusEnum("status").notNull(),
+  iconUrl: text("icon_url"),
   logoUrl: text("logo_url"),
   tech: textList("tech"),
   links: jsonb("links").$type<ProjectLink[]>().notNull(),

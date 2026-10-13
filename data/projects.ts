@@ -9,6 +9,7 @@ export const projects: Project[] = [
       "Multi-tenant AI customer service SaaS where businesses train an assistant on their own documents.",
     filter: "full-stack",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["Next.js", "TypeScript", "PostgreSQL", "pgvector", "OpenAI"],
     links: [
@@ -31,6 +32,7 @@ export const projects: Project[] = [
       "Court booking platform with Midtrans payments and a real-time owner dashboard for revenue and usage.",
     filter: "full-stack",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["Next.js", "TypeScript", "Supabase", "Midtrans", "Upstash Redis"],
     links: [
@@ -57,6 +59,7 @@ export const projects: Project[] = [
       "MERN digital bookstore with an in-browser PDF/EPUB reader, Stripe checkout and an AI shopping assistant.",
     filter: "full-stack",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["React", "Express", "Node.js", "MongoDB", "Stripe", "OpenAI"],
     links: [
@@ -83,6 +86,7 @@ export const projects: Project[] = [
       "Event tickets as NFTs on testnet, with on-chain validation and a resale marketplace with royalties.",
     filter: "web3",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["Next.js", "TypeScript", "Solidity", "Supabase", "Wagmi"],
     links: [
@@ -109,6 +113,7 @@ export const projects: Project[] = [
       "Location-based coffee finder with Google Places search, map pins, directions and saved favorites.",
     filter: "full-stack",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["Next.js", "TypeScript", "MongoDB", "Redis", "Google Places API"],
     links: [
@@ -135,6 +140,7 @@ export const projects: Project[] = [
       "Movie discovery app with real-time search, infinite scroll, a trailer player and a personal watchlist.",
     filter: "full-stack",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["Next.js", "TypeScript", "Tailwind CSS", "MongoDB", "Redis"],
     links: [
@@ -161,6 +167,7 @@ export const projects: Project[] = [
       "AI-generated certificates stored on IPFS and minted as NFTs on a testnet.",
     filter: "web3",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["Next.js", "TypeScript", "Solidity", "Hardhat", "OpenAI API"],
     links: [
@@ -187,6 +194,7 @@ export const projects: Project[] = [
       "Responsive, SEO-optimized landing page with a built-in mortgage (KPR) calculator.",
     filter: "frontend",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["Next.js", "React", "Tailwind CSS", "Formik", "Leaflet"],
     links: [
@@ -213,6 +221,7 @@ export const projects: Project[] = [
       "Figma-to-code conversion of a Virtual Reality landing page, with animations and a responsive layout.",
     filter: "frontend",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion"],
     links: [
@@ -239,6 +248,7 @@ export const projects: Project[] = [
       "Interactive encyclopedia of cat breeds with smooth animations and parallax scrolling.",
     filter: "frontend",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["Next.js", "React", "JavaScript", "CSS", "Lottie"],
     links: [
@@ -265,6 +275,7 @@ export const projects: Project[] = [
       "Animated landing page for Indonesian destinations with a Framer Motion and Embla slider.",
     filter: "frontend",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["React", "CSS", "Framer Motion", "Embla Slider"],
     links: [
@@ -291,6 +302,7 @@ export const projects: Project[] = [
       "Web Tic Tac Toe to play against a Minimax computer opponent or a friend.",
     filter: "game",
     status: "live",
+    iconUrl: null,
     logoUrl: null,
     tech: ["React", "Vite", "Redux", "Tailwind CSS"],
     links: [
@@ -317,6 +329,7 @@ export const projects: Project[] = [
       "Command-line banking app in C++ with authentication, transactions and SQLite3 storage.",
     filter: "systems",
     status: "completed",
+    iconUrl: null,
     logoUrl: null,
     tech: ["C++", "SQLite3", "OpenSSL", "GNU Make"],
     links: [
@@ -338,6 +351,7 @@ export const projects: Project[] = [
       "Command-line contact manager in C with a custom hash table and CSV persistence.",
     filter: "systems",
     status: "completed",
+    iconUrl: null,
     logoUrl: null,
     tech: ["C", "Hash Table", "CSV Parsing", "GNU Make"],
     links: [
@@ -359,6 +373,7 @@ export const projects: Project[] = [
       "Unbeatable command-line Tic Tac Toe in C, powered by the Minimax algorithm.",
     filter: "systems",
     status: "completed",
+    iconUrl: null,
     logoUrl: null,
     tech: ["C", "Minimax Algorithm"],
     links: [
