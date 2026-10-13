@@ -103,8 +103,8 @@ Plan locked in the P5 plan chat (D82–D97). 🎨 steps are visual: they stop at
 | P5.2 🎨 | Dashboard shell: own form primitives in `components/dashboard/ui` (Input, Textarea, Select, Switch, ConfirmDialog on native `<dialog>`, D93); layout, nav, Toaster, noindex; overview with counts and links |
 | P5.3a | Action pattern (`adminAction`, `ActionResult`, `revalidateSite`, field primitives; D87, D88) and the Profile editor without uploads; admin profile query (D90) |
 | P5.3b 🎨 | Vercel Blob uploads for avatar, portrait and resume (D94); delete replaced blobs; `next.config.ts` changes |
-| P5.4a 🎨 | Projects list: validator base split and `types/limits.ts` (D89), admin query, visibility, reorder within a filter, delete with confirm, featured cap of 3 (D91) |
-| P5.4b 🎨 | Projects create/edit form: status, filter, tags, two link slots, logo upload; slug set at creation |
+| P5.4a 🎨 | Projects list: `types/limits.ts` (featured cap), admin query, visibility, reorder within a filter, delete with confirm, featured cap of 3 (D91) |
+| P5.4b 🎨 | Projects create/edit form (with the validator base split, D89): status, filter, tags, two link slots, logo upload; slug set at creation |
 | P5.5 🎨 | Tech Stack editor: edit, reorder and hide groups; items (up to 7) with icon picker; highlights (up to 5); limits visible; fit QA with full cards at all eight viewports (D92, D98) |
 | P5.6 🎨 | Experience editor: Work and Learning items, shipped projects (max 3), three core bullets kept first (D92) |
 | P5.7 | Hardening: `--yes-overwrite` guard on the seed (D97); empty-state test; every route and action tried signed out; revoke test; "view on site" links; Known issues cleanup |
