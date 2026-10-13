@@ -10,6 +10,8 @@ interface TextFieldProps {
   // Set for a multi-line field
   rows?: number;
   type?: "text" | "email";
+  // Shown but not editable; still submitted with the form
+  readOnly?: boolean;
 }
 
 // Uncontrolled field: the form reads it with FormData on submit
@@ -21,6 +23,7 @@ const TextField = ({
   error,
   rows,
   type = "text",
+  readOnly,
 }: TextFieldProps) => {
   const describedBy =
     [hint ? `${name}-hint` : null, error ? `${name}-error` : null]
@@ -31,6 +34,7 @@ const TextField = ({
     id: name,
     name,
     defaultValue,
+    readOnly,
     "aria-invalid": error ? true : undefined,
     "aria-describedby": describedBy,
   };

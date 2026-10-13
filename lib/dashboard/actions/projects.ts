@@ -1,12 +1,13 @@
 "use server";
 
-import { and, asc, count, eq } from "drizzle-orm";
+import { and, asc, count, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { deleteBlobs } from "@/lib/blob/cleanup";
 import { isBlobUrl } from "@/lib/blob/url";
 import { db } from "@/lib/db";
 import * as t from "@/lib/db/schema";
 import { MAX_FEATURED_PROJECTS } from "@/types/limits";
+import { projectFormSchema } from "@/validators/projects";
 import { adminAction, fail, ok } from "../admin-action";
 
 const CAP_MESSAGE = `Overview shows ${MAX_FEATURED_PROJECTS} featured projects. Turn off Featured on another visible project first.`;
@@ -136,3 +137,53 @@ export const deleteProject = adminAction(
     return ok();
   },
 );
+
+// A new project is visible, not featured, and last in order (D89)
+export const createProject = adminAction(projectFormSchema, async (input) => {
+  const [existing] = await db
+    .select({ id: t.projects.id })
+    .from(t.projects)
+    .where(eq(t.projects.slug, input.slug));
+  if (existing) {
+    return fail("Please fix the highlighted fields.", {
+      slug: ["This slug is already used."],
+    });
+  }
+
+  const [last] = await db
+    .select({ sort: t.projects.sort })
+    .from(t.projects)
+    .orderBy(desc(t.projects.sort))
+    .limit(1);
+
+  await db.insert(t.projects).values({
+    ...input,
+    featured: false,
+    visible: true,
+    sort: (last?.sort ?? -1) + 1,
+  });
+  return ok();
+});
+
+// The slug identifies the row and never changes; featured, visible and sort
+// are not touched here
+export const updateProject = adminAction(projectFormSchema, async (input) => {
+  const [before] = await db
+    .select({ logoUrl: t.projects.logoUrl })
+    .from(t.projects)
+    .where(eq(t.projects.slug, input.slug));
+  if (!before) return fail("Project not found.");
+
+  await db.update(t.projects).set(input).where(eq(t.projects.slug, input.slug));
+
+  // A replaced or removed logo file goes after the save succeeded (D101)
+  let cleanupFailed = false;
+  if (
+    before.logoUrl &&
+    before.logoUrl !== input.logoUrl &&
+    isBlobUrl(before.logoUrl)
+  ) {
+    cleanupFailed = !(await deleteBlobs([before.logoUrl]));
+  }
+  return ok({ cleanupFailed });
+});

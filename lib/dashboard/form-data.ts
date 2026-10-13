@@ -17,3 +17,13 @@ export function readLines(data: FormData, name: string): string[] {
 export function joinLines(items: string[]): string {
   return items.join("\n");
 }
+
+// Picks the option that matches a form value, so a select's string becomes the
+// typed union without a cast (the server validates it again)
+export function oneOf<T extends string>(
+  options: readonly T[],
+  value: string,
+  fallback: T,
+): T {
+  return options.find((option) => option === value) ?? fallback;
+}

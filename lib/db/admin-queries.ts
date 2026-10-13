@@ -47,3 +47,13 @@ export async function getAdminProjects(): Promise<AdminProject[]> {
     .from(t.projects)
     .orderBy(asc(t.projects.sort), asc(t.projects.slug));
 }
+
+export async function getAdminProjectBySlug(
+  slug: string,
+): Promise<AdminProject | null> {
+  const [row] = await db
+    .select()
+    .from(t.projects)
+    .where(eq(t.projects.slug, slug));
+  return row ?? null;
+}
