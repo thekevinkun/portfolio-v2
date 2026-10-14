@@ -1,6 +1,7 @@
 import { GlassCard } from "@/components/ui";
 import { BulletList, CardLabel } from "./ExperienceParts";
 import type { ExperienceProject } from "@/types/experience";
+import { SHIPPED_COMPACT_BULLETS } from "@/types/limits";
 
 interface ExperienceShippedCardProps {
   project: ExperienceProject;
@@ -13,7 +14,10 @@ const ExperienceShippedCard = ({ project }: ExperienceShippedCardProps) => (
     <h3 className="text-sm font-bold tracking-tight text-fg-high">
       {project.name}
     </h3>
-    <BulletList items={project.bullets} compactCount={3} />
+    <BulletList
+      items={project.bullets}
+      compactCount={SHIPPED_COMPACT_BULLETS}
+    />
   </GlassCard>
 );
 
