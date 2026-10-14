@@ -1,16 +1,51 @@
 import { TECH_ICON_KEYS, type TechIconKey } from "@/types/skills";
 import { TECH_ICONS, type TechIcon } from "./tech-icons";
 
-// The whole Simple Icons set from react-icons, looked up by export name
-// ("SiPython"). Loaded on demand so its thousands of icons never join an
-// initial bundle (D107).
-export type SimpleIconSet = Record<string, TechIcon | undefined>;
+// Icon name -> component. Simple Icons are keyed by export name ("SiPython");
+// lucide by the lower-case, letters-and-digits form of its name ("shieldcheck").
+type IconIndex = Record<string, TechIcon | undefined>;
 
-export async function loadSimpleIcons(): Promise<SimpleIconSet> {
-  const set = await import("react-icons/si");
-  // The exports are components keyed by name; indexing them by a computed name
-  // needs this widening
-  return set as unknown as SimpleIconSet;
+export interface IconSets {
+  simple: IconIndex;
+  lucide: IconIndex;
+}
+
+const isIconComponent = (value: unknown): value is TechIcon =>
+  typeof value === "function" ||
+  (typeof value === "object" && value !== null && "$$typeof" in value);
+
+// "ShieldCheck" -> "shieldcheck": the same form as a typed "shield-check"
+const toPlain = (value: string) =>
+  value.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+// Every icon export of lucide-react (PascalCase names); helpers and providers
+// are skipped
+function indexLucide(namespace: Record<string, unknown>): IconIndex {
+  const index: IconIndex = {};
+  for (const [name, value] of Object.entries(namespace)) {
+    if (!/^[A-Z]/.test(name) || name.endsWith("Provider")) continue;
+    if (isIconComponent(value)) index[toPlain(name)] = value;
+  }
+  return index;
+}
+
+// Loaded on demand and once, so the thousands of icons never join an initial
+// bundle (D107): on the server for the public cards, in the browser only in
+// the dashboard editor.
+let cached: Promise<IconSets> | null = null;
+
+export function loadIconSets(): Promise<IconSets> {
+  cached ??= (async () => {
+    const [simple, lucide] = await Promise.all([
+      import("react-icons/si"),
+      import("lucide-react"),
+    ]);
+    return {
+      simple: simple as unknown as IconIndex,
+      lucide: indexLucide(lucide as unknown as Record<string, unknown>),
+    };
+  })();
+  return cached;
 }
 
 // Simple Icons spells symbols out: "Node.js" -> "nodedotjs", "C++" -> "cplusplus"
@@ -62,26 +97,38 @@ function candidates(value: string): string[] {
   return [...new Set(withAliases)].filter((slug) => slug !== "");
 }
 
-function findSimpleIcon(set: SimpleIconSet, value: string): TechIcon | null {
+function findSimpleIcon(index: IconIndex, value: string): TechIcon | null {
   for (const slug of candidates(value)) {
-    const icon = set[`Si${slug.charAt(0).toUpperCase()}${slug.slice(1)}`];
+    const icon = index[`Si${slug.charAt(0).toUpperCase()}${slug.slice(1)}`];
     if (icon) return icon;
   }
   return null;
 }
 
+function findLucideIcon(index: IconIndex, value: string): TechIcon | null {
+  return index[toPlain(value)] ?? null;
+}
+
 const isBuiltInKey = (value: string): value is TechIconKey =>
   (TECH_ICON_KEYS as readonly string[]).includes(value);
 
-// 1. a built-in key ("credit-card"), 2. a typed Simple Icons name, 3. the item
-// name when the icon box is empty. null means "show the letter fallback".
+// 1. a built-in key ("credit-card"), 2. "lucide:name" to force lucide, 3. the
+// typed name, or the item name when the icon box is empty, looked up in Simple
+// Icons first and then in lucide. null means "show the letter fallback".
 export function resolveTechIcon(
-  set: SimpleIconSet | null,
+  sets: IconSets | null,
   name: string,
   iconKey: string,
 ): TechIcon | null {
   const typed = iconKey.trim();
   if (typed && isBuiltInKey(typed)) return TECH_ICONS[typed];
-  if (!set) return null;
-  return findSimpleIcon(set, typed || name);
+  if (!sets) return null;
+
+  const forced = /^lucide:\s*(.+)$/i.exec(typed);
+  if (forced?.[1]) return findLucideIcon(sets.lucide, forced[1]);
+
+  const query = typed || name;
+  return (
+    findSimpleIcon(sets.simple, query) ?? findLucideIcon(sets.lucide, query)
+  );
 }

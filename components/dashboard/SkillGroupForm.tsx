@@ -9,9 +9,9 @@ import {
 } from "react";
 import { toast } from "sonner";
 import {
-  loadSimpleIcons,
+  loadIconSets,
   resolveTechIcon,
-  type SimpleIconSet,
+  type IconSets,
 } from "@/components/panels/resolve-tech-icon";
 import TechLogo from "@/components/panels/TechLogo";
 import { Button, ButtonLink } from "@/components/ui";
@@ -70,8 +70,8 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [groupIcon, setGroupIcon] = useState<TechIconKey>(group.iconKey);
-  // The logo set loads in the browser only here, for the live preview
-  const [simpleIcons, setSimpleIcons] = useState<SimpleIconSet | null>(null);
+  // The icon sets load in the browser only here, for the live preview
+  const [iconSets, setIconSets] = useState<IconSets | null>(null);
   // Row keys are counters, so the server and the browser render the same ids
   const nextKey = useRef(group.items.length + group.highlights.length);
   const [items, setItems] = useState<ItemRow[]>(() =>
@@ -86,8 +86,8 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
 
   useEffect(() => {
     let active = true;
-    void loadSimpleIcons().then((set) => {
-      if (active) setSimpleIcons(set);
+    void loadIconSets().then((sets) => {
+      if (active) setIconSets(sets);
     });
     return () => {
       active = false;
@@ -227,7 +227,7 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
 
       <FormSection
         title="Items"
-        description={`Up to ${MAX_SKILL_ITEMS}. The logo is found from the name (Python, Go, FastAPI, Pandas...). Leave the icon box empty for that. If no logo exists, a letter is shown; type an icon name from simpleicons.org (for example tailwindcss) in the icon box to pick one. Mark an item "Used" only after it has shipped in a real project; everything else is "Learning".`}
+        description={`Up to ${MAX_SKILL_ITEMS}. The icon is found from the name (Python, Go, FastAPI, Database...); leave the icon box empty for that. If none is found, a letter is shown. To pick one yourself, type its name in the icon box: a brand from simpleicons.org (tailwindcss) or a generic icon from lucide.dev/icons (shield-check, lock, bug). Write lucide: before a name to force a lucide icon. Mark an item "Used" only after it has shipped in a real project; everything else is "Learning".`}
       >
         <ul className="space-y-3">
           {items.map((row, index) => {
@@ -236,9 +236,9 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
               errors[`item.${row.key}.name`] ??
               errors[`item.${row.key}.iconKey`] ??
               errors[`item.${row.key}.status`];
-            const icon = resolveTechIcon(simpleIcons, row.name, row.iconKey);
+            const icon = resolveTechIcon(iconSets, row.name, row.iconKey);
             const unresolved =
-              simpleIcons !== null &&
+              iconSets !== null &&
               icon === null &&
               (row.name.trim() !== "" || row.iconKey.trim() !== "");
             return (
@@ -337,8 +337,9 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
                 </div>
                 {unresolved ? (
                   <p className="text-xs text-fg-low">
-                    No logo found, so a letter is shown. Type an icon name from
-                    simpleicons.org in the icon box to pick one.
+                    No icon found, so a letter is shown. Type an icon name in
+                    the icon box: a brand from simpleicons.org or a generic icon
+                    from lucide.dev/icons.
                   </p>
                 ) : null}
                 {error ? (

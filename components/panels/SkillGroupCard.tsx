@@ -3,7 +3,7 @@ import { GlassCard } from "@/components/ui";
 import { cn } from "@/lib/cn";
 import { formatIndexLabel } from "@/lib/skills/index-label";
 import type { SkillGroup } from "@/types/skills";
-import { loadSimpleIcons, resolveTechIcon } from "./resolve-tech-icon";
+import { loadIconSets, resolveTechIcon } from "./resolve-tech-icon";
 import { TECH_ICONS } from "./tech-icons";
 import TechLogo from "./TechLogo";
 
@@ -17,8 +17,8 @@ interface SkillGroupCardProps {
 // padding and gaps. Highlights are written to fit one line.
 const SkillGroupCard = async ({ group, position }: SkillGroupCardProps) => {
   const GroupIcon = TECH_ICONS[group.iconKey];
-  // Looked up here, on the server, so the icon set never reaches the browser
-  const simpleIcons = await loadSimpleIcons();
+  // Looked up here, on the server, so the icon sets never reach the browser
+  const iconSets = await loadIconSets();
 
   return (
     <GlassCard className="flex w-full flex-col justify-between gap-2 p-3 tier-regular:gap-4 tier-regular:p-4">
@@ -64,7 +64,7 @@ const SkillGroupCard = async ({ group, position }: SkillGroupCardProps) => {
               )}
             >
               <TechLogo
-                icon={resolveTechIcon(simpleIcons, item.name, item.iconKey)}
+                icon={resolveTechIcon(iconSets, item.name, item.iconKey)}
                 name={item.name}
                 className="size-3.5 shrink-0 text-fg-high"
               />
