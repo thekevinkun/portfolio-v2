@@ -14,9 +14,10 @@ import { nonEmpty, slugSchema, sortOrder } from "./shared";
 
 const iconKey = z.enum(TECH_ICON_KEYS);
 
+// iconKey is free text: empty means "find the logo from the name" (D107)
 export const skillItemSchema = z.strictObject({
   name: nonEmpty,
-  iconKey,
+  iconKey: z.string().trim().max(40, "At most 40 characters."),
   status: z.enum(SKILL_STATUSES),
 });
 

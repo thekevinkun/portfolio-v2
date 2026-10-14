@@ -45,7 +45,7 @@ const TechStackPanel = ({ groups }: TechStackPanelProps) => (
                 {...reveal("from-left", 2 + i)}
                 className="flex w-full"
               >
-                <SkillGroupCard group={group} />
+                <SkillGroupCard group={group} position={i + 1} />
               </div>
             ))}
           </Carousel>

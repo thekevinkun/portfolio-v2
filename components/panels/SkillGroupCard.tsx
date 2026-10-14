@@ -1,17 +1,24 @@
 import { Check } from "lucide-react";
 import { GlassCard } from "@/components/ui";
 import { cn } from "@/lib/cn";
+import { formatIndexLabel } from "@/lib/skills/index-label";
 import type { SkillGroup } from "@/types/skills";
+import { loadSimpleIcons, resolveTechIcon } from "./resolve-tech-icon";
 import { TECH_ICONS } from "./tech-icons";
+import TechLogo from "./TechLogo";
 
 interface SkillGroupCardProps {
   group: SkillGroup;
+  // 1-based place among the visible cards: the number follows the order
+  position: number;
 }
 
 // One layer of the stack. Everything always shows; short panels only tighten
 // padding and gaps. Highlights are written to fit one line.
-const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
+const SkillGroupCard = async ({ group, position }: SkillGroupCardProps) => {
   const GroupIcon = TECH_ICONS[group.iconKey];
+  // Looked up here, on the server, so the icon set never reaches the browser
+  const simpleIcons = await loadSimpleIcons();
 
   return (
     <GlassCard className="flex w-full flex-col justify-between gap-2 p-3 tier-regular:gap-4 tier-regular:p-4">
@@ -22,7 +29,7 @@ const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
               aria-hidden="true"
               className="size-1.5 rounded-full bg-accent"
             />
-            {group.indexLabel}
+            {formatIndexLabel(position, group.indexLabel)}
           </span>
           <span className="rounded-sm bg-accent px-2 py-0.5 text-[9px] font-bold text-on-accent">
             {group.badge}
@@ -47,22 +54,23 @@ const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
         </div>
 
         <ul className="grid grid-cols-2 gap-1 tier-regular:gap-1.5">
-          {group.items.map((item, i) => {
-            const Icon = TECH_ICONS[item.iconKey];
-            return (
-              <li
-                key={`${item.name}-${i}`}
-                title={item.status === "learning" ? "Learning" : undefined}
-                className={cn(
-                  "flex min-w-0 items-center gap-1.5 rounded-md border border-glass-border bg-glass-fill px-2 py-1 font-mono text-[10px] text-fg-medium last:odd:col-span-2 tier-regular:py-1.5",
-                  item.status === "learning" && "text-fg-low",
-                )}
-              >
-                <Icon className="size-3.5 shrink-0 text-fg-high" aria-hidden />
-                <span className="truncate">{item.name}</span>
-              </li>
-            );
-          })}
+          {group.items.map((item, i) => (
+            <li
+              key={`${item.name}-${i}`}
+              title={item.status === "learning" ? "Learning" : undefined}
+              className={cn(
+                "flex min-w-0 items-center gap-1.5 rounded-md border border-glass-border bg-glass-fill px-2 py-1 font-mono text-[10px] text-fg-medium last:odd:col-span-2 tier-regular:py-1.5",
+                item.status === "learning" && "text-fg-low",
+              )}
+            >
+              <TechLogo
+                icon={resolveTechIcon(simpleIcons, item.name, item.iconKey)}
+                name={item.name}
+                className="size-3.5 shrink-0 text-fg-high"
+              />
+              <span className="truncate">{item.name}</span>
+            </li>
+          ))}
         </ul>
       </div>
 

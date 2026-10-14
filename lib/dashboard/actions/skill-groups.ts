@@ -5,16 +5,25 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import * as t from "@/lib/db/schema";
 import { skillGroupFormSchema } from "@/validators/skills";
+import { plainIndexLabel } from "@/lib/skills/index-label";
 import { adminAction, fail, ok } from "../admin-action";
 
 // The slug identifies the group and never changes; sort and visible are not
 // touched here. There is no create or delete (D92).
 export const updateSkillGroup = adminAction(
   skillGroupFormSchema,
-  async ({ slug, ...content }) => {
+  async ({ slug, indexLabel, ...content }) => {
+    // The card number follows the position, so a typed number is dropped
+    const label = plainIndexLabel(indexLabel);
+    if (!label) {
+      return fail("Please fix the highlighted fields.", {
+        indexLabel: ["Add a label without the number."],
+      });
+    }
+
     const updated = await db
       .update(t.skillGroups)
-      .set(content)
+      .set({ ...content, indexLabel: label })
       .where(eq(t.skillGroups.slug, slug))
       .returning({ id: t.skillGroups.id });
     if (updated.length === 0) return fail("Group not found.");

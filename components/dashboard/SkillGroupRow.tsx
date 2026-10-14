@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Switch } from "@/components/dashboard/ui";
 import { Button, ButtonLink, Pill } from "@/components/ui";
 import { cn } from "@/lib/cn";
+import { plainIndexLabel } from "@/lib/skills/index-label";
 import {
   moveSkillGroup,
   setSkillGroupVisible,
@@ -53,7 +54,7 @@ const SkillGroupRow = ({ group, isFirst, isLast }: SkillGroupRowProps) => {
           ) : null}
         </div>
         <p className="mt-1 truncate font-mono text-xs text-fg-low">
-          {group.indexLabel} · {group.items.length}{" "}
+          {plainIndexLabel(group.indexLabel)} · {group.items.length}{" "}
           {group.items.length === 1 ? "item" : "items"}
           {learning.length > 0 ? ` (${learning.length} learning)` : ""} ·{" "}
           {group.highlights.length}{" "}

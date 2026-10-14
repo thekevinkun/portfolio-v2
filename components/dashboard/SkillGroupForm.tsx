@@ -1,12 +1,29 @@
 "use client";
 
-import { useRef, useState, useTransition, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+  type FormEvent,
+} from "react";
 import { toast } from "sonner";
+import {
+  loadSimpleIcons,
+  resolveTechIcon,
+  type SimpleIconSet,
+} from "@/components/panels/resolve-tech-icon";
+import TechLogo from "@/components/panels/TechLogo";
 import { Button, ButtonLink } from "@/components/ui";
+import FormSection from "./FormSection";
+import IconSelect from "./IconSelect";
+import TextField from "./TextField";
+import { FieldRow, Input, Select } from "./ui";
+import { cn } from "@/lib/cn";
 import { updateSkillGroup } from "@/lib/dashboard/actions/skill-groups";
 import { oneOf, readText } from "@/lib/dashboard/form-data";
 import { toFormErrors } from "@/lib/dashboard/form-errors";
-import { cn } from "@/lib/cn";
+import { plainIndexLabel } from "@/lib/skills/index-label";
 import type { AdminSkillGroup } from "@/types/admin";
 import {
   MAX_HIGHLIGHT_LENGTH,
@@ -14,19 +31,17 @@ import {
   MAX_SKILL_ITEMS,
 } from "@/types/limits";
 import {
+  GROUP_ICON_KEYS,
   SKILL_STATUSES,
   type SkillStatus,
   type TechIconKey,
 } from "@/types/skills";
-import FormSection from "./FormSection";
-import IconSelect from "./IconSelect";
-import TextField from "./TextField";
-import { FieldRow, Input, Select } from "./ui";
 
 interface ItemRow {
   key: number;
   name: string;
-  iconKey: TechIconKey;
+  // Empty = find the logo from the name
+  iconKey: string;
   status: SkillStatus;
 }
 
@@ -55,6 +70,8 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
   const [pending, startTransition] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [groupIcon, setGroupIcon] = useState<TechIconKey>(group.iconKey);
+  // The logo set loads in the browser only here, for the live preview
+  const [simpleIcons, setSimpleIcons] = useState<SimpleIconSet | null>(null);
   // Row keys are counters, so the server and the browser render the same ids
   const nextKey = useRef(group.items.length + group.highlights.length);
   const [items, setItems] = useState<ItemRow[]>(() =>
@@ -67,13 +84,23 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
     })),
   );
 
+  useEffect(() => {
+    let active = true;
+    void loadSimpleIcons().then((set) => {
+      if (active) setSimpleIcons(set);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const addItem = () => {
     const key = nextKey.current++;
     setItems((previous) =>
       previous.length >= MAX_SKILL_ITEMS
         ? previous
         : // Learning until it has shipped in a real project (R4)
-          [...previous, { key, name: "", iconKey: "api", status: "learning" }],
+          [...previous, { key, name: "", iconKey: "", status: "learning" }],
     );
   };
 
@@ -106,14 +133,14 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
 
     const content = {
       slug: group.slug,
-      indexLabel: text("indexLabel"),
+      indexLabel: plainIndexLabel(text("indexLabel")),
       title: text("title"),
       subtitle: text("subtitle"),
       badge: text("badge"),
       iconKey: groupIcon,
       items: items.map(({ name, iconKey, status }) => ({
         name: name.trim(),
-        iconKey,
+        iconKey: iconKey.trim(),
         status,
       })),
       highlights: kept.map((row) => row.text.trim()),
@@ -159,9 +186,9 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
       <FormSection title="Group">
         <TextField
           name="indexLabel"
-          label="Index label"
-          defaultValue={group.indexLabel}
-          hint='The small label at the top left of the card, for example "01 / CLIENT & UI".'
+          label="Label"
+          defaultValue={plainIndexLabel(group.indexLabel)}
+          hint='The small label at the top left of the card, for example "CLIENT & UI". Don&apos;t type a number: the card number follows its position.'
           error={errors.indexLabel}
         />
         <TextField
@@ -192,6 +219,7 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
             id="group-icon"
             label="Group icon"
             value={groupIcon}
+            keys={GROUP_ICON_KEYS}
             onChange={setGroupIcon}
           />
         </FieldRow>
@@ -199,7 +227,7 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
 
       <FormSection
         title="Items"
-        description={`Up to ${MAX_SKILL_ITEMS}. Mark an item "Used" only after it has shipped in a real project; everything else is "Learning".`}
+        description={`Up to ${MAX_SKILL_ITEMS}. The logo is found from the name (Python, Go, FastAPI, Pandas...). Leave the icon box empty for that. If no logo exists, a letter is shown; type an icon name from simpleicons.org (for example tailwindcss) in the icon box to pick one. Mark an item "Used" only after it has shipped in a real project; everything else is "Learning".`}
       >
         <ul className="space-y-3">
           {items.map((row, index) => {
@@ -208,13 +236,18 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
               errors[`item.${row.key}.name`] ??
               errors[`item.${row.key}.iconKey`] ??
               errors[`item.${row.key}.status`];
+            const icon = resolveTechIcon(simpleIcons, row.name, row.iconKey);
+            const unresolved =
+              simpleIcons !== null &&
+              icon === null &&
+              (row.name.trim() !== "" || row.iconKey.trim() !== "");
             return (
               <li key={row.key} className="space-y-1.5">
                 <div className="flex flex-wrap items-center gap-2">
                   <Input
                     id={`${id}-name`}
                     aria-label={`Item ${index + 1} name`}
-                    placeholder="Name"
+                    placeholder="Name, for example Python"
                     value={row.name}
                     aria-invalid={error ? true : undefined}
                     className="min-w-0 flex-1 basis-40"
@@ -222,12 +255,25 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
                       changeItem(row.key, { name: event.target.value })
                     }
                   />
-                  <IconSelect
+                  <span
+                    aria-hidden="true"
+                    className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-glass-border bg-glass-fill text-fg-high"
+                  >
+                    <TechLogo
+                      icon={icon}
+                      name={row.name || row.iconKey || "?"}
+                      className="size-4"
+                    />
+                  </span>
+                  <Input
                     id={`${id}-icon`}
-                    label={`Item ${index + 1} icon`}
+                    aria-label={`Item ${index + 1} icon name (optional)`}
+                    placeholder="icon: auto"
                     value={row.iconKey}
-                    className="w-40"
-                    onChange={(iconKey) => changeItem(row.key, { iconKey })}
+                    className="w-36"
+                    onChange={(event) =>
+                      changeItem(row.key, { iconKey: event.target.value })
+                    }
                   />
                   <Select
                     id={`${id}-status`}
@@ -289,6 +335,12 @@ const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
                     </Button>
                   </div>
                 </div>
+                {unresolved ? (
+                  <p className="text-xs text-fg-low">
+                    No logo found, so a letter is shown. Type an icon name from
+                    simpleicons.org in the icon box to pick one.
+                  </p>
+                ) : null}
                 {error ? (
                   <p role="alert" className="text-xs text-danger">
                     {error}
