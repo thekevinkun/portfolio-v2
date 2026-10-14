@@ -41,7 +41,7 @@ const TechStackPanel = ({ groups }: TechStackPanelProps) => (
           >
             {groups.map((group, i) => (
               <div
-                key={group.indexLabel}
+                key={group.slug}
                 {...reveal("from-left", 2 + i)}
                 className="flex w-full"
               >

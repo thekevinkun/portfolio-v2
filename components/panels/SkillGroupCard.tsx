@@ -47,11 +47,11 @@ const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
         </div>
 
         <ul className="grid grid-cols-2 gap-1 tier-regular:gap-1.5">
-          {group.items.map((item) => {
+          {group.items.map((item, i) => {
             const Icon = TECH_ICONS[item.iconKey];
             return (
               <li
-                key={item.name}
+                key={`${item.name}-${i}`}
                 title={item.status === "learning" ? "Learning" : undefined}
                 className={cn(
                   "flex min-w-0 items-center gap-1.5 rounded-md border border-glass-border bg-glass-fill px-2 py-1 font-mono text-[10px] text-fg-medium last:odd:col-span-2 tier-regular:py-1.5",
@@ -67,9 +67,9 @@ const SkillGroupCard = ({ group }: SkillGroupCardProps) => {
       </div>
 
       <ul className="flex flex-col gap-1 border-t border-glass-border pt-2 tier-regular:gap-1.5 tier-regular:pt-3">
-        {group.highlights.map((text) => (
+        {group.highlights.map((text, i) => (
           <li
-            key={text}
+            key={`${text}-${i}`}
             className="flex items-center gap-1.5 text-[11px] leading-snug text-fg-medium"
           >
             <Check className="size-3 shrink-0 text-fg-high" aria-hidden />
