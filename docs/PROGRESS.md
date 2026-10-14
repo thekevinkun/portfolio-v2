@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-13
-**Current phase / step:** P5.5
+**Last updated:** 2026-10-14
+**Current phase / step:** P5.6
 **Mode default:** Build
 
 ---
@@ -16,7 +16,7 @@
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
-| P5    | Dashboard                | 🟦 In progress | P5.1–P5.4c done (D82–D106) |
+| P5    | Dashboard                | 🟦 In progress | P5.1–P5.5 done (D82–D108) |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 | P7    | Project details          | ⬜ Not started | Planned after P5, before P6 (D106)          |
 
@@ -33,7 +33,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P5.4a Projects list: visibility, reorder, delete, featured cap
 - [x] P5.4b Projects create/edit form
 - [x] P5.4c Project categories: table, categories editor, public pills from the table
-- [ ] P5.5 Tech Stack editor
+- [x] P5.5 Tech Stack editor
 - [ ] P5.6 Experience editor
 - [ ] P5.7 Hardening and cleanup
 
@@ -73,7 +73,7 @@ None. O4 and O5 settled (D73, D74).
 - Tech Stack highlights are written for ~280 px cards (≤ ~38 characters); longer text would truncate with "…"
 - Web3, C/C++ and Git no longer appear on the Tech Stack page (strip removed); Projects filters cover Web3 and C/C++
 - Carousel: a swipe that starts on the cards can't turn the page and stops at the last card; the header, controls row, dock and tab bar still turn pages (add edge hand-off only if testing shows people getting stuck)
-- OpenAI, AWS and pgvector use generic lucide icons, not brand logos
+- OpenAI, AWS and pgvector items keep their built-in generic icons; the editor can switch any item to a Simple Icons or lucide name (D108)
 - Projects: at 3-up the last page can repeat cards (Full Stack has 5, so page 2 shows cards 3–5)
 - Projects: filter reflow animation (auto-animate) and rolling counter digits (number-flow) wait for P6.1
 - Projects: after a filter click, later visits to Projects start their cards with no wait instead of waiting for the page slide
@@ -88,8 +88,8 @@ None. O4 and O5 settled (D73, D74).
 - Carousel slides must keep `overflow-clip`: animated cards would otherwise change the track's scroll size and break Carousel's page measurement and the wheel guard
 - Spotlight border sheen uses `mask-composite`; spot-check Safari and Firefox in P6.2, and check entrances plus spotlight at 4× CPU throttle there
 - Density thresholds (D60) were measured on the eight QA viewports plus one 1536×791 laptop window; if a real device shows a problem, tune the variants in `app/globals.css`
-- The validator limits (5 skill items, 4 highlights of at most 40 characters, 3–5 shipped bullets per project) must be visible in the P5.5 and P5.6 editors
-- Tech Stack cards were fit-tested with 5 items and 4 highlights (P3.9); D98 raises the limits to 7 and 5 in P5.5, which must re-run fit QA with full cards (a short panel such as 1366×768 is the likeliest to overflow)
+- The shipped limits (at most 3 projects, 3–5 bullets each) must be visible in the P5.6 editor
+- Tech Stack: full cards (7 items, 5 highlights) were fit-checked at the QA viewports in P5.5 (D107); 360×640 is 4 px taller than its area, absorbed by the gap and padding, and 1024×768 has 7 px of slack and is the tightest; re-check both if the card spacing changes
 - Dashboard sign-in works only on localhost and the production domain (two OAuth apps, D85); preview URLs cannot sign in
 - Dashboard: `app/dashboard/(admin)/[area]/page.tsx` is a temporary stub for the editors that don't exist yet; delete it in P5.7
 - Dashboard: the open `Select` list is drawn by the browser, so its look can differ between browsers (options carry their own colors, D99); spot-check in P5.4b where the selects are used
@@ -106,6 +106,7 @@ None. O4 and O5 settled (D73, D74).
 - Lighthouse at launch: mobile 92 / 98 / 100 / 100 with LCP 3.1 s and Speed Index 4.2 s red; the Overview portrait fade is the suspect (P6.2); accessibility 98 (P6.3)
 - The project logo (the large image) is stored but shown nowhere until P7 (D104, D106)
 - Categories: hiding one removes its tab only, its projects stay visible (D105); the tabs wrap onto more lines and were fit-checked with eight tabs at the five QA viewports, more than that is untested
+- Tech Stack icons: a brand missing from the installed `react-icons` Simple Icons set falls back to a letter; type a different brand, a lucide name or `lucide:<name>` in the item's icon box (D108)
 
 ---
 
@@ -130,6 +131,25 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-14 — P5.5
+Done:
+- Tech Stack editor: list at `/dashboard/tech-stack` (visible switch, up/down reorder, Edit; no create or delete) and a group form with label, title, subtitle, badge, group icon, items (up to 7) and highlights (up to 5, at most 40 characters), with counters; hiding the last visible group is refused
+- Item icons are found from the typed name (Simple Icons, then lucide) with an optional icon box (Simple Icons name, lucide name, `lucide:name`, built-in key) and a letter fallback; the group icon is limited to four generic icons
+- Card numbers follow the card's position (`formatIndexLabel`); stored labels have no number and the seed labels were stripped
+- Limits moved to `types/limits.ts` and read by the validator; fit QA with full cards passed
+Files created/changed:
+- types/{limits,skills,admin}.ts; validators/skills.ts; lib/db/admin-queries.ts; lib/dashboard/actions/skill-groups.ts; lib/skills/index-label.ts; components/panels/{resolve-tech-icon.ts,TechLogo.tsx,SkillGroupCard.tsx,TechStackPanel.tsx}; components/dashboard/{SkillGroupRow,SkillGroupForm,IconSelect}.tsx; app/dashboard/(admin)/tech-stack/{page.tsx,[slug]/page.tsx}; data/skill-groups.ts; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
+Decisions:
+- D107, D108 (D108 amends D53)
+Verified (viewports / devices):
+- Typecheck, lint, build and `npm run start` on the Neon dev branch; list matches Neon; text, item and highlight edits show on the public page; limits and error messages save nothing; reorder and hide renumber the cards `01`–`04` by position; last visible group cannot be hidden; free-typed items (Python, Go, FastAPI, Pandas, JavaScript, C++, Node.js) show logos, a nonsense name shows the letter; lucide icons by name (`shield-check`, `lock`, `bug`, `lucide:shield`); existing logos unchanged; no icon-set code in the public chunks; fit slack 367 / 78 / 187 / 55 / 96 / 7 / 200 / −4 px at 1920×1080, 1536×791, 1440×900, 1366×768, 1280×720, 1024×768, 390×844, 360×640; signed-out save redirects to login; phone layout; keyboard focus
+Known issues:
+- 360×640 is 4 px over its area (absorbed); 1024×768 is the tightest; a brand missing from the installed Simple Icons set falls back to a letter
+Next step (ID + one-line goal):
+- P5.6 — Experience editor (Work and Learning items, shipped projects up to 3)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/experience.ts, types/limits.ts, types/admin.ts, validators/experience.ts, validators/shared.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/actions/skill-groups.ts, data/experience.ts, lib/experience/format.ts, components/panels/ExperiencePanel.tsx, ExperienceRoleCard.tsx, ExperienceShippedCard.tsx, ExperienceLearningCard.tsx, ExperienceParts.tsx, components/dashboard/SkillGroupForm.tsx, SkillGroupRow.tsx, TextField.tsx, FormSection.tsx, nav-items.ts, every file in components/dashboard/ui/, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/tech-stack/page.tsx. Phase: P5 — Dashboard. Step: P5.6. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Experience editor (D92): edit the two existing items (Work and Learning) with summary, short summary, bullets and tags; shipped projects add, remove and reorder with at most 3 (`MAX_SHIPPED_PROJECTS` in types/limits.ts) and 3–5 bullets each (the first three show in the wide layout), the Shipped name as free text (D75); no create, delete, reorder or hide of top-level items; limits visible in the form.
 
 ### Handoff — 2026-10-14 — P5.4c
 Done:
@@ -170,21 +190,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, drizzle.config.ts, scripts/seed.ts, data/seed.ts, data/projects.ts, types/projects.ts, validators/projects.ts, validators/shared.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, lib/projects/filters.ts, lib/dashboard/admin-action.ts, lib/dashboard/actions/projects.ts, components/panels/ProjectsPanel.tsx, components/panels/ProjectCard.tsx, components/ui/Carousel.tsx, components/dashboard/ProjectForm.tsx, ProjectRow.tsx, nav-items.ts, DashboardNav.tsx, every file in components/dashboard/ui/, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/projects/page.tsx. Phase: P5 — Dashboard. Step: P5.4c. Mode: Build. Follow WORKFLOW.md §11. Goal: Replace the project_filter enum with a project_categories table (D105): migration that copies the five current filters, a categories editor, the project form select reading the table, public pills built from visible categories with projects, and a fit check with more pills.
 
 ### Handoff — 2026-10-13 — P5.4a
-Done:
-- Projects list at `/dashboard/projects`: grouped by filter, each row with Visible and Featured switches, up/down reorder within the filter, and Delete with a confirm dialog that suggests hiding
-- Actions `setProjectVisible`, `setProjectFeatured`, `moveProject`, `deleteProject`; featured cap of 3 (visible and featured) checked in both directions; reorder renumbers `sort` in one `db.batch`
-Files created/changed:
-- types/limits.ts; types/admin.ts; lib/db/admin-queries.ts (`getAdminProjects`); lib/dashboard/actions/projects.ts; components/dashboard/ProjectRow.tsx; app/dashboard/(admin)/projects/page.tsx; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D102
-Verified (viewports / devices):
-- Typecheck, lint, build and `npm run start` on the Neon dev branch; list matches Neon; hiding and showing a project and a featured project updates the public Projects page and Overview; the cap blocks a 4th featured project and re-showing a hidden featured one; reorder within Frontend shows on the public site (`db.batch` works); delete removes the row and the public card; signed-out clicks redirect to login; phone layout; keyboard focus; public site unchanged
-Known issues:
-- Reorder cannot cross filters (Overview reads the global order)
-Next step (ID + one-line goal):
-- P5.4b — Projects create/edit form
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/projects.ts, types/assets.ts, types/limits.ts, types/admin.ts, validators/projects.ts, validators/shared.ts, lib/db/schema.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/pending-asset.ts, lib/dashboard/actions/projects.ts, lib/dashboard/actions/assets.ts, lib/dashboard/actions/profile.ts, lib/blob/references.ts, lib/blob/cleanup.ts, lib/blob/url.ts, lib/projects/filters.ts, data/projects.ts, components/panels/ProjectCard.tsx, components/panels/FeaturedProjectCard.tsx, components/dashboard/AssetField.tsx, ProfileForm.tsx, TextField.tsx, FormSection.tsx, ProjectRow.tsx, every file in components/dashboard/ui/, and app/dashboard/(admin)/projects/page.tsx. Phase: P5 — Dashboard. Step: P5.4b. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the project create/edit form: split validators/projects.ts into base shape and refinement (D89) so the form omits sort and visible, add the new project and edit routes, a slug generated at creation and read-only afterwards, status and filter selects, tech tags, two fixed link slots (Live and Repo), a logo upload that reuses the upload-on-Save flow from P5.3b, and add project logos to lib/blob/references.ts.
+- P5.4a: Projects list with visibility, featured cap, reorder within a filter, delete with confirm; D102.
 
 ### Handoff — 2026-10-12 — P5.3b
 - P5.3b: Vercel Blob uploads on Save for avatar, portrait and resume, two stores, magic-byte check; D101.

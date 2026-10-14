@@ -107,7 +107,7 @@ Plan locked in the P5 plan chat (D82–D97). 🎨 steps are visual: they stop at
 | P5.4a 🎨 | Projects list: `types/limits.ts` (featured cap), admin query, visibility, reorder within a filter, delete with confirm, featured cap of 3 (D91) |
 | P5.4b 🎨 | Projects create/edit form (with the validator base split, D89): status, filter, tags (any number), two link slots, icon and logo upload; slug set at creation (D103, D104) |
 | P5.4c 🎨 | Project categories: `project_categories` table, categories editor, the project form reads it, public pills come from visible categories (D105); migration dev then production; fit check with more pills |
-| P5.5 🎨 | Tech Stack editor: edit, reorder and hide groups; items (up to 7) with icon picker; highlights (up to 5); limits visible; fit QA with full cards at all eight viewports (D92, D98) |
+| P5.5 🎨 | Tech Stack editor: edit, reorder and hide groups; items (up to 7) with an icon found from the name, highlights (up to 5), limits visible; card numbers follow the order; fit QA with full cards at the QA viewports (D92, D98, D107, D108) |
 | P5.6 🎨 | Experience editor: Work and Learning items, shipped projects (max 3), three core bullets kept first (D92) |
 | P5.7 | Hardening: `--yes-overwrite` guard on the seed (D97); empty-state test; every route and action tried signed out; revoke test; "view on site" links; Known issues cleanup |
 
