@@ -30,3 +30,9 @@ export type ExperienceItem = {
   sort: number;
   visible: boolean;
 };
+
+// What the dashboard form edits; the kind, order and visibility stay as they are
+export type ExperienceItemContent = Omit<
+  ExperienceItem,
+  "kind" | "sort" | "visible"
+>;

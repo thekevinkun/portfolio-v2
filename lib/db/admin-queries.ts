@@ -4,6 +4,7 @@ import { db } from "./index";
 import type {
   AdminCategory,
   AdminCounts,
+  AdminExperienceItem,
   AdminProject,
   AdminSkillGroup,
 } from "@/types/admin";
@@ -107,5 +108,25 @@ export async function getAdminSkillGroupBySlug(
     .select()
     .from(t.skillGroups)
     .where(eq(t.skillGroups.slug, slug));
+  return row ?? null;
+}
+
+// Every item, hidden ones too, in public order (D90)
+export async function getAdminExperienceItems(): Promise<
+  AdminExperienceItem[]
+> {
+  return db
+    .select()
+    .from(t.experienceItems)
+    .orderBy(asc(t.experienceItems.sort), asc(t.experienceItems.slug));
+}
+
+export async function getAdminExperienceItemBySlug(
+  slug: string,
+): Promise<AdminExperienceItem | null> {
+  const [row] = await db
+    .select()
+    .from(t.experienceItems)
+    .where(eq(t.experienceItems.slug, slug));
   return row ?? null;
 }

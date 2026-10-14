@@ -13,3 +13,15 @@ export const MAX_CATEGORY_LABEL = 20;
 export const MAX_SKILL_ITEMS = 7;
 export const MAX_SKILL_HIGHLIGHTS = 5;
 export const MAX_HIGHLIGHT_LENGTH = 40;
+
+// Experience page (D56, D62): the wide layout is a row of the Work card and up
+// to three Shipped cards, with the Learning band below
+export const MAX_SHIPPED_PROJECTS = 3;
+export const MIN_SHIPPED_BULLETS = 3;
+export const MAX_SHIPPED_BULLETS = 5;
+// Only this many bullets of a Shipped card show in the wide layout
+export const SHIPPED_COMPACT_BULLETS = 3;
+// Learning bullets, and tags on either item. Estimates from the current
+// content, confirmed by the fit QA (D109).
+export const MAX_EXPERIENCE_BULLETS = 4;
+export const MAX_EXPERIENCE_TAGS = 8;
