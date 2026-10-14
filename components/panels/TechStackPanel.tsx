@@ -41,11 +41,11 @@ const TechStackPanel = ({ groups }: TechStackPanelProps) => (
           >
             {groups.map((group, i) => (
               <div
-                key={group.indexLabel}
+                key={group.slug}
                 {...reveal("from-left", 2 + i)}
                 className="flex w-full"
               >
-                <SkillGroupCard group={group} />
+                <SkillGroupCard group={group} position={i + 1} />
               </div>
             ))}
           </Carousel>

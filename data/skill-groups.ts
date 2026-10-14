@@ -4,7 +4,7 @@ import type { SkillGroup } from "@/types/skills";
 export const skillGroups: SkillGroup[] = [
   {
     slug: "frontend",
-    indexLabel: "01 / CLIENT & UI",
+    indexLabel: "CLIENT & UI",
     title: "Frontend & Client UI",
     subtitle: "Interface layer",
     badge: "INTERFACE",
@@ -27,7 +27,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     slug: "backend",
-    indexLabel: "02 / SERVER & APIS",
+    indexLabel: "SERVER & APIS",
     title: "Backend & Runtime",
     subtitle: "Services and APIs",
     badge: "SERVICES",
@@ -50,7 +50,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     slug: "data",
-    indexLabel: "03 / DATA & STORAGE",
+    indexLabel: "DATA & STORAGE",
     title: "Data & Persistence",
     subtitle: "Databases and caching",
     badge: "PERSISTENCE",
@@ -73,7 +73,7 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     slug: "ai-cloud",
-    indexLabel: "04 / AI & CLOUD",
+    indexLabel: "AI & CLOUD",
     title: "AI & Cloud",
     subtitle: "Models and deployment",
     badge: "AI & OPS",

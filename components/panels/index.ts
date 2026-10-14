@@ -5,6 +5,7 @@ export { default as ProjectCard } from "./ProjectCard";
 export { default as ProjectsPanel } from "./ProjectsPanel";
 export { default as SkillGroupCard } from "./SkillGroupCard";
 export { default as TechStackPanel } from "./TechStackPanel";
+export { default as TechLogo } from "./TechLogo";
 export { default as ExperiencePanel } from "./ExperiencePanel";
 export { default as ExperienceLearningCard } from "./ExperienceLearningCard";
 export { default as ExperienceRoleCard } from "./ExperienceRoleCard";
