@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-14
-**Current phase / step:** P5.6
+**Last updated:** 2026-10-15
+**Current phase / step:** P5.7
 **Mode default:** Build
 
 ---
@@ -16,7 +16,7 @@
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
-| P5    | Dashboard                | 🟦 In progress | P5.1–P5.5 done (D82–D108) |
+| P5    | Dashboard                | 🟦 In progress | P5.1–P5.6 done (D82–D110) |
 | P6    | Polish & finish          | ⬜ Not started |                                             |
 | P7    | Project details          | ⬜ Not started | Planned after P5, before P6 (D106)          |
 
@@ -34,7 +34,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P5.4b Projects create/edit form
 - [x] P5.4c Project categories: table, categories editor, public pills from the table
 - [x] P5.5 Tech Stack editor
-- [ ] P5.6 Experience editor
+- [x] P5.6 Experience editor
 - [ ] P5.7 Hardening and cleanup
 
 ---
@@ -56,7 +56,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
-- D82–D106: see CLAUDE.md §10.
+- D82–D110: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -77,18 +77,18 @@ None. O4 and O5 settled (D73, D74).
 - Projects: at 3-up the last page can repeat cards (Full Stack has 5, so page 2 shows cards 3–5)
 - Projects: filter reflow animation (auto-animate) and rolling counter digits (number-flow) wait for P6.1
 - Projects: after a filter click, later visits to Projects start their cards with no wait instead of waiting for the page slide
-- Experience: slide classes target the Learning card by position (`nth-1`), so they assume one Learning item before the Work items; revisit if the dashboard allows several (the v1 editor edits the two existing items only, D92)
+- Experience: slide classes target the Learning card by position (`nth-1`), so they assume one Learning item before the Work items; revisit if the dashboard allows several (the editor edits the two existing items only, D92; several Work items arrive with the work timeline, D110, and Learning stays single)
 - Experience: in the wide layout Learning is moved last with CSS order, so reading order differs from visual order there (the cards have no links, so tab order is unaffected)
-- Experience: the long Work summary and Shipped bullets 4–5 show only outside the wide layout (D62); on phones shorter than 580 px the trimmed cards also hide Learning tags; the P5.6 editor must keep the three core bullets first
+- Experience: the long Work summary and Shipped bullets 4–5 show only outside the wide layout (D62); on phones shorter than 580 px the trimmed cards also hide Learning tags; the editor hint says the first three bullets show in the wide layout (D109)
 - Experience at 2-up: the last carousel page holds a single card (Bookshop)
 - Experience at 1366×768 (panel 511) is the tightest wide layout; if the Learning band ever touches the footer, hide its tag chips in that range with a dedicated variant
+- Experience: editable content is limited to 4 Learning bullets and 8 tags per item (D109); the Work card cannot hold more than one role until the work timeline (D110)
 - Experience: `--i-wide` (entrance order) follows viewport width ≥ 1280 px, while the wide layout also needs 500 px of height, so a wide but short window shows the carousel animating in wide order (harmless)
 - Get In Touch: the UTC offset label is computed when the page is generated, so it refreshes on each dashboard save and hourly; the timezone is editable since P5.3a, and a DST timezone could show a wrong offset for up to an hour around a clock change
 - Entrance timing is tuned by feel: default 650 ms / 55 ms step / 300 ms wait after a turn (`:root` in globals.css); Overview 800 ms / 110 ms (`[data-section="overview"]`), featured cards offset 850 ms / step 220 ms / 900 ms, portrait 1600 ms (OverviewPanel.tsx)
 - Carousel slides must keep `overflow-clip`: animated cards would otherwise change the track's scroll size and break Carousel's page measurement and the wheel guard
 - Spotlight border sheen uses `mask-composite`; spot-check Safari and Firefox in P6.2, and check entrances plus spotlight at 4× CPU throttle there
 - Density thresholds (D60) were measured on the eight QA viewports plus one 1536×791 laptop window; if a real device shows a problem, tune the variants in `app/globals.css`
-- The shipped limits (at most 3 projects, 3–5 bullets each) must be visible in the P5.6 editor
 - Tech Stack: full cards (7 items, 5 highlights) were fit-checked at the QA viewports in P5.5 (D107); 360×640 is 4 px taller than its area, absorbed by the gap and padding, and 1024×768 has 7 px of slack and is the tightest; re-check both if the card spacing changes
 - Dashboard sign-in works only on localhost and the production domain (two OAuth apps, D85); preview URLs cannot sign in
 - Dashboard: `app/dashboard/(admin)/[area]/page.tsx` is a temporary stub for the editors that don't exist yet; delete it in P5.7
@@ -132,6 +132,25 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-14 — P5.6
+Done:
+- Experience editor: list at `/dashboard/experience` (no create, delete, reorder or hide) and an item form: title, organization, start and end, summary and tags; Work also short summary and Shipped projects (add, remove, reorder, up to 3, 3–5 bullets each, free-text name); Learning also bullets
+- The server applies the fields by the row's real kind and never touches kind, sort or visible; limits in `types/limits.ts` read by the validators
+- Shared helpers `moved` and `splitLines`; "Required." message for empty fields; unique React keys on the public Experience cards
+- Planned and logged: the work timeline for a future job or client (D110)
+Files created/changed:
+- types/{limits,experience,admin}.ts; validators/{experience,shared}.ts; lib/db/admin-queries.ts; lib/dashboard/{list,form-data}.ts; lib/dashboard/actions/experience.ts; components/dashboard/{ExperienceForm,SkillGroupForm}.tsx; components/panels/{ExperiencePanel,ExperienceParts,ExperienceShippedCard}.tsx; app/dashboard/(admin)/experience/{page.tsx,[slug]/page.tsx}; data/experience.ts (typo); docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
+Decisions:
+- D109, D110 (D110 is planned, not built)
+Verified (viewports / devices):
+- Typecheck, lint, build and `npm run start` on the Neon dev branch; list matches Neon; summary, short summary, dates, tags and bullets edit and show on the public page; invalid dates, bullet counts, tags and empty fields save nothing; shipped add, remove and reorder with equal names and no key warning; the Learning form has no Shipped section and the Work form has no Bullets; signed-out save redirects to login; phone layout; keyboard focus; fit QA with content at the limits (slack numbers not recorded)
+Known issues:
+- The Work card cannot hold more than one role until D110; Learning bullets (4) and tags (8) limits are estimates confirmed by the fit QA
+Next step (ID + one-line goal):
+- P5.7 — Hardening: seed guard, empty states, signed-out probes, cleanup of the editor stub and Known issues
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, scripts/seed.ts, proxy.ts, lib/auth/index.ts, lib/auth/require-admin.ts, lib/dashboard/admin-action.ts, lib/dashboard/actions/*.ts (all), lib/db/queries.ts, components/dashboard/nav-items.ts, DashboardNav.tsx, app/dashboard/(admin)/layout.tsx, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/[area]/page.tsx, components/panels/OverviewPanel.tsx, ContactPanel.tsx, TechStackPanel.tsx, ProjectsPanel.tsx, ExperiencePanel.tsx, app/(site)/[[...section]]/page.tsx. Phase: P5 — Dashboard. Step: P5.7. Mode: Build. Follow WORKFLOW.md §11. Goal: Harden the dashboard: make `db:seed --update` require `--yes-overwrite` (D97), test every public page with all rows hidden (empty states), try every dashboard route and action signed out and with a revoked `ADMIN_GITHUB_ID`, delete the `[area]` stub, clean up the Known issues and the "content workflow" note, and update docs.
+
 ### Handoff — 2026-10-14 — P5.5
 Done:
 - Tech Stack editor: list at `/dashboard/tech-stack` (visible switch, up/down reorder, Edit; no create or delete) and a group form with label, title, subtitle, badge, group icon, items (up to 7) and highlights (up to 5, at most 40 characters), with counters; hiding the last visible group is refused
@@ -170,24 +189,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/skills.ts, types/limits.ts, types/action.ts, types/admin.ts, validators/skills.ts, validators/shared.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/actions/categories.ts, data/skill-groups.ts, components/panels/TechStackPanel.tsx, SkillGroupCard.tsx, tech-icons.ts, components/dashboard/CategoryRow.tsx, ProjectForm.tsx, TextField.tsx, FormSection.tsx, nav-items.ts, every file in components/dashboard/ui/, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/categories/page.tsx. Phase: P5 — Dashboard. Step: P5.5. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Tech Stack editor (D92, D98): edit, reorder and hide the groups (no create or delete), items up to 7 with an icon picker and used/learning, highlights up to 5 of at most 40 characters, with limits in types/limits.ts used by the validator, and a fit QA of full cards at all eight viewports before the limits go up.
 
 ### Handoff — 2026-10-13 — P5.4b
-Done:
-- Project create and edit form (`ProjectForm`, one component for both): slug rules, filter and status selects, tech tags (any number), two fixed link slots, icon and logo with the upload-on-Save flow and rollback; `createProject` and `updateProject`
-- Validator split: `projectFormSchema` and `projectSchema` share one content shape (D89)
-- New `projects.icon_url` column and migration; the cards use the icon, the logo (large image) is stored for the later project details; deleting a project deletes both files; `references.ts` checks both
-- Project cards show the first 5 tech tags and a "+N" chip; tags and link buttons are pinned to the card bottom
-- Planned and logged: project categories as a table (P5.4c, D105) and the project details overlay (P7, D106)
-Files created/changed:
-- validators/projects.ts; types/{projects,assets,limits}.ts; lib/db/schema.ts; drizzle/ (icon_url migration); data/projects.ts; lib/blob/references.ts; lib/dashboard/{slugify,form-data}.ts; lib/dashboard/actions/projects.ts; lib/db/admin-queries.ts; components/dashboard/{ProjectForm,AssetField,TextField,ProjectRow}.tsx; app/dashboard/(admin)/projects/{new/page,[slug]/page,page}.tsx; components/panels/{ProjectCard,FeaturedProjectCard}.tsx; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D103–D106
-Verified (viewports / devices):
-- Typecheck, lint, build and `npm run start` on the Neon dev branch and dev store; create with generated and reserved slugs; validation errors save nothing; edit round-trip; icon and logo upload only on Save, replace, remove and failed-save rollback; both files deleted with the project; five tags and "+N" on cards at 1440×900, 1366×768 and 390×844; pinned tags and buttons across cards; migration applied to dev and production; signed-out save redirects to login; public site unchanged
-Known issues:
-- Filters are still the fixed enum until P5.4c; the logo is shown nowhere until P7
-Next step (ID + one-line goal):
-- P5.4c — Project categories
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, drizzle.config.ts, scripts/seed.ts, data/seed.ts, data/projects.ts, types/projects.ts, validators/projects.ts, validators/shared.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, lib/projects/filters.ts, lib/dashboard/admin-action.ts, lib/dashboard/actions/projects.ts, components/panels/ProjectsPanel.tsx, components/panels/ProjectCard.tsx, components/ui/Carousel.tsx, components/dashboard/ProjectForm.tsx, ProjectRow.tsx, nav-items.ts, DashboardNav.tsx, every file in components/dashboard/ui/, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/projects/page.tsx. Phase: P5 — Dashboard. Step: P5.4c. Mode: Build. Follow WORKFLOW.md §11. Goal: Replace the project_filter enum with a project_categories table (D105): migration that copies the five current filters, a categories editor, the project form select reading the table, public pills built from visible categories with projects, and a fit check with more pills.
+- P5.4b: project create/edit form, icon and logo split, five tech tags on cards, tags and buttons pinned to the card bottom; D103, D104.
 
 ### Handoff — 2026-10-13 — P5.4a
 - P5.4a: Projects list with visibility, featured cap, reorder within a filter, delete with confirm; D102.
