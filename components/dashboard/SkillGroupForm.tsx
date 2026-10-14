@@ -23,6 +23,7 @@ import { cn } from "@/lib/cn";
 import { updateSkillGroup } from "@/lib/dashboard/actions/skill-groups";
 import { oneOf, readText } from "@/lib/dashboard/form-data";
 import { toFormErrors } from "@/lib/dashboard/form-errors";
+import { moved } from "@/lib/dashboard/list";
 import { plainIndexLabel } from "@/lib/skills/index-label";
 import type { AdminSkillGroup } from "@/types/admin";
 import {
@@ -54,17 +55,6 @@ const STATUS_LABELS: Record<SkillStatus, string> = {
   used: "Used in a real project",
   learning: "Learning",
 };
-
-// Swaps a row with its neighbor; the list is returned unchanged at the edge
-function moved<T>(list: T[], index: number, step: -1 | 1): T[] {
-  const first = list[index];
-  const second = list[index + step];
-  if (first === undefined || second === undefined) return list;
-  const next = [...list];
-  next[index] = second;
-  next[index + step] = first;
-  return next;
-}
 
 const SkillGroupForm = ({ group }: { group: AdminSkillGroup }) => {
   const [pending, startTransition] = useTransition();

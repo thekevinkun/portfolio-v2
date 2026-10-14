@@ -131,6 +131,18 @@ Decided in the P5.4b discussion (D106). Numbered P7 so the P6 references in PROG
 
 ---
 
+## Later — Work timeline (S–M, built when the first job or client exists)
+
+Designed in the P5.6 discussion (D110). No migration: kinds and dates exist.
+
+| Step | Task |
+|---|---|
+| L1 | Experience panel: the Work card lists up to 4 roles (current first, then newest), the Shipped cards and the Learning band stay as they are; the carousel order and the `nth-1` assumption are re-checked |
+| L2 | Dashboard: create and delete Work and Freelance items (up to 4), automatic order, Learning stays single |
+| L3 | Fit QA with three roles at 1366×768, 1280×720, 1024×768 and the phone carousel; update the profile texts, resume and LinkedIn |
+
+---
+
 ## P6 — Polish & finish (S–M)
 
 | Step | Task |

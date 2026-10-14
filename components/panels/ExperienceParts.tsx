@@ -35,7 +35,7 @@ export const BulletList = ({
   <ul className="flex flex-col gap-1 tier-roomy:gap-2">
     {items.map((text, i) => (
       <li
-        key={text}
+        key={`${text}-${i}`}
         className={cn(
           "flex items-start gap-1.5 text-[11px] lg:text-[11.5px] leading-snug text-fg-medium",
           compactCount !== undefined &&
@@ -58,9 +58,9 @@ export const TagList = ({
   className?: string;
 }) => (
   <ul className={cn("flex flex-wrap gap-1", className)}>
-    {tags.map((tag) => (
+    {tags.map((tag, i) => (
       <li
-        key={tag}
+        key={`${tag}-${i}`}
         className="rounded-md border border-glass-border bg-glass-fill px-2 py-0.5 font-mono text-[10px] text-fg-medium"
       >
         {tag}

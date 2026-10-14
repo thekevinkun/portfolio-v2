@@ -1,3 +1,4 @@
+import type { ExperienceItem, ExperienceProject } from "@/types/experience";
 import type { Project, ProjectCategory } from "@/types/projects";
 import type { SkillGroup } from "@/types/skills";
 
@@ -21,3 +22,14 @@ export type AdminCategory = ProjectCategory & {
 
 // A skill group as the dashboard sees it: hidden ones too, with its id
 export type AdminSkillGroup = SkillGroup & { id: string };
+
+// An experience item as the dashboard sees it: the database holds null where
+// the public type has an optional field
+export type AdminExperienceItem = Omit<
+  ExperienceItem,
+  "summaryShort" | "shipped"
+> & {
+  id: string;
+  summaryShort: string | null;
+  shipped: ExperienceProject[] | null;
+};

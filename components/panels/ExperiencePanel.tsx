@@ -48,8 +48,8 @@ const ExperiencePanel = ({ items }: ExperiencePanelProps) => {
     node: <ExperienceRoleCard item={item} />,
   }));
   const shipped: ExperienceEntry[] = work.flatMap((item) =>
-    (item.shipped ?? []).map((project) => ({
-      key: `shipped-${item.sort}-${project.name}`,
+    (item.shipped ?? []).map((project, index) => ({
+      key: `shipped-${item.sort}-${index}`,
       node: <ExperienceShippedCard project={project} />,
     })),
   );

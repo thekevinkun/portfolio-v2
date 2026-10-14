@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const nonEmpty = z.string().trim().min(1);
+export const nonEmpty = z.string().trim().min(1, "Required.");
 
 export const slugSchema = z
   .string()
