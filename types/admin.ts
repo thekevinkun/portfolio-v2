@@ -1,4 +1,5 @@
 import type { Project, ProjectCategory } from "@/types/projects";
+import type { SkillGroup } from "@/types/skills";
 
 export interface AdminCounts {
   skillGroups: { total: number; hidden: number };
@@ -17,3 +18,6 @@ export type AdminCategory = ProjectCategory & {
   projectCount: number;
   visibleProjectCount: number;
 };
+
+// A skill group as the dashboard sees it: hidden ones too, with its id
+export type AdminSkillGroup = SkillGroup & { id: string };

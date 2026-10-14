@@ -1,8 +1,14 @@
 import { z } from "zod";
 import {
+  MAX_HIGHLIGHT_LENGTH,
+  MAX_SKILL_HIGHLIGHTS,
+  MAX_SKILL_ITEMS,
+} from "@/types/limits";
+import {
   SKILL_STATUSES,
   TECH_ICON_KEYS,
   type SkillGroup,
+  type SkillGroupContent,
 } from "@/types/skills";
 import { nonEmpty, slugSchema, sortOrder } from "./shared";
 
@@ -14,7 +20,8 @@ export const skillItemSchema = z.strictObject({
   status: z.enum(SKILL_STATUSES),
 });
 
-// Card limits from D52: 5 items, 4 highlights that fit one line (~38 characters)
+// Card limits (D52, D98): items and highlights per card, and highlights that
+// fit one line
 export const skillGroupSchema = z.strictObject({
   slug: slugSchema,
   indexLabel: nonEmpty,
@@ -22,8 +29,24 @@ export const skillGroupSchema = z.strictObject({
   subtitle: nonEmpty,
   badge: nonEmpty,
   iconKey,
-  items: z.array(skillItemSchema).min(1).max(5),
-  highlights: z.array(nonEmpty.max(40)).max(4),
+  items: z
+    .array(skillItemSchema)
+    .min(1, "Add at least one item.")
+    .max(MAX_SKILL_ITEMS, `At most ${MAX_SKILL_ITEMS} items.`),
+  highlights: z
+    .array(
+      nonEmpty.max(
+        MAX_HIGHLIGHT_LENGTH,
+        `At most ${MAX_HIGHLIGHT_LENGTH} characters.`,
+      ),
+    )
+    .max(MAX_SKILL_HIGHLIGHTS, `At most ${MAX_SKILL_HIGHLIGHTS} highlights.`),
   sort: sortOrder,
   visible: z.boolean(),
 }) satisfies z.ZodType<SkillGroup>;
+
+// The dashboard form: no sort or visible
+export const skillGroupFormSchema = skillGroupSchema.omit({
+  sort: true,
+  visible: true,
+}) satisfies z.ZodType<SkillGroupContent>;

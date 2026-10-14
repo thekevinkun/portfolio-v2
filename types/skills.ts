@@ -55,3 +55,6 @@ export type SkillGroup = {
   sort: number;
   visible: boolean;
 };
+
+// What the dashboard form edits; sort and visible have their own controls
+export type SkillGroupContent = Omit<SkillGroup, "sort" | "visible">;

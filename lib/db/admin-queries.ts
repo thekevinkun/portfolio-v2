@@ -1,7 +1,12 @@
 import { asc, eq } from "drizzle-orm";
 import * as t from "./schema";
 import { db } from "./index";
-import type { AdminCategory, AdminCounts, AdminProject } from "@/types/admin";
+import type {
+  AdminCategory,
+  AdminCounts,
+  AdminProject,
+  AdminSkillGroup,
+} from "@/types/admin";
 import type { Profile } from "@/types/profile";
 
 const hiddenCount = (rows: { visible: boolean }[]) =>
@@ -85,4 +90,22 @@ export async function getAdminCategories(): Promise<AdminCategory[]> {
       visibleProjectCount: own.filter((project) => project.visible).length,
     };
   });
+}
+
+// Every group, hidden ones too, in public order (D90)
+export async function getAdminSkillGroups(): Promise<AdminSkillGroup[]> {
+  return db
+    .select()
+    .from(t.skillGroups)
+    .orderBy(asc(t.skillGroups.sort), asc(t.skillGroups.slug));
+}
+
+export async function getAdminSkillGroupBySlug(
+  slug: string,
+): Promise<AdminSkillGroup | null> {
+  const [row] = await db
+    .select()
+    .from(t.skillGroups)
+    .where(eq(t.skillGroups.slug, slug));
+  return row ?? null;
 }
