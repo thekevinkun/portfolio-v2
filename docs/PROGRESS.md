@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-15
-**Current phase / step:** P5.7
+**Current phase / step:** P7.1 (plan chat)
 **Mode default:** Build
 
 ---
@@ -16,9 +16,9 @@
 | P2    | Stage engine             | ✅ Done | Device pass passed (P2.9); spec in CLAUDE.md §4.2.1      |
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
-| P5    | Dashboard                | 🟦 In progress | P5.1–P5.6 done (D82–D110) |
+| P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
 | P6    | Polish & finish          | ⬜ Not started |                                             |
-| P7    | Project details          | ⬜ Not started | Planned after P5, before P6 (D106)          |
+| P7    | Project details          | ⬜ Not started | Next: plan chat P7.1 (D106)         |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
@@ -26,16 +26,11 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [x] P5.1 Auth: next-auth@beta, GitHub allowlist, `requireAdmin()`, `proxy.ts`, bare login page
-- [x] P5.2 Dashboard shell: own form primitives, layout, nav, overview
-- [x] P5.3a Action pattern + Profile editor (no uploads)
-- [x] P5.3b Blob uploads (avatar, portrait, resume)
-- [x] P5.4a Projects list: visibility, reorder, delete, featured cap
-- [x] P5.4b Projects create/edit form
-- [x] P5.4c Project categories: table, categories editor, public pills from the table
-- [x] P5.5 Tech Stack editor
-- [x] P5.6 Experience editor
-- [ ] P5.7 Hardening and cleanup
+- [ ] P7.1 Plan chat (no code): content model and limits, animation, history and Back, Stage guard, mobile layout, data size
+- [ ] P7.2 Data: `details` columns, types, Zod schemas, seed (migration dev, then production)
+- [ ] P7.3 Dashboard editor: sections, features, engineering notes, screenshots, video id
+- [ ] P7.4 Public overlay: dialog, animation, two columns, Stage guard, history entry, reduced motion
+- [ ] P7.5 Look button and title triggers, YouTube click-to-load, fit and performance pass
 
 ---
 
@@ -56,7 +51,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D51–D53: see CLAUDE.md §10.
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
-- D82–D110: see CLAUDE.md §10.
+- D82–D111: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -91,7 +86,6 @@ None. O4 and O5 settled (D73, D74).
 - Density thresholds (D60) were measured on the eight QA viewports plus one 1536×791 laptop window; if a real device shows a problem, tune the variants in `app/globals.css`
 - Tech Stack: full cards (7 items, 5 highlights) were fit-checked at the QA viewports in P5.5 (D107); 360×640 is 4 px taller than its area, absorbed by the gap and padding, and 1024×768 has 7 px of slack and is the tightest; re-check both if the card spacing changes
 - Dashboard sign-in works only on localhost and the production domain (two OAuth apps, D85); preview URLs cannot sign in
-- Dashboard: `app/dashboard/(admin)/[area]/page.tsx` is a temporary stub for the editors that don't exist yet; delete it in P5.7
 - Dashboard: the open `Select` list is drawn by the browser, so its look can differ between browsers (options carry their own colors, D99); spot-check in P5.4b where the selects are used
 - Profile editor: socials are always exactly LinkedIn and GitHub, both required (D57); adding another kind needs a form and layout change
 - A tab closed during the few seconds of a profile save can leave one orphan file in the Blob store; a failed save uploads the new files and deletes them again (validating the text fields on the server first would avoid that)
@@ -102,7 +96,7 @@ None. O4 and O5 settled (D73, D74).
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - A bad row in Neon (for example a live project with no live link) fails the build; whether a failed hourly regeneration keeps serving the last good page was not tested (check before launch, P4.6)
 - Unused files in `public/`: the five default Next SVGs (`file`, `globe`, `next`, `vercel`, `window`) and `placeholder/avatar.svg`; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
-- Until P5, content changes go through `data/` and `npm run db:seed -- --update`, which overwrites every row
+- Content changes go through the dashboard; `data/` is seed input for a fresh database only, and `db:seed --update` needs `--yes-overwrite` (D97, D111)
 - Lighthouse at launch: mobile 92 / 98 / 100 / 100 with LCP 3.1 s and Speed Index 4.2 s red; the Overview portrait fade is the suspect (P6.2); accessibility 98 (P6.3)
 - The project logo (the large image) is stored but shown nowhere until P7 (D104, D106)
 - Categories: hiding one removes its tab only, its projects stay visible (D105); the tabs wrap onto more lines and were fit-checked with eight tabs at the five QA viewports, more than that is untested
@@ -131,6 +125,25 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-15 — P5.7 (P5 closed)
+Done:
+- `db:seed --update` requires `--yes-overwrite` and prints the database host
+- `scripts/check-actions.ts` runs first in `npm run build`: every dashboard action must use `adminAction` (except `signOutAdmin`) and every admin page must call `requireAdmin()`
+- Deleted the `[area]` stub; Projects page shows "No projects to show right now." when no category has a visible project
+- Tested: every dashboard route redirects when signed out, actions signed out and with a revoked `ADMIN_GITHUB_ID` change nothing, and each public page with its content hidden
+Files created/changed:
+- scripts/{seed,check-actions}.ts; package.json; components/panels/ProjectsPanel.tsx; app/dashboard/(admin)/[area]/page.tsx (deleted); docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
+Decisions:
+- D111
+Verified (viewports / devices):
+- Typecheck, lint, build (the guard check passed first) and `npm run start` on the Neon dev branch; the guard check fails on a temporary unguarded action; seed guard; signed-out routes and actions; revoked session; empty states of the public pages (no crashes, build succeeds); public site unchanged
+Known issues:
+- Same as the Known issues list; the Work timeline (D110) and the project details overlay (D106) are planned, not built
+Next step (ID + one-line goal):
+- P7.1 — Project details plan chat (no code)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P7 section of ROADMAP.md, types/projects.ts, types/limits.ts, types/assets.ts, validators/projects.ts, lib/db/schema.ts, lib/db/queries.ts, components/panels/ProjectsPanel.tsx, ProjectCard.tsx, FeaturedProjectCard.tsx, OverviewPanel.tsx, components/ui/Carousel.tsx, components/stage/{Stage,StageProvider,StageInputs,StagePanel,StageFocus}.tsx, lib/stage/{config,reducer,stage-context,scroll-guard,useStageKeys,useStageWheel,useStageSwipe,useStageUrl}.ts, app/globals.css, components/dashboard/ProjectForm.tsx, AssetField.tsx, lib/dashboard/actions/{projects,assets}.ts, lib/blob/{sniff,cleanup,references,url}.ts, next.config.ts. Phase: P7 — Project details. Step: P7.1 (plan chat). Mode: Build, but this is a plan chat: no code. Follow WORKFLOW.md §11. Goal: Plan the project details overlay (D106) before building: the content model and limits, the open and close animation, the history entry and Back behavior, the Stage guard (keys, wheel, swipe, focus), the two-column and phone layouts, data size and loading, screenshots and the YouTube video, and the dashboard editor; split P7.2–P7.5 into commit-sized steps if needed, then give me the decision table and the exact docs edits and stop for my approval.
 
 ### Handoff — 2026-10-14 — P5.6
 Done:
@@ -171,22 +184,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/experience.ts, types/limits.ts, types/admin.ts, validators/experience.ts, validators/shared.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/actions/skill-groups.ts, data/experience.ts, lib/experience/format.ts, components/panels/ExperiencePanel.tsx, ExperienceRoleCard.tsx, ExperienceShippedCard.tsx, ExperienceLearningCard.tsx, ExperienceParts.tsx, components/dashboard/SkillGroupForm.tsx, SkillGroupRow.tsx, TextField.tsx, FormSection.tsx, nav-items.ts, every file in components/dashboard/ui/, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/tech-stack/page.tsx. Phase: P5 — Dashboard. Step: P5.6. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Experience editor (D92): edit the two existing items (Work and Learning) with summary, short summary, bullets and tags; shipped projects add, remove and reorder with at most 3 (`MAX_SHIPPED_PROJECTS` in types/limits.ts) and 3–5 bullets each (the first three show in the wide layout), the Shipped name as free text (D75); no create, delete, reorder or hide of top-level items; limits visible in the form.
 
 ### Handoff — 2026-10-14 — P5.4c
-Done:
-- `project_categories` table replaces the filter enum; migration copies the five originals, converts the column and drops the enum (applied to dev and production)
-- Categories editor at `/dashboard/categories`: add, rename, reorder, hide, delete (only when empty); Categories card on the overview and in the nav
-- The project form's Filter select reads the categories; the Projects page tabs are built from visible categories that have visible projects
-Files created/changed:
-- types/{projects,limits,admin}.ts; validators/{categories,projects}.ts; lib/db/{schema,queries,admin-queries}.ts; drizzle/ (categories migration); data/{categories,seed}.ts; scripts/seed.ts; lib/dashboard/actions/{categories,projects}.ts; lib/projects/filters.ts; components/dashboard/{CategoryAddForm,CategoryRow,ProjectForm,nav-items}; components/panels/ProjectsPanel.tsx; app/dashboard/(admin)/{categories/page,projects/page,projects/new/page,projects/[slug]/page,page}.tsx; app/(site)/[[...section]]/page.tsx; docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D105 (implemented; amends D3, D54, D64, D66)
-Verified (viewports / devices):
-- Typecheck, lint, build and `npm run start` on the Neon dev branch; same five tabs after the migration; rename, add, hide, reorder and delete rules; a new category and a moved project show on the public site; featured project in a hidden category still shows on Overview; errors save nothing; eight tabs at 1440×900, 1366×768, 1024×768, 390×844 and 360×640; seed `--check`; signed-out rename redirects to login; migration applied to production with the checks and the live site still working
-Known issues:
-- More than eight tabs untested; hiding a category removes only its tab
-Next step (ID + one-line goal):
-- P5.5 — Tech Stack editor (items up to 7, highlights up to 5, D98, with a fit QA)
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/skills.ts, types/limits.ts, types/action.ts, types/admin.ts, validators/skills.ts, validators/shared.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/actions/categories.ts, data/skill-groups.ts, components/panels/TechStackPanel.tsx, SkillGroupCard.tsx, tech-icons.ts, components/dashboard/CategoryRow.tsx, ProjectForm.tsx, TextField.tsx, FormSection.tsx, nav-items.ts, every file in components/dashboard/ui/, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/categories/page.tsx. Phase: P5 — Dashboard. Step: P5.5. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Tech Stack editor (D92, D98): edit, reorder and hide the groups (no create or delete), items up to 7 with an icon picker and used/learning, highlights up to 5 of at most 40 characters, with limits in types/limits.ts used by the validator, and a fit QA of full cards at all eight viewports before the limits go up.
+- P5.4c: `project_categories` table replaces the filter enum, categories editor, public tabs from the table; D105.
 
 ### Handoff — 2026-10-13 — P5.4b
 - P5.4b: project create/edit form, icon and logo split, five tech tags on cards, tags and buttons pinned to the card bottom; D103, D104.

@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P4 done (launched); P5 (dashboard) in progress (D82–D110): P5.1–P5.6 done.**
+> Status: **P1–P4 done (launched); P5 (dashboard) done (D82–D111); P7 (project details) is next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -163,7 +163,7 @@ Neon → Drizzle queries (parallel) → getStageData() → Stage (SSR, all 5 pan
 Dashboard save → server action → write → revalidatePath on the public routes
 ```
 
-Until P5, `export const revalidate = 3600` on the route refreshes the pages from Neon (D69).
+Every dashboard write calls `revalidateSite()` (D88); `export const revalidate = 3600` on the route stays as the fallback (D69).
 
 Every dashboard mutation: **auth check → Zod validate → write → revalidate.** No exceptions.
 
@@ -303,7 +303,7 @@ portfolio/
 Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md.
 Repo files: <paste output of: git ls-files | grep -v lock>
 Also pasted: <the files this step builds on, listed in the previous handoff>
-Phase: P5 — Dashboard. Step: P5.1.
+Phase: <id> — <name>. Step: <id>.
 Mode: Build. Follow WORKFLOW.md §11.
 Goal: <one sentence>
 ```
@@ -438,6 +438,7 @@ Goal: <one sentence>
 | D108 | Item icons are found, not listed (amends D53): `SkillItem.iconKey` is free text and empty means "find it from the name"; `resolveTechIcon` (`components/panels/resolve-tech-icon.ts`) tries a built-in key (`TECH_ICON_KEYS`, so existing items keep their icons), then `lucide:<name>` to force lucide, then the typed name or the item name in Simple Icons (`react-icons/si`, with symbol spelling such as `nodedotjs` and `cplusplus`, a few aliases and trailing words such as "API") and then in lucide (letters and digits only, so `shield-check` and `shieldcheck` match); no match shows the first letter in a small box (`TechLogo`); the icon sets load on demand and once (`loadIconSets`): on the server for the public cards (`SkillGroupCard` is an async server component) and in the browser only in the dashboard editor for the live preview, so they never join a public bundle (R5, checked by searching the public chunks for an icon name); the editor says when nothing was found; `TECH_ICON_KEYS` and `TECH_ICONS` remain for the built-in keys and the group icons |
 | D109 | P5.6 Experience editor (implements D92): `/dashboard/experience` lists the two items (no switch, reorder, create or delete; a "Hidden" tag if one ever is) and `/dashboard/experience/<slug>` edits one: title, organization, start and end (`YYYY-MM`, an empty end means Present), summary and tags; Work (kinds `work` and `freelance`) also has the short summary and the Shipped list, Learning (`education`) also has its bullets; Work bullets stay empty (D56); `updateExperienceItem` applies the fields by the row's real kind and never touches kind, sort or visible; limits live in `types/limits.ts` and the validators read them: `MAX_SHIPPED_PROJECTS` 3, shipped bullets 3–5 (`MIN_`/`MAX_SHIPPED_BULLETS`), `SHIPPED_COMPACT_BULLETS` 3 (the first three show in the wide layout), `MAX_EXPERIENCE_BULLETS` 4 (Learning) and `MAX_EXPERIENCE_TAGS` 8, the last two estimated from the content and confirmed by the fit QA with content at the limits (passed at the QA viewports); a fully empty shipped row is dropped on save, a half-filled one is an error; the Shipped name is free text (D75); `experienceItemFormSchema` and `experienceItemSchema` share one `contentShape` (D89); `nonEmpty` reports "Required."; `moved` (`lib/dashboard/list.ts`) and `splitLines` are shared helpers; the public cards key list rows with their position, and shipped cards by index, so equal values cannot clash |
 | D110 | Work timeline (planned, built when the first job or client exists): the Work card becomes a compact list of roles (kinds `work` and `freelance`), current roles first and then newest start first, each with title, organization, dates and one line; the three Shipped cards and the Learning band keep their shape, so the wide layout still fits one screen, with a fit check of three roles at 1366×768 and in the carousel; at most 4 roles, ordered automatically, no reorder buttons; an ongoing Upwork engagement or several gigs is its own `freelance` role, separate from Independent / Personal Projects, while a single notable gig can be a Shipped card; the dashboard then allows creating and deleting work and freelance items up to 4 (lifts D92 for them only), and Learning stays single; no migration (kinds and dates exist); a role's detailed achievements go to the project-style overlay (D106); every claim follows R4, with client names kept generic when confidential |
+| D111 | P5.7 hardening (implements D84 and D97): `db:seed --update` needs `--yes-overwrite` and every write run prints the database host (no password); `scripts/check-actions.ts` runs at the start of `npm run build` (`check:actions`) and fails the build when a file in `lib/dashboard/actions` doesn't start with "use server", when an export there isn't built with `adminAction` (the only exception is `signOutAdmin`), or when a page under `app/dashboard/(admin)` doesn't call `requireAdmin()`; the temporary `[area]` stub is deleted; the Projects page shows "No projects to show right now." when no category has a visible project; every dashboard route redirects to the login page when signed out, a signed-out or revoked-session action redirects and changes nothing, and each public page was checked with its content hidden; content changes go through the dashboard from now on, and `data/` is seed input for a fresh database only |
 
 ### Open
 
