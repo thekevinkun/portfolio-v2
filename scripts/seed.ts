@@ -12,7 +12,7 @@ import { skillGroupSchema } from "@/validators/skills";
 // because lib/env.ts reads process.env the moment it is imported.
 loadEnvConfig(process.cwd());
 
-const FLAGS = ["--update", "--check"];
+const FLAGS = ["--update", "--check", "--yes-overwrite"];
 
 // Validates every row and records problems instead of stopping at the first
 function validateRows<T extends { slug: string }>(
@@ -70,6 +70,13 @@ async function main() {
   }
   const update = args.includes("--update");
   const checkOnly = args.includes("--check");
+
+  // --update overwrites every row, dashboard edits included (D97)
+  if (update && !checkOnly && !args.includes("--yes-overwrite")) {
+    throw new Error(
+      "--update overwrites every row and erases dashboard edits. Add --yes-overwrite if you really want that.",
+    );
+  }
 
   const errors: string[] = [];
   const profileResult = profileSchema.safeParse(seed.profile);
@@ -131,7 +138,11 @@ async function main() {
       ? "Mode: --update (overwrites existing rows)"
       : "Mode: add missing rows only",
   );
+
   const { db } = await import("@/lib/db");
+  const { env } = await import("@/lib/env");
+  // Which database is this about to write to? (no password is printed)
+  console.log(`Database host: ${new URL(env.DATABASE_URL).host}`);
 
   // id is fixed to 1 (profile_singleton)
   const profileRow = { id: 1, ...profileResult.data };

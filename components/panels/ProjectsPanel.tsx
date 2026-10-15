@@ -58,70 +58,79 @@ const ProjectsPanel = ({ projects, categories }: ProjectsPanelProps) => {
             className="shrink-0"
           />
 
-          <div
-            role="group"
-            aria-label="Filter projects"
-            {...reveal("rise", 2)}
-            className="flex shrink-0 flex-wrap items-center gap-1.5 tier-regular:gap-2"
-          >
-            {filters.map((filter) => {
-              const isSelected = filter.id === active;
-              return (
-                <Button
-                  key={filter.id}
-                  variant={isSelected ? "primary" : "secondary"}
-                  size="sm"
-                  aria-pressed={isSelected}
-                  onClick={() => {
-                    setSelected(filter.id);
-                    setSwitched(true);
-                  }}
-                  className={cn(
-                    "gap-1.5 px-3 py-1 text-[11px] uppercase tier-regular:px-4 tier-regular:py-1.5 tier-regular:text-xs",
-                    !isSelected && "font-medium",
-                  )}
-                >
-                  {isSelected && (
-                    <span
-                      aria-hidden="true"
-                      className="size-1.5 rounded-full bg-on-accent"
-                    />
-                  )}
-                  {filter.label}
-                </Button>
-              );
-            })}
-          </div>
+          {filters.length === 0 ? (
+            // Nothing visible: no categories with visible projects
+            <p {...reveal("rise", 2)} className="text-sm text-fg-low">
+              No projects to show right now.
+            </p>
+          ) : (
+            <>
+              <div
+                role="group"
+                aria-label="Filter projects"
+                {...reveal("rise", 2)}
+                className="flex shrink-0 flex-wrap items-center gap-1.5 tier-regular:gap-2"
+              >
+                {filters.map((filter) => {
+                  const isSelected = filter.id === active;
+                  return (
+                    <Button
+                      key={filter.id}
+                      variant={isSelected ? "primary" : "secondary"}
+                      size="sm"
+                      aria-pressed={isSelected}
+                      onClick={() => {
+                        setSelected(filter.id);
+                        setSwitched(true);
+                      }}
+                      className={cn(
+                        "gap-1.5 px-3 py-1 text-[11px] uppercase tier-regular:px-4 tier-regular:py-1.5 tier-regular:text-xs",
+                        !isSelected && "font-medium",
+                      )}
+                    >
+                      {isSelected && (
+                        <span
+                          aria-hidden="true"
+                          className="size-1.5 rounded-full bg-on-accent"
+                        />
+                      )}
+                      {filter.label}
+                    </Button>
+                  );
+                })}
+              </div>
 
-          <div className="flex min-h-0 flex-1 flex-col justify-center">
-            {/* key: a new filter starts again from the first page */}
-            <Carousel
-              key={active}
-              label={`${activeLabel} projects`}
-              indicator="counter"
-              className="gap-3"
-              slideClassName={SLIDE}
-              controlsClassName="mt-2 h-8 justify-end tier-regular:mt-3 tier-regular:h-9"
-            >
-              {visible.map((project, i) => (
-                <div
-                  key={project.slug}
-                  {...reveal(
-                    "from-right",
-                    switched ? i : 3 + i,
-                    switched ? { delay: "0ms" } : undefined,
-                  )}
-                  className="flex w-full"
+              <div className="flex min-h-0 flex-1 flex-col justify-center">
+                {/* key: a new filter starts again from the first page */}
+                <Carousel
+                  key={active}
+                  label={`${activeLabel} projects`}
+                  indicator="counter"
+                  className="gap-3"
+                  slideClassName={SLIDE}
+                  controlsClassName="mt-2 h-8 justify-end tier-regular:mt-3 tier-regular:h-9"
                 >
-                  <ProjectCard project={project} />
-                </div>
-              ))}
-            </Carousel>
-          </div>
+                  {visible.map((project, i) => (
+                    <div
+                      key={project.slug}
+                      {...reveal(
+                        "from-right",
+                        switched ? i : 3 + i,
+                        switched ? { delay: "0ms" } : undefined,
+                      )}
+                      className="flex w-full"
+                    >
+                      <ProjectCard project={project} />
+                    </div>
+                  ))}
+                </Carousel>
+              </div>
 
-          <p className="sr-only" aria-live="polite">
-            {`${visible.length} ${activeLabel} projects`}
-          </p>
+              <p className="sr-only" aria-live="polite">
+                {`${visible.length} ${activeLabel} projects`}
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>
