@@ -25,3 +25,18 @@ export const SHIPPED_COMPACT_BULLETS = 3;
 // content, confirmed by the fit QA (D109).
 export const MAX_EXPERIENCE_BULLETS = 4;
 export const MAX_EXPERIENCE_TAGS = 8;
+
+// Project details (D112). Estimates from the planned layout; the P7.4b fit
+// check confirms or lowers them.
+export const MAX_DETAIL_PROBLEM = 700;
+export const MAX_DETAIL_ROLE = 40;
+export const MAX_DETAIL_TIMEFRAME = 30;
+export const MAX_DETAIL_FEATURES = 6;
+export const MAX_DETAIL_FEATURE_TITLE = 50;
+export const MAX_DETAIL_FEATURE_TEXT = 220;
+export const MAX_DETAIL_NOTES = 3;
+export const MAX_DETAIL_NOTE_TITLE = 60;
+export const MAX_DETAIL_NOTE_BODY = 900;
+export const MAX_DETAIL_SCREENSHOTS = 8;
+export const MAX_DETAIL_ALT = 140;
+export const MAX_DETAIL_CAPTION = 140;

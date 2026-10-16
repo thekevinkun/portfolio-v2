@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-15
-**Current phase / step:** P7.2a
+**Last updated:** 2026-10-16
+**Current phase / step:** P7.2b
 **Mode default:** Build
 
 ---
@@ -18,7 +18,7 @@
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
 | P6    | Polish & finish          | ⬜ Not started |                                             |
-| P7    | Project details          | 🟦 In progress | P7.1 plan done (D112–D122); next P7.2a      |
+| P7    | Project details          | 🟦 In progress | P7.2a done (D123); next P7.2b               |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
@@ -27,8 +27,8 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Current phase checklist
 
 - [x] P7.1 Plan chat (no code): D112–D122
-- [ ] P7.2a Types, limits, Zod schema, `hasDetails`
-- [ ] P7.2b Column and migration (dev, then production), queries
+- [x] P7.2a Types, limits, Zod schema (`hasDetails` moved to P7.2b, D123)
+- [ ] P7.2b Column and migration (dev, then production), `hasDetails`, queries
 - [ ] P7.3a Dashboard editor: text, role, timeframe, video id
 - [ ] P7.3b Screenshots: upload, captions, reorder, references
 - [ ] P7.4a Overlay shell: dialog, animation, history, Stage guard
@@ -55,7 +55,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
 - D82–D111: see CLAUDE.md §10.
-- D112–D122: see CLAUDE.md §10.
+- D112–D123: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -131,6 +131,23 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-16 — P7.2a
+Done:
+- `ProjectDetails` types, `YOUTUBE_ID_PATTERN`, the D112 limits and `projectDetailsSchema` with `detailsOrNull`; no database change
+- `hasDetails` moved to P7.2b (D123)
+Files created/changed:
+- types/details.ts (new); types/limits.ts; validators/details.ts (new); docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
+Decisions:
+- D123
+Verified (viewports / devices):
+- Typecheck, lint, build; a temporary tsx script (not committed) checked valid and invalid details, the 7th feature, the 9th screenshot, a bad video id, an unknown key, a blank and an over-long string, and a `javascript:` screenshot URL
+Known issues:
+- Same as the Known issues list; the details limits are estimates until the P7.4b fit check
+Next step (ID + one-line goal):
+- P7.2b: add the `details` column and migration, `hasDetails` on `Project`, `getProjectDetails()`
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, types/projects.ts, types/admin.ts, types/details.ts, validators/projects.ts, validators/details.ts, data/projects.ts, scripts/seed.ts, drizzle/0002_heavy_roulette.sql, drizzle/meta/_journal.json, drizzle.config.ts. Phase: P7 — Project details. Step: P7.2b. Mode: Build. Follow WORKFLOW.md §11. Goal: Add the nullable `details` jsonb column with a migration (dev, then production), add `hasDetails` to `Project` and fix every file that builds one, and add the cached `getProjectDetails()` query.
+
 ### Handoff — 2026-10-15 — P7.1 (plan chat)
 Done:
 - Planned the project details overlay: content model, loading, mount, animation, history, Stage guard, layouts, video, screenshots, editor; split P7.2–P7.5; D112–D122
@@ -167,23 +184,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P7 section of ROADMAP.md, types/projects.ts, types/limits.ts, types/assets.ts, validators/projects.ts, lib/db/schema.ts, lib/db/queries.ts, components/panels/ProjectsPanel.tsx, ProjectCard.tsx, FeaturedProjectCard.tsx, OverviewPanel.tsx, components/ui/Carousel.tsx, components/stage/{Stage,StageProvider,StageInputs,StagePanel,StageFocus}.tsx, lib/stage/{config,reducer,stage-context,scroll-guard,useStageKeys,useStageWheel,useStageSwipe,useStageUrl}.ts, app/globals.css, components/dashboard/ProjectForm.tsx, AssetField.tsx, lib/dashboard/actions/{projects,assets}.ts, lib/blob/{sniff,cleanup,references,url}.ts, next.config.ts. Phase: P7 — Project details. Step: P7.1 (plan chat). Mode: Build, but this is a plan chat: no code. Follow WORKFLOW.md §11. Goal: Plan the project details overlay (D106) before building: the content model and limits, the open and close animation, the history entry and Back behavior, the Stage guard (keys, wheel, swipe, focus), the two-column and phone layouts, data size and loading, screenshots and the YouTube video, and the dashboard editor; split P7.2–P7.5 into commit-sized steps if needed, then give me the decision table and the exact docs edits and stop for my approval.
 
 ### Handoff — 2026-10-14 — P5.6
-Done:
-- Experience editor: list at `/dashboard/experience` (no create, delete, reorder or hide) and an item form: title, organization, start and end, summary and tags; Work also short summary and Shipped projects (add, remove, reorder, up to 3, 3–5 bullets each, free-text name); Learning also bullets
-- The server applies the fields by the row's real kind and never touches kind, sort or visible; limits in `types/limits.ts` read by the validators
-- Shared helpers `moved` and `splitLines`; "Required." message for empty fields; unique React keys on the public Experience cards
-- Planned and logged: the work timeline for a future job or client (D110)
-Files created/changed:
-- types/{limits,experience,admin}.ts; validators/{experience,shared}.ts; lib/db/admin-queries.ts; lib/dashboard/{list,form-data}.ts; lib/dashboard/actions/experience.ts; components/dashboard/{ExperienceForm,SkillGroupForm}.tsx; components/panels/{ExperiencePanel,ExperienceParts,ExperienceShippedCard}.tsx; app/dashboard/(admin)/experience/{page.tsx,[slug]/page.tsx}; data/experience.ts (typo); docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D109, D110 (D110 is planned, not built)
-Verified (viewports / devices):
-- Typecheck, lint, build and `npm run start` on the Neon dev branch; list matches Neon; summary, short summary, dates, tags and bullets edit and show on the public page; invalid dates, bullet counts, tags and empty fields save nothing; shipped add, remove and reorder with equal names and no key warning; the Learning form has no Shipped section and the Work form has no Bullets; signed-out save redirects to login; phone layout; keyboard focus; fit QA with content at the limits (slack numbers not recorded)
-Known issues:
-- The Work card cannot hold more than one role until D110; Learning bullets (4) and tags (8) limits are estimates confirmed by the fit QA
-Next step (ID + one-line goal):
-- P5.7 — Hardening: seed guard, empty states, signed-out probes, cleanup of the editor stub and Known issues
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, scripts/seed.ts, proxy.ts, lib/auth/index.ts, lib/auth/require-admin.ts, lib/dashboard/admin-action.ts, lib/dashboard/actions/*.ts (all), lib/db/queries.ts, components/dashboard/nav-items.ts, DashboardNav.tsx, app/dashboard/(admin)/layout.tsx, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/[area]/page.tsx, components/panels/OverviewPanel.tsx, ContactPanel.tsx, TechStackPanel.tsx, ProjectsPanel.tsx, ExperiencePanel.tsx, app/(site)/[[...section]]/page.tsx. Phase: P5 — Dashboard. Step: P5.7. Mode: Build. Follow WORKFLOW.md §11. Goal: Harden the dashboard: make `db:seed --update` require `--yes-overwrite` (D97), test every public page with all rows hidden (empty states), try every dashboard route and action signed out and with a revoked `ADMIN_GITHUB_ID`, delete the `[area]` stub, clean up the Known issues and the "content workflow" note, and update docs.
+- P5.6: Experience editor (Work and Learning items, shipped projects add/remove/reorder up to 3, limits in `types/limits.ts`); the server applies fields by the row's real kind; work timeline planned (D110); D109, D110.
 
 ### Handoff — 2026-10-14 — P5.5
 - P5.5: Tech Stack editor (list, group form, items with icons found from the name, highlights), card numbers follow position, limits in `types/limits.ts`, fit QA with full cards; D107, D108.
