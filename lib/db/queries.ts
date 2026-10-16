@@ -1,17 +1,22 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq, isNotNull } from "drizzle-orm";
 import { cache } from "react";
 import type { z } from "zod";
 import * as t from "./schema";
 import { db } from "./index";
 import { profileSchema } from "@/validators/profile";
+import { projectDetailsSchema } from "@/validators/details";
 import { projectSchema } from "@/validators/projects";
 import { skillGroupSchema } from "@/validators/skills";
 import { categorySchema } from "@/validators/categories";
 import { experienceItemSchema } from "@/validators/experience";
 import type { ExperienceItem } from "@/types/experience";
 import type { Profile } from "@/types/profile";
-import type { Project, ProjectCategory } from "@/types/projects";
 import type { SkillGroup } from "@/types/skills";
+import type {
+  Project,
+  ProjectCategory,
+  ProjectDetailsEntry,
+} from "@/types/projects";
 
 // The strict schemas have no id field, so it is dropped before parsing
 function withoutId<T extends { id: unknown }>(row: T): Omit<T, "id"> {
@@ -63,9 +68,12 @@ async function loadProjects(): Promise<Project[]> {
     .where(eq(t.projects.visible, true))
     .orderBy(asc(t.projects.sort), asc(t.projects.slug));
 
-  return rows.map((row) =>
-    parseOrThrow(`projects[${row.slug}]`, projectSchema, withoutId(row)),
-  );
+  // The strict schema has no details field. The write-up loads separately
+  // (getProjectDetails); here only whether one exists matters (D113).
+  return rows.map(({ details, ...row }) => ({
+    ...parseOrThrow(`projects[${row.slug}]`, projectSchema, withoutId(row)),
+    hasDetails: details !== null,
+  }));
 }
 
 async function loadExperienceItems(): Promise<ExperienceItem[]> {
@@ -103,6 +111,55 @@ async function loadCategories(): Promise<ProjectCategory[]> {
   );
 }
 
+// The write-up of every visible project that has one, in public order, with
+// the fields the overlay shows next to it (D113). A bad details value fails
+// loudly like any bad row (D68).
+async function loadProjectDetails(): Promise<ProjectDetailsEntry[]> {
+  const [projects, categories, rows] = await Promise.all([
+    getProjects(),
+    // Any category, hidden ones too: a project in a hidden category stays
+    // visible (D105), so its label must still resolve
+    db
+      .select({
+        slug: t.projectCategories.slug,
+        label: t.projectCategories.label,
+      })
+      .from(t.projectCategories),
+    db
+      .select({ slug: t.projects.slug, details: t.projects.details })
+      .from(t.projects)
+      .where(and(eq(t.projects.visible, true), isNotNull(t.projects.details))),
+  ]);
+
+  const labels = new Map(
+    categories.map((category) => [category.slug, category.label]),
+  );
+  const stored = new Map(rows.map((row) => [row.slug, row.details]));
+
+  const entries: ProjectDetailsEntry[] = [];
+  for (const project of projects) {
+    const raw = stored.get(project.slug);
+    if (!raw) continue;
+    entries.push({
+      slug: project.slug,
+      title: project.title,
+      kicker: project.kicker,
+      summary: project.summary,
+      status: project.status,
+      categoryLabel: labels.get(project.filter) ?? project.filter,
+      logoUrl: project.logoUrl,
+      tech: project.tech,
+      links: project.links,
+      details: parseOrThrow(
+        `projects[${project.slug}].details`,
+        projectDetailsSchema,
+        raw,
+      ),
+    });
+  }
+  return entries;
+}
+
 async function loadStageData() {
   const [profile, skillGroups, categories, projects, experienceItems] =
     await Promise.all([
@@ -121,5 +178,6 @@ export const getProfile = cache(loadProfile);
 export const getSkillGroups = cache(loadSkillGroups);
 export const getCategories = cache(loadCategories);
 export const getProjects = cache(loadProjects);
+export const getProjectDetails = cache(loadProjectDetails);
 export const getExperienceItems = cache(loadExperienceItems);
 export const getStageData = cache(loadStageData);

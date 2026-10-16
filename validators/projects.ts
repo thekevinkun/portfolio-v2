@@ -2,8 +2,8 @@ import { z } from "zod";
 import {
   PROJECT_LINK_KINDS,
   PROJECT_STATUSES,
-  type Project,
   type ProjectContent,
+  type StoredProject,
 } from "@/types/projects";
 import { assetUrl, httpUrl, nonEmpty, slugSchema, sortOrder } from "./shared";
 
@@ -59,4 +59,4 @@ export const projectSchema = z
     sort: sortOrder,
     visible: z.boolean(),
   })
-  .refine(liveNeedsLink, liveRule) satisfies z.ZodType<Project>;
+  .refine(liveNeedsLink, liveRule) satisfies z.ZodType<StoredProject>;

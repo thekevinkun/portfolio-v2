@@ -1,3 +1,5 @@
+import type { ProjectDetails } from "./details";
+
 // A category slug. Categories are rows in `project_categories` (D105), so the
 // list is no longer fixed in code.
 export type ProjectFilter = string;
@@ -27,7 +29,9 @@ export type ProjectLink = {
   url: string;
 };
 
-export type Project = {
+// A project as the database and the seed hold it, without the details: the
+// write-up loads separately (D113, D124)
+export type StoredProject = {
   slug: string;
   title: string;
   kicker: string;
@@ -45,6 +49,28 @@ export type Project = {
   visible: boolean;
 };
 
+// What the public pages receive: the stored fields plus whether a write-up
+// exists (it decides if the Details button shows)
+export type Project = StoredProject & { hasDetails: boolean };
+
 // What the dashboard form edits. Featured, visible and order have their own
 // controls in the list (D102).
-export type ProjectContent = Omit<Project, "featured" | "sort" | "visible">;
+export type ProjectContent = Omit<
+  StoredProject,
+  "featured" | "sort" | "visible"
+>;
+
+// One project's write-up for the overlay, with the fields shown next to it
+// (D113, D124). `categoryLabel` resolves from any category, hidden ones too.
+export type ProjectDetailsEntry = {
+  slug: string;
+  title: string;
+  kicker: string;
+  summary: string;
+  status: ProjectStatus;
+  categoryLabel: string;
+  logoUrl: string | null;
+  tech: string[];
+  links: ProjectLink[];
+  details: ProjectDetails;
+};

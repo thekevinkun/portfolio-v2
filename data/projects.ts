@@ -1,6 +1,6 @@
-import type { Project } from "@/types/projects";
+import type { StoredProject } from "@/types/projects";
 
-export const projects: Project[] = [
+export const projects: StoredProject[] = [
   {
     slug: "kundesk",
     title: "Kundesk",
