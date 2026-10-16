@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P4 done (launched); P5 (dashboard) done (D82–D111); P7 (project details) planned (D112–D122), P7.2 is next.**
+> Status: **P1–P4 done (launched); P5 (dashboard) done (D82–D111); P7 (project details) in progress (D112–D123), P7.2b is next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -449,6 +449,7 @@ Goal: <one sentence>
 | D120 | Screenshots: upload kind `screenshot` (separate from `PROJECT_ASSET_KINDS`), PNG, JPEG or WebP up to 2 MB, no SVG, up to 8 per project, D101 flow (upload on Save, one request each, rollback on failure, cleanup after save), `profile/` path prefix kept so `discardAsset` is unchanged; `isReferenced` also checks `details` with a jsonb containment query; public frame is 16:10 with `object-cover object-top`, upload about 1600×1000, so no image sizes are stored |
 | D121 | Details editor: `/dashboard/projects/<slug>/details`, linked from the project form and list, `updateProjectDetails` built on `adminAction` with `projectDetailsSchema`; the project list shows a "Has details" tag; features, notes and screenshots reorder with up/down buttons (D91); the first version keeps existing screenshots unchanged until P7.3b |
 | D122 | First details content is written by Kun in the dashboard for Kundesk, Padel Batu Alam Permai and Kun Bookshop; nothing invented is seeded (R4); no new dependency (R9) |
+| D123 | P7.2a details types and validator: `types/details.ts` holds the types and `YOUTUBE_ID_PATTERN` (one source for the editor and the schema); `features`, `notes` and `screenshots` are always present and may be empty, while `problem`, `role`, `timeframe` and `videoId` are optional strings left out when empty; a screenshot needs `alt`, its `caption` is optional and its `url` is a site path or http(s); `projectDetailsSchema` (`validators/details.ts`, strict, limits from `types/limits.ts`) rejects blank strings because the editor drops blank rows first (D109), and `detailsOrNull` turns an empty result into `null` for the column; `hasDetails` moves from P7.2a to P7.2b, because adding it to `Project` changes `ProjectContent`, `projectSchema`, `AdminProject`, the seed data and the public query together and needs the column |
 
 ### Open
 

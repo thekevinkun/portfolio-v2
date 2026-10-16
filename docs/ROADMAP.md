@@ -122,8 +122,8 @@ Decided in the P5.4b discussion (D106). Numbered P7 so the P6 references in PROG
 | Step | Task |
 |---|---|
 | P7.1 | **Plan chat (no code):** done, D112–D122 |
-| P7.2a | Types, limits, `projectDetailsSchema` and `Project.hasDetails` |
-| P7.2b | `details` column and migration (dev, then production), `getProjectDetails()`, `hasDetails` in the public query |
+| P7.2a | Types, limits and `projectDetailsSchema` (`hasDetails` moved to P7.2b, D123) |
+| P7.2b | `details` column and migration (dev, then production), `hasDetails` on `Project` and every file that builds one, `getProjectDetails()` |
 | P7.3a | Dashboard editor page and action: text sections, role, timeframe, video id, reorder; screenshots passed through unchanged |
 | P7.3b 🎨 | Screenshots: upload kind, picker with previews, captions and reorder, `isReferenced`, cleanup |
 | P7.4a 🎨 | Overlay shell: `<dialog>`, context, open and close animation, history entry, Stage guard, focus return, reduced motion |
