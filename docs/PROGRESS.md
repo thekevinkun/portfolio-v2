@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-15
-**Current phase / step:** P7.1 (plan chat)
+**Current phase / step:** P7.2a
 **Mode default:** Build
 
 ---
@@ -18,7 +18,7 @@
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
 | P6    | Polish & finish          | ⬜ Not started |                                             |
-| P7    | Project details          | ⬜ Not started | Next: plan chat P7.1 (D106)         |
+| P7    | Project details          | 🟦 In progress | P7.1 plan done (D112–D122); next P7.2a      |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
@@ -26,11 +26,14 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [ ] P7.1 Plan chat (no code): content model and limits, animation, history and Back, Stage guard, mobile layout, data size
-- [ ] P7.2 Data: `details` columns, types, Zod schemas, seed (migration dev, then production)
-- [ ] P7.3 Dashboard editor: sections, features, engineering notes, screenshots, video id
-- [ ] P7.4 Public overlay: dialog, animation, two columns, Stage guard, history entry, reduced motion
-- [ ] P7.5 Look button and title triggers, YouTube click-to-load, fit and performance pass
+- [x] P7.1 Plan chat (no code): D112–D122
+- [ ] P7.2a Types, limits, Zod schema, `hasDetails`
+- [ ] P7.2b Column and migration (dev, then production), queries
+- [ ] P7.3a Dashboard editor: text, role, timeframe, video id
+- [ ] P7.3b Screenshots: upload, captions, reorder, references
+- [ ] P7.4a Overlay shell: dialog, animation, history, Stage guard
+- [ ] P7.4b Overlay content and layouts
+- [ ] P7.5 Triggers on cards, YouTube facade, performance pass
 
 ---
 
@@ -52,6 +55,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
 - D82–D111: see CLAUDE.md §10.
+- D112–D122: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -101,6 +105,7 @@ None. O4 and O5 settled (D73, D74).
 - The project logo (the large image) is stored but shown nowhere until P7 (D104, D106)
 - Categories: hiding one removes its tab only, its projects stay visible (D105); the tabs wrap onto more lines and were fit-checked with eight tabs at the five QA viewports, more than that is untested
 - Tech Stack icons: a brand missing from the installed `react-icons` Simple Icons set falls back to a letter; type a different brand, a lucide name or `lucide:<name>` in the item's icon box (D108)
+- Uploads keep the `profile/` path prefix even for project screenshots (D120); only the name is misleading, and `discardAsset` relies on it
 
 ---
 
@@ -125,6 +130,22 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-15 — P7.1 (plan chat)
+Done:
+- Planned the project details overlay: content model, loading, mount, animation, history, Stage guard, layouts, video, screenshots, editor; split P7.2–P7.5; D112–D122
+Files created/changed:
+- docs (CLAUDE.md, ROADMAP.md, PROGRESS.md); stale first D105 row removed
+Decisions:
+- D112–D122
+Verified (viewports / devices):
+- Not applicable (plan chat). Untested assumptions: Next's popstate handling (D116), YouTube embedding (D119), payload size (D113)
+Known issues:
+- Same as the Known issues list
+Next step (ID + one-line goal):
+- P7.2a: types, limits and Zod schema for details
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: types/projects.ts, types/limits.ts, validators/projects.ts, validators/shared.ts, lib/db/queries.ts. Phase: P7 — Project details. Step: P7.2a. Mode: Build. Follow WORKFLOW.md §11. Goal: Add `types/details.ts` and the limits from D112, the `projectDetailsSchema` Zod validator (strict, limits read from `types/limits.ts`, YouTube id format, empty details saved as null), and `hasDetails` on `Project`, without touching the database yet.
 
 ### Handoff — 2026-10-15 — P5.7 (P5 closed)
 Done:
@@ -165,23 +186,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, scripts/seed.ts, proxy.ts, lib/auth/index.ts, lib/auth/require-admin.ts, lib/dashboard/admin-action.ts, lib/dashboard/actions/*.ts (all), lib/db/queries.ts, components/dashboard/nav-items.ts, DashboardNav.tsx, app/dashboard/(admin)/layout.tsx, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/[area]/page.tsx, components/panels/OverviewPanel.tsx, ContactPanel.tsx, TechStackPanel.tsx, ProjectsPanel.tsx, ExperiencePanel.tsx, app/(site)/[[...section]]/page.tsx. Phase: P5 — Dashboard. Step: P5.7. Mode: Build. Follow WORKFLOW.md §11. Goal: Harden the dashboard: make `db:seed --update` require `--yes-overwrite` (D97), test every public page with all rows hidden (empty states), try every dashboard route and action signed out and with a revoked `ADMIN_GITHUB_ID`, delete the `[area]` stub, clean up the Known issues and the "content workflow" note, and update docs.
 
 ### Handoff — 2026-10-14 — P5.5
-Done:
-- Tech Stack editor: list at `/dashboard/tech-stack` (visible switch, up/down reorder, Edit; no create or delete) and a group form with label, title, subtitle, badge, group icon, items (up to 7) and highlights (up to 5, at most 40 characters), with counters; hiding the last visible group is refused
-- Item icons are found from the typed name (Simple Icons, then lucide) with an optional icon box (Simple Icons name, lucide name, `lucide:name`, built-in key) and a letter fallback; the group icon is limited to four generic icons
-- Card numbers follow the card's position (`formatIndexLabel`); stored labels have no number and the seed labels were stripped
-- Limits moved to `types/limits.ts` and read by the validator; fit QA with full cards passed
-Files created/changed:
-- types/{limits,skills,admin}.ts; validators/skills.ts; lib/db/admin-queries.ts; lib/dashboard/actions/skill-groups.ts; lib/skills/index-label.ts; components/panels/{resolve-tech-icon.ts,TechLogo.tsx,SkillGroupCard.tsx,TechStackPanel.tsx}; components/dashboard/{SkillGroupRow,SkillGroupForm,IconSelect}.tsx; app/dashboard/(admin)/tech-stack/{page.tsx,[slug]/page.tsx}; data/skill-groups.ts; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D107, D108 (D108 amends D53)
-Verified (viewports / devices):
-- Typecheck, lint, build and `npm run start` on the Neon dev branch; list matches Neon; text, item and highlight edits show on the public page; limits and error messages save nothing; reorder and hide renumber the cards `01`–`04` by position; last visible group cannot be hidden; free-typed items (Python, Go, FastAPI, Pandas, JavaScript, C++, Node.js) show logos, a nonsense name shows the letter; lucide icons by name (`shield-check`, `lock`, `bug`, `lucide:shield`); existing logos unchanged; no icon-set code in the public chunks; fit slack 367 / 78 / 187 / 55 / 96 / 7 / 200 / −4 px at 1920×1080, 1536×791, 1440×900, 1366×768, 1280×720, 1024×768, 390×844, 360×640; signed-out save redirects to login; phone layout; keyboard focus
-Known issues:
-- 360×640 is 4 px over its area (absorbed); 1024×768 is the tightest; a brand missing from the installed Simple Icons set falls back to a letter
-Next step (ID + one-line goal):
-- P5.6 — Experience editor (Work and Learning items, shipped projects up to 3)
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P5 section of ROADMAP.md, package.json, types/experience.ts, types/limits.ts, types/admin.ts, validators/experience.ts, validators/shared.ts, lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/actions/skill-groups.ts, data/experience.ts, lib/experience/format.ts, components/panels/ExperiencePanel.tsx, ExperienceRoleCard.tsx, ExperienceShippedCard.tsx, ExperienceLearningCard.tsx, ExperienceParts.tsx, components/dashboard/SkillGroupForm.tsx, SkillGroupRow.tsx, TextField.tsx, FormSection.tsx, nav-items.ts, every file in components/dashboard/ui/, app/dashboard/(admin)/page.tsx, app/dashboard/(admin)/tech-stack/page.tsx. Phase: P5 — Dashboard. Step: P5.6. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the Experience editor (D92): edit the two existing items (Work and Learning) with summary, short summary, bullets and tags; shipped projects add, remove and reorder with at most 3 (`MAX_SHIPPED_PROJECTS` in types/limits.ts) and 3–5 bullets each (the first three show in the wide layout), the Shipped name as free text (D75); no create, delete, reorder or hide of top-level items; limits visible in the form.
+- P5.5: Tech Stack editor (list, group form, items with icons found from the name, highlights), card numbers follow position, limits in `types/limits.ts`, fit QA with full cards; D107, D108.
 
 ### Handoff — 2026-10-14 — P5.4c
 - P5.4c: `project_categories` table replaces the filter enum, categories editor, public tabs from the table; D105.
