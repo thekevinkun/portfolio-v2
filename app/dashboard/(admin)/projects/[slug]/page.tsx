@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProjectForm from "@/components/dashboard/ProjectForm";
+import { ButtonLink } from "@/components/ui";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import {
   getAdminCategories,
@@ -25,16 +26,25 @@ export default async function EditProjectPage({
 
   return (
     <div className="mx-auto w-full max-w-3xl px-6 py-8 lg:px-10 lg:py-12">
-      <header className="mb-8">
-        <Link
-          href="/dashboard/projects"
-          className="text-xs text-fg-low hover:text-fg-high focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <Link
+            href="/dashboard/projects"
+            className="text-xs text-fg-low hover:text-fg-high focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          >
+            ← Projects
+          </Link>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-fg-high">
+            {project.title}
+          </h1>
+        </div>
+        <ButtonLink
+          href={`/dashboard/projects/${project.slug}/details`}
+          variant="secondary"
+          size="sm"
         >
-          ← Projects
-        </Link>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-fg-high">
-          {project.title}
-        </h1>
+          {project.details !== null ? "Edit details" : "Add details"}
+        </ButtonLink>
       </header>
       <ProjectForm project={project} categories={categories} />
     </div>

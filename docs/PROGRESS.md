@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-16
-**Current phase / step:** P7.3a
+**Current phase / step:** P7.3b
 **Mode default:** Build
 
 ---
@@ -18,7 +18,7 @@
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
 | P6    | Polish & finish          | ⬜ Not started |                                             |
-| P7    | Project details          | 🟦 In progress | P7.2b done (D124); next P7.3a               |
+| P7    | Project details          | 🟦 In progress | P7.3a done (D125); next P7.3b               |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
@@ -29,7 +29,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P7.1 Plan chat (no code): D112–D122
 - [x] P7.2a Types, limits, Zod schema (`hasDetails` moved to P7.2b, D123)
 - [x] P7.2b Column and migration (dev, then production), `hasDetails`, queries
-- [ ] P7.3a Dashboard editor: text, role, timeframe, video id
+- [x] P7.3a Dashboard editor: text, role, timeframe, video id
 - [ ] P7.3b Screenshots: upload, captions, reorder, references
 - [ ] P7.4a Overlay shell: dialog, animation, history, Stage guard
 - [ ] P7.4b Overlay content and layouts
@@ -55,7 +55,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
 - D82–D111: see CLAUDE.md §10.
-- D112–D124: see CLAUDE.md §10.
+- D112–D125: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -106,6 +106,7 @@ None. O4 and O5 settled (D73, D74).
 - Categories: hiding one removes its tab only, its projects stay visible (D105); the tabs wrap onto more lines and were fit-checked with eight tabs at the five QA viewports, more than that is untested
 - Tech Stack icons: a brand missing from the installed `react-icons` Simple Icons set falls back to a letter; type a different brand, a lucide name or `lucide:<name>` in the item's icon box (D108)
 - Uploads keep the `profile/` path prefix even for project screenshots (D120); only the name is misleading, and `discardAsset` relies on it
+- Details editor: edits are lost if you leave the page before saving (no unsaved-changes warning)
 
 ---
 
@@ -130,6 +131,23 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-16 — P7.3a
+Done:
+- Details editor at `/dashboard/projects/<slug>/details`: overview fields, features and notes with reorder, video link or id, saved screenshots passed through unchanged
+- `updateProjectDetails` action; empty form saves `null`; "Has details" tag and links in the project list and edit page
+Files created/changed:
+- lib/projects/youtube.ts; lib/dashboard/actions/project-details.ts; components/dashboard/{CountedField,TitledRows,DetailsForm}.tsx, ProjectRow.tsx; app/dashboard/(admin)/projects/[slug]/details/page.tsx, [slug]/page.tsx; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D125
+Verified (viewports / devices):
+- Typecheck, lint, build (guard check passed); a temporary tsx script (not committed) checked the YouTube parser; on the Neon dev branch: save, reload, reorder, limits, half-filled rows, video forms, clear, signed-out redirect and 404; checked at 1440×900 and 390×844
+Known issues:
+- Edits are lost if you leave before saving; nothing shows on the public site yet
+Next step (ID + one-line goal):
+- P7.3b: screenshots in the details editor (upload on Save, captions, alt text, reorder, references)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/dashboard/DetailsForm.tsx, TitledRows.tsx, CountedField.tsx, AssetField.tsx, lib/dashboard/pending-asset.ts, lib/dashboard/actions/assets.ts, project-details.ts, projects.ts, lib/blob/references.ts, cleanup.ts, types/assets.ts, types/details.ts, types/limits.ts, validators/details.ts, next.config.ts, app/dashboard/(admin)/projects/[slug]/details/page.tsx. Phase: P7 — Project details. Step: P7.3b. Mode: Build. Follow WORKFLOW.md §11. Goal: Add up to 8 screenshots to the details editor: a `screenshot` upload kind (D120), picked files kept in the browser until Save, one upload request each with progress, alt text and caption per image, up/down reorder, rollback on failure, deletion of replaced or removed files after the save, and `isReferenced` checking screenshots inside `details`.
 
 ### Handoff — 2026-10-16 — P7.2b
 Done:
@@ -167,20 +185,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, types/projects.ts, types/admin.ts, types/details.ts, validators/projects.ts, validators/details.ts, data/projects.ts, scripts/seed.ts, drizzle/0002_heavy_roulette.sql, drizzle/meta/_journal.json, drizzle.config.ts. Phase: P7 — Project details. Step: P7.2b. Mode: Build. Follow WORKFLOW.md §11. Goal: Add the nullable `details` jsonb column with a migration (dev, then production), add `hasDetails` to `Project` and fix every file that builds one, and add the cached `getProjectDetails()` query.
 
 ### Handoff — 2026-10-15 — P7.1 (plan chat)
-Done:
-- Planned the project details overlay: content model, loading, mount, animation, history, Stage guard, layouts, video, screenshots, editor; split P7.2–P7.5; D112–D122
-Files created/changed:
-- docs (CLAUDE.md, ROADMAP.md, PROGRESS.md); stale first D105 row removed
-Decisions:
-- D112–D122
-Verified (viewports / devices):
-- Not applicable (plan chat). Untested assumptions: Next's popstate handling (D116), YouTube embedding (D119), payload size (D113)
-Known issues:
-- Same as the Known issues list
-Next step (ID + one-line goal):
-- P7.2a: types, limits and Zod schema for details
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: types/projects.ts, types/limits.ts, validators/projects.ts, validators/shared.ts, lib/db/queries.ts. Phase: P7 — Project details. Step: P7.2a. Mode: Build. Follow WORKFLOW.md §11. Goal: Add `types/details.ts` and the limits from D112, the `projectDetailsSchema` Zod validator (strict, limits read from `types/limits.ts`, YouTube id format, empty details saved as null), and `hasDetails` on `Project`, without touching the database yet.
+- P7.1: planned the project details overlay (content model, loading, mount, animation, history, Stage guard, layouts, video, screenshots, editor); split P7.2–P7.5; D112–D122.
 
 ### Handoff — 2026-10-15 — P5.7 (P5 closed)
 - P5.7: hardening: `db:seed --update` needs `--yes-overwrite`, build-time `check:actions` guard, empty states, signed-out and revoked-session probes; P5 closed; D111.
