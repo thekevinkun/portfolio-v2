@@ -13,7 +13,7 @@
 | P3 | Five pages (static data) | L | Every page fits one screen at every QA viewport |
 | P4 | Neon data → **LAUNCH** | M | Site fully database-driven and live |
 | P5 | Dashboard | M | Secure admin to edit all content |
-| P7 | Project details | L | Full-screen project overlay with a structured write-up; built after P5, before P6 |
+| P7 | Project details | L | Overlay with a structured write-up (D106, D112–D122); built after P5, before P6 |
 | P6 | Polish & finish | S–M | Remaining animations, perf pass, OG images, final content check |
 
 ---
@@ -121,11 +121,14 @@ Decided in the P5.4b discussion (D106). Numbered P7 so the P6 references in PROG
 
 | Step | Task |
 |---|---|
-| P7.1 | **Plan chat (no code):** content model and limits, animation choice, history and Back behavior, Stage guard, mobile layout, data size |
-| P7.2 | Data: `details` columns (migration dev, then production), types, Zod schemas, seed |
-| P7.3 | Dashboard editor: sections, features, engineering notes, screenshots (upload on Save, up to 8, captions and alt text), video id |
-| P7.4 | Public overlay: native `<dialog>`, open animation from the card, two-column layout, Stage key guard, `data-stage-scroll`, history entry, focus return, reduced motion |
-| P7.5 | Look button and title trigger on Projects and Overview cards; YouTube click-to-load; fit and performance pass at all QA viewports |
+| P7.1 | **Plan chat (no code):** done, D112–D122 |
+| P7.2a | Types, limits, `projectDetailsSchema` and `Project.hasDetails` |
+| P7.2b | `details` column and migration (dev, then production), `getProjectDetails()`, `hasDetails` in the public query |
+| P7.3a | Dashboard editor page and action: text sections, role, timeframe, video id, reorder; screenshots passed through unchanged |
+| P7.3b 🎨 | Screenshots: upload kind, picker with previews, captions and reorder, `isReferenced`, cleanup |
+| P7.4a 🎨 | Overlay shell: `<dialog>`, context, open and close animation, history entry, Stage guard, focus return, reduced motion |
+| P7.4b 🎨 | Overlay content and both layouts, fit measured at the QA viewports |
+| P7.5 🎨 | Details button and title trigger on Projects and Overview cards, YouTube facade, performance pass |
 
 **Acceptance:** a card opens its project details without leaving `/projects`; Esc, Back and the close button close it; the Stage does not turn behind it; Lighthouse mobile stays ≥ 90.
 
