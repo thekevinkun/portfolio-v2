@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-16
-**Current phase / step:** P7.2b
+**Current phase / step:** P7.3a
 **Mode default:** Build
 
 ---
@@ -18,7 +18,7 @@
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
 | P6    | Polish & finish          | ⬜ Not started |                                             |
-| P7    | Project details          | 🟦 In progress | P7.2a done (D123); next P7.2b               |
+| P7    | Project details          | 🟦 In progress | P7.2b done (D124); next P7.3a               |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
@@ -28,7 +28,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 - [x] P7.1 Plan chat (no code): D112–D122
 - [x] P7.2a Types, limits, Zod schema (`hasDetails` moved to P7.2b, D123)
-- [ ] P7.2b Column and migration (dev, then production), `hasDetails`, queries
+- [x] P7.2b Column and migration (dev, then production), `hasDetails`, queries
 - [ ] P7.3a Dashboard editor: text, role, timeframe, video id
 - [ ] P7.3b Screenshots: upload, captions, reorder, references
 - [ ] P7.4a Overlay shell: dialog, animation, history, Stage guard
@@ -55,7 +55,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
 - D82–D111: see CLAUDE.md §10.
-- D112–D123: see CLAUDE.md §10.
+- D112–D124: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -131,6 +131,24 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-16 — P7.2b
+Done:
+- `projects.details` jsonb column (additive migration, applied to dev; production before the merge, D86)
+- `StoredProject` base type; `Project` = `StoredProject` + `hasDetails`; `AdminProject` carries `details`
+- `getProjectDetails()` (cached) with category label, parsed by `projectDetailsSchema`
+Files created/changed:
+- lib/db/schema.ts; drizzle/0003_* (SQL, snapshot, journal); types/projects.ts; types/admin.ts; validators/projects.ts; data/projects.ts; lib/db/queries.ts; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D124
+Verified (viewports / devices):
+- Typecheck, lint, build and `db:seed --check` on the Neon dev branch; column checked in the SQL editor; a temporary script (not committed) checked hasDetails and entries after a write, that a dashboard save leaves `details` untouched, that a bad value throws, and the reset; pages and dashboard unchanged in the browser
+Known issues:
+- Same as the Known issues list; nothing shows details yet
+Next step (ID + one-line goal):
+- P7.3a: the details editor page and action (text sections, role, timeframe, video id, reorder; screenshots passed through unchanged)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: types/details.ts, types/limits.ts, types/admin.ts, validators/details.ts, validators/shared.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/actions/projects.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/list.ts, components/dashboard/ProjectForm.tsx, ProjectRow.tsx, TextField.tsx, FormSection.tsx, ui/index.ts, app/dashboard/(admin)/projects/page.tsx, app/dashboard/(admin)/projects/[slug]/page.tsx. Phase: P7 — Project details. Step: P7.3a. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the details editor at /dashboard/projects/<slug>/details with `updateProjectDetails` (adminAction, projectDetailsSchema, detailsOrNull): problem, role, timeframe, features and notes with up/down reorder, a YouTube URL or id field that stores only the id, existing screenshots passed through unchanged, a link from the project form and a "Has details" tag in the list.
+  
 ### Handoff — 2026-10-16 — P7.2a
 Done:
 - `ProjectDetails` types, `YOUTUBE_ID_PATTERN`, the D112 limits and `projectDetailsSchema` with `detailsOrNull`; no database change
@@ -165,23 +183,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: types/projects.ts, types/limits.ts, validators/projects.ts, validators/shared.ts, lib/db/queries.ts. Phase: P7 — Project details. Step: P7.2a. Mode: Build. Follow WORKFLOW.md §11. Goal: Add `types/details.ts` and the limits from D112, the `projectDetailsSchema` Zod validator (strict, limits read from `types/limits.ts`, YouTube id format, empty details saved as null), and `hasDetails` on `Project`, without touching the database yet.
 
 ### Handoff — 2026-10-15 — P5.7 (P5 closed)
-Done:
-- `db:seed --update` requires `--yes-overwrite` and prints the database host
-- `scripts/check-actions.ts` runs first in `npm run build`: every dashboard action must use `adminAction` (except `signOutAdmin`) and every admin page must call `requireAdmin()`
-- Deleted the `[area]` stub; Projects page shows "No projects to show right now." when no category has a visible project
-- Tested: every dashboard route redirects when signed out, actions signed out and with a revoked `ADMIN_GITHUB_ID` change nothing, and each public page with its content hidden
-Files created/changed:
-- scripts/{seed,check-actions}.ts; package.json; components/panels/ProjectsPanel.tsx; app/dashboard/(admin)/[area]/page.tsx (deleted); docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D111
-Verified (viewports / devices):
-- Typecheck, lint, build (the guard check passed first) and `npm run start` on the Neon dev branch; the guard check fails on a temporary unguarded action; seed guard; signed-out routes and actions; revoked session; empty states of the public pages (no crashes, build succeeds); public site unchanged
-Known issues:
-- Same as the Known issues list; the Work timeline (D110) and the project details overlay (D106) are planned, not built
-Next step (ID + one-line goal):
-- P7.1 — Project details plan chat (no code)
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P7 section of ROADMAP.md, types/projects.ts, types/limits.ts, types/assets.ts, validators/projects.ts, lib/db/schema.ts, lib/db/queries.ts, components/panels/ProjectsPanel.tsx, ProjectCard.tsx, FeaturedProjectCard.tsx, OverviewPanel.tsx, components/ui/Carousel.tsx, components/stage/{Stage,StageProvider,StageInputs,StagePanel,StageFocus}.tsx, lib/stage/{config,reducer,stage-context,scroll-guard,useStageKeys,useStageWheel,useStageSwipe,useStageUrl}.ts, app/globals.css, components/dashboard/ProjectForm.tsx, AssetField.tsx, lib/dashboard/actions/{projects,assets}.ts, lib/blob/{sniff,cleanup,references,url}.ts, next.config.ts. Phase: P7 — Project details. Step: P7.1 (plan chat). Mode: Build, but this is a plan chat: no code. Follow WORKFLOW.md §11. Goal: Plan the project details overlay (D106) before building: the content model and limits, the open and close animation, the history entry and Back behavior, the Stage guard (keys, wheel, swipe, focus), the two-column and phone layouts, data size and loading, screenshots and the YouTube video, and the dashboard editor; split P7.2–P7.5 into commit-sized steps if needed, then give me the decision table and the exact docs edits and stop for my approval.
+- P5.7: hardening: `db:seed --update` needs `--yes-overwrite`, build-time `check:actions` guard, empty states, signed-out and revoked-session probes; P5 closed; D111.
 
 ### Handoff — 2026-10-14 — P5.6
 - P5.6: Experience editor (Work and Learning items, shipped projects add/remove/reorder up to 3, limits in `types/limits.ts`); the server applies fields by the row's real kind; work timeline planned (D110); D109, D110.
