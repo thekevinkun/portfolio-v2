@@ -22,6 +22,13 @@
       "when": 1791896073048,
       "tag": "0002_heavy_roulette",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792114108585,
+      "tag": "0003_blue_ultimatum",
+      "breakpoints": true
     }
   ]
 }

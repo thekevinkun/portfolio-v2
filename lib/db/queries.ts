@@ -63,9 +63,12 @@ async function loadProjects(): Promise<Project[]> {
     .where(eq(t.projects.visible, true))
     .orderBy(asc(t.projects.sort), asc(t.projects.slug));
 
-  return rows.map((row) =>
-    parseOrThrow(`projects[${row.slug}]`, projectSchema, withoutId(row)),
-  );
+  // The strict schema has no details field. The write-up loads separately
+  // (getProjectDetails); here only whether one exists matters (D113).
+  return rows.map(({ details, ...row }) => ({
+    ...parseOrThrow(`projects[${row.slug}]`, projectSchema, withoutId(row)),
+    hasDetails: details !== null,
+  }));
 }
 
 async function loadExperienceItems(): Promise<ExperienceItem[]> {

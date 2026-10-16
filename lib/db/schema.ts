@@ -14,6 +14,7 @@ import {
   EXPERIENCE_KINDS,
   type ExperienceProject,
 } from "../../types/experience";
+import type { ProjectDetails } from "../../types/details";
 import type { SocialLink } from "../../types/profile";
 import { PROJECT_STATUSES, type ProjectLink } from "../../types/projects";
 import type { SkillItem, TechIconKey } from "../../types/skills";
@@ -101,6 +102,8 @@ export const projects = pgTable("projects", {
   logoUrl: text("logo_url"),
   tech: textList("tech"),
   links: jsonb("links").$type<ProjectLink[]>().notNull(),
+  // The structured write-up for the project overlay (D112); null = none
+  details: jsonb("details").$type<ProjectDetails>(),
   featured: boolean("featured").notNull().default(false),
   sort: sort(),
   visible: visible(),

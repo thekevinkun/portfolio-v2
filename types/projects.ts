@@ -27,7 +27,9 @@ export type ProjectLink = {
   url: string;
 };
 
-export type Project = {
+// A project as the database and the seed hold it, without the details: the
+// write-up loads separately (D113, D124)
+export type StoredProject = {
   slug: string;
   title: string;
   kicker: string;
@@ -45,6 +47,13 @@ export type Project = {
   visible: boolean;
 };
 
+// What the public pages receive: the stored fields plus whether a write-up
+// exists (it decides if the Details button shows)
+export type Project = StoredProject & { hasDetails: boolean };
+
 // What the dashboard form edits. Featured, visible and order have their own
 // controls in the list (D102).
-export type ProjectContent = Omit<Project, "featured" | "sort" | "visible">;
+export type ProjectContent = Omit<
+  StoredProject,
+  "featured" | "sort" | "visible"
+>;

@@ -1,5 +1,6 @@
 import type { ExperienceItem, ExperienceProject } from "@/types/experience";
-import type { Project, ProjectCategory } from "@/types/projects";
+import type { ProjectDetails } from "@/types/details";
+import type { ProjectCategory, StoredProject } from "@/types/projects";
 import type { SkillGroup } from "@/types/skills";
 
 export interface AdminCounts {
@@ -10,7 +11,11 @@ export interface AdminCounts {
 }
 
 // A project as the dashboard sees it: hidden rows too, with its id (D90)
-export type AdminProject = Project & { id: string };
+export type AdminProject = StoredProject & {
+  id: string;
+  // The write-up the editor works on; null when there is none (D124)
+  details: ProjectDetails | null;
+};
 
 // A category as the dashboard sees it: hidden ones too, with its id and how
 // many projects use it
