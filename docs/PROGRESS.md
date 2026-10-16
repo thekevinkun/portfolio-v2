@@ -133,7 +133,7 @@ Prompt for the next chat:
 
 ### Handoff — 2026-10-16 — P7.2b
 Done:
-- `projects.details` jsonb column (additive migration, applied to dev; production before the merge, D86)
+- `projects.details` jsonb column (additive migration, applied to dev; production was migrated after the merge, so the first production build failed until it ran, D86)
 - `StoredProject` base type; `Project` = `StoredProject` + `hasDetails`; `AdminProject` carries `details`
 - `getProjectDetails()` (cached) with category label, parsed by `projectDetailsSchema`
 Files created/changed:
