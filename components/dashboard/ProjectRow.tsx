@@ -71,6 +71,11 @@ const ProjectRow = ({ project, isFirst, isLast }: ProjectRowProps) => {
               Hidden
             </Pill>
           ) : null}
+          {project.details !== null ? (
+            <Pill className="px-2 py-0.5 font-mono text-[10px] uppercase">
+              Has details
+            </Pill>
+          ) : null}
         </div>
         <p className="mt-1 truncate font-mono text-xs text-fg-low">
           {project.kicker}
@@ -122,6 +127,14 @@ const ProjectRow = ({ project, isFirst, isLast }: ProjectRowProps) => {
           aria-label={`Edit ${project.title}`}
         >
           Edit
+        </ButtonLink>
+        <ButtonLink
+          href={`/dashboard/projects/${project.slug}/details`}
+          variant="secondary"
+          size="sm"
+          aria-label={`Edit details of ${project.title}`}
+        >
+          Details
         </ButtonLink>
         <Button
           size="sm"
