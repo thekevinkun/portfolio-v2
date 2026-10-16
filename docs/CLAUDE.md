@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P4 done (launched); P5 (dashboard) done (D82–D111); P7 (project details) in progress (D112–D124), P7.3a is next.**
+> Status: **P1–P4 done (launched); P5 (dashboard) done (D82–D111); P7 (project details) in progress (D112–D125), P7.3b is next.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -188,7 +188,7 @@ Private `/dashboard`, single admin. Routes: `/dashboard/login` (public) and an `
 | Overview   | Counts (visible / hidden), links to each editor, "view site"                                                     |
 | Profile    | Identity, intro, contact copy, availability, socials, chips, focus areas, SEO; upload avatar, portrait, resume   |
 | Tech Stack | Edit, reorder, hide the groups; items (≤ 7) with an icon found from the name and used/learning; highlights (≤ 5, ≤ 40 chars)     |
-| Projects   | Create/edit/delete, status, filter type, two link slots, tags, icon and logo, featured (≤ 3 visible) + visible, up/down reorder within a filter |
+| Projects   | Create/edit/delete, status, filter type, two link slots, tags, icon and logo, featured (≤ 3 visible) + visible, up/down reorder within a filter, and the project details write-up (D125) |
 | Categories | Add, rename, reorder, hide the Projects page tabs; delete only when it has no projects (D105) |
 | Experience | Edit the Work and Learning items; shipped projects add/remove/reorder (≤ 3); no create/delete of top-level items until the work timeline (D110) |
 
@@ -451,6 +451,7 @@ Goal: <one sentence>
 | D122 | First details content is written by Kun in the dashboard for Kundesk, Padel Batu Alam Permai and Kun Bookshop; nothing invented is seeded (R4); no new dependency (R9) |
 | D123 | P7.2a details types and validator: `types/details.ts` holds the types and `YOUTUBE_ID_PATTERN` (one source for the editor and the schema); `features`, `notes` and `screenshots` are always present and may be empty, while `problem`, `role`, `timeframe` and `videoId` are optional strings left out when empty; a screenshot needs `alt`, its `caption` is optional and its `url` is a site path or http(s); `projectDetailsSchema` (`validators/details.ts`, strict, limits from `types/limits.ts`) rejects blank strings because the editor drops blank rows first (D109), and `detailsOrNull` turns an empty result into `null` for the column; `hasDetails` moves from P7.2a to P7.2b, because adding it to `Project` changes `ProjectContent`, `projectSchema`, `AdminProject`, the seed data and the public query together and needs the column |
 | D124 | P7.2b details storage (implements D113): `projects.details` is a nullable jsonb column typed `ProjectDetails`, added by an additive migration (applied to dev, then to production only after the merge, so the first production build failed until it ran; D86 says production comes first); the stored fields are `StoredProject` and the public `Project` is `StoredProject` plus `hasDetails`; `projectSchema`, `ProjectContent`, the seed data and `AdminProject` build on `StoredProject`, so the strict schemas, the seed and the dashboard form never see `details`; `AdminProject` also carries `details` (null or the object) for the editor; `loadProjects` drops `details` before the strict parse and sets `hasDetails` from `details !== null`; `getProjectDetails()` (cached) returns one `ProjectDetailsEntry` per visible project with details, in public order, with the category label looked up among all categories (hidden ones included, D105), the logo, tech, links and the details parsed by `projectDetailsSchema`, and a bad value throws like any bad row (D68); `db:seed` never writes `details`, so `--update` keeps them, and `updateProject` leaves them untouched |
+| D125 | P7.3a details editor (implements D121): `/dashboard/projects/<slug>/details` (404 for an unknown slug) holds one client form, `DetailsForm`: overview fields (problem, role, timeframe), up to 6 features and 3 notes as repeatable rows (`TitledRows`: add, remove, up/down reorder with `moved`; `CountedField` gives live character counters from the limits in `types/limits.ts`), a video field and a pass-through of the saved screenshots; it sends one typed object to `updateProjectDetails` (`adminAction`, strict `{ slug, details }`, `projectDetailsSchema`, saves `detailsOrNull`); fully blank rows are dropped before sending and half-filled rows are sent so the server reports "Required." on the right field, mapped back by a stable row key; an empty form is stored as `null`, so the project loses its Details button; `parseYoutubeId` (`lib/projects/youtube.ts`) accepts a YouTube link (watch, youtu.be, embed, shorts, live, m.youtube, youtube-nocookie) or an 11-character id and only the id is stored; the project list shows a "Has details" tag and a Details link and the edit page header links to the editor; no migration; nothing shows on the public site until P7.4 |
 
 ### Open
 
