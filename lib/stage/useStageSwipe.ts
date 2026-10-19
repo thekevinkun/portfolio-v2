@@ -7,6 +7,7 @@ import {
   SWIPE_FLICK_MIN_PX,
   SWIPE_VELOCITY,
 } from "./config";
+import { isStageLocked } from "./modal-guard";
 import { useStage } from "./stage-context";
 
 interface Tracking {
@@ -31,6 +32,8 @@ export function useStageSwipe(): void {
 
     const onDown = (e: PointerEvent) => {
       if (e.pointerType !== "touch") return;
+      // An open project overlay owns touch input (D117)
+      if (isStageLocked()) return reset();
       // A second finger means pinch or multi-touch: not a swipe
       if (!e.isPrimary) return reset();
 

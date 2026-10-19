@@ -527,3 +527,43 @@ body {
     opacity: 1;
   }
 }
+
+/* Project details overlay (P7.4a, D115): a native <dialog> in the top layer.
+   data-state is closed | opening | open | closing; only "open" shows it, so
+   opening and closing play the same transition. Transform and opacity only. */
+:root {
+  --duration-overlay: 400ms;
+  --overlay-rise: 24px;
+  --overlay-scale: 0.98;
+}
+
+dialog[data-details-overlay] {
+  opacity: 0;
+  transform: translate3d(0, var(--overlay-rise), 0) scale(var(--overlay-scale));
+  transition:
+    opacity var(--duration-overlay) var(--ease-out-expo),
+    transform var(--duration-overlay) var(--ease-out-expo);
+}
+
+dialog[data-details-overlay][data-state="open"] {
+  opacity: 1;
+  transform: none;
+}
+
+dialog[data-details-overlay]::backdrop {
+  background: rgb(0 0 0 / 0);
+  transition: background-color var(--duration-overlay) linear;
+}
+
+dialog[data-details-overlay][data-state="open"]::backdrop {
+  background: rgb(0 0 0 / 0.7);
+}
+
+/* Reduced motion: a short fade only, no rise or scale */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-overlay: 150ms;
+    --overlay-rise: 0px;
+    --overlay-scale: 1;
+  }
+}

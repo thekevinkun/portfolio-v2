@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { SECTION_COUNT } from "./config";
+import { isStageLocked } from "./modal-guard";
 import { canInnerScroll } from "./scroll-guard";
 import { useStage } from "./stage-context";
 
@@ -47,6 +48,8 @@ export function useStageKeys(): void {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
+      // An open project overlay owns the keyboard (D117)
+      if (isStageLocked()) return;
       // Held keys must not race through pages
       if (e.defaultPrevented || e.repeat) return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;

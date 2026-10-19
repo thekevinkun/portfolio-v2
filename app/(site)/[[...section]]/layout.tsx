@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Dock, StatusFooter, TabBar, TopBar } from "@/components/chrome";
+import { ProjectDetailsProvider } from "@/components/details";
 import {
   StageFocus,
   StageInputs,
@@ -8,7 +9,7 @@ import {
   StageUrlSync,
 } from "@/components/stage";
 import { StageBackground } from "@/components/ui";
-import { getProfile } from "@/lib/db/queries";
+import { getProfile, getProjectDetails } from "@/lib/db/queries";
 import { getSectionIndex } from "@/lib/stage/section-index";
 import { getSectionTitles } from "@/lib/stage/section-title";
 
@@ -18,29 +19,35 @@ interface SiteLayoutProps {
 }
 
 // Public site only. Chrome and Stage share one provider; the URL sets the
-// initial page so the server renders the right panel with no flash.
+// initial page so the server renders the right panel with no flash. The
+// project details overlay (D114) wraps everything, so any panel can open it.
 export default async function SiteLayout({
   children,
   params,
 }: SiteLayoutProps) {
   const { section } = await params;
   const initialIndex = Math.max(0, getSectionIndex(section));
-  const profile = await getProfile();
+  const [profile, detailEntries] = await Promise.all([
+    getProfile(),
+    getProjectDetails(),
+  ]);
 
   return (
     <StageProvider initialIndex={initialIndex}>
-      <StageInputs />
-      <StageUrlSync titles={getSectionTitles(profile)} />
-      <StageFocus />
-      <StageLiveRegion />
-      <StageBackground />
-      <div className="flex h-dvh flex-col overflow-hidden">
-        <TopBar profile={profile} />
-        <Dock />
-        <div className="relative min-h-0 flex-1">{children}</div>
-        <StatusFooter profile={profile} />
-        <TabBar />
-      </div>
+      <ProjectDetailsProvider entries={detailEntries}>
+        <StageInputs />
+        <StageUrlSync titles={getSectionTitles(profile)} />
+        <StageFocus />
+        <StageLiveRegion />
+        <StageBackground />
+        <div className="flex h-dvh flex-col overflow-hidden">
+          <TopBar profile={profile} />
+          <Dock />
+          <div className="relative min-h-0 flex-1">{children}</div>
+          <StatusFooter profile={profile} />
+          <TabBar />
+        </div>
+      </ProjectDetailsProvider>
     </StageProvider>
   );
 }
