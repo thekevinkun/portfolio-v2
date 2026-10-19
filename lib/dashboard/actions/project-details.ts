@@ -2,6 +2,8 @@
 
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { deleteBlobs } from "@/lib/blob/cleanup";
+import { isBlobUrl } from "@/lib/blob/url";
 import { db } from "@/lib/db";
 import * as t from "@/lib/db/schema";
 import { detailsOrNull, projectDetailsSchema } from "@/validators/details";
@@ -20,7 +22,7 @@ export const updateProjectDetails = adminAction(
   inputSchema,
   async ({ slug, details }) => {
     const [row] = await db
-      .select({ id: t.projects.id })
+      .select({ id: t.projects.id, details: t.projects.details })
       .from(t.projects)
       .where(eq(t.projects.slug, slug));
     if (!row) return fail("Project not found.");
@@ -29,6 +31,14 @@ export const updateProjectDetails = adminAction(
       .update(t.projects)
       .set({ details: detailsOrNull(details) })
       .where(eq(t.projects.slug, slug));
-    return ok();
+
+    // Screenshot files that are no longer listed go after the save succeeded
+    // (D101); site paths are never deleted
+    const kept = new Set(details.screenshots.map((shot) => shot.url));
+    const removed = (row.details?.screenshots ?? [])
+      .map((shot) => shot.url)
+      .filter((url) => !kept.has(url) && isBlobUrl(url));
+    const cleanupFailed = !(await deleteBlobs(removed));
+    return ok({ cleanupFailed });
   },
 );

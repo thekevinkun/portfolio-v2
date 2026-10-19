@@ -139,15 +139,25 @@ export const deleteProject = adminAction(
   z.object({ id: z.uuid() }),
   async ({ id }) => {
     const [row] = await db
-      .select({ iconUrl: t.projects.iconUrl, logoUrl: t.projects.logoUrl })
+      .select({
+        iconUrl: t.projects.iconUrl,
+        logoUrl: t.projects.logoUrl,
+        details: t.projects.details,
+      })
       .from(t.projects)
       .where(eq(t.projects.id, id));
     if (!row) return fail("Project not found.");
 
     await db.delete(t.projects).where(eq(t.projects.id, id));
 
-    // The icon and logo files go with the project
-    await deleteBlobs(blobFiles(row.iconUrl, row.logoUrl));
+    // The icon, logo and screenshot files go with the project
+    await deleteBlobs(
+      blobFiles(
+        row.iconUrl,
+        row.logoUrl,
+        ...(row.details?.screenshots ?? []).map((shot) => shot.url),
+      ),
+    );
     return ok();
   },
 );
