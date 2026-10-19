@@ -5,9 +5,14 @@ export type ProfileAssetKind = (typeof PROFILE_ASSET_KINDS)[number];
 export const PROJECT_ASSET_KINDS = ["icon", "logo"] as const;
 export type ProjectAssetKind = (typeof PROJECT_ASSET_KINDS)[number];
 
+// Screenshots in a project's details (D120)
+export const DETAIL_ASSET_KINDS = ["screenshot"] as const;
+export type DetailAssetKind = (typeof DETAIL_ASSET_KINDS)[number];
+
 export const ASSET_KINDS = [
   ...PROFILE_ASSET_KINDS,
   ...PROJECT_ASSET_KINDS,
+  ...DETAIL_ASSET_KINDS,
 ] as const;
 export type AssetKind = (typeof ASSET_KINDS)[number];
 
@@ -66,6 +71,11 @@ export const ASSET_RULES: Record<AssetKind, AssetRule> = {
     description: "Square PNG, JPEG or WebP, up to 1 MB",
   },
   logo: {
+    mimes: IMAGE_MIMES,
+    maxMb: 2,
+    description: "PNG, JPEG or WebP, up to 2 MB",
+  },
+  screenshot: {
     mimes: IMAGE_MIMES,
     maxMb: 2,
     description: "PNG, JPEG or WebP, up to 2 MB",
