@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { WHEEL_LINE_PX, WHEEL_QUIET_MS } from "./config";
+import { isStageLocked } from "./modal-guard";
 import { canInnerScroll } from "./scroll-guard";
 import { useStage } from "./stage-context";
 import {
@@ -34,6 +35,8 @@ export function useStageWheel(): void {
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
       if (e.ctrlKey) return; // pinch-zoom arrives as ctrl+wheel
+      // An open project overlay scrolls on its own (D117)
+      if (isStageLocked()) return;
 
       const factor =
         e.deltaMode === 1
