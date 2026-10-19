@@ -23,6 +23,21 @@ export function isAssetKind(value: unknown): value is AssetKind {
   );
 }
 
+// Where each kind is stored in the Blob store (D126). Project images live
+// apart from the profile files; older project icons and logos stay in
+// profile/ and keep working, since files are found by URL.
+export const ASSET_FOLDER_NAMES = ["profile", "projects"] as const;
+export type AssetFolder = (typeof ASSET_FOLDER_NAMES)[number];
+
+export const ASSET_FOLDERS: Record<AssetKind, AssetFolder> = {
+  avatar: "profile",
+  portrait: "profile",
+  resume: "profile",
+  icon: "projects",
+  logo: "projects",
+  screenshot: "projects",
+};
+
 export const ASSET_MIMES = [
   "image/png",
   "image/jpeg",
