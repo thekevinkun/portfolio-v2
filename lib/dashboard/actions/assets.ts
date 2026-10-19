@@ -8,6 +8,8 @@ import { isReferenced } from "@/lib/blob/references";
 import { sniffMime } from "@/lib/blob/sniff";
 import { isBlobUrl } from "@/lib/blob/url";
 import {
+  ASSET_FOLDERS,
+  ASSET_FOLDER_NAMES,
   ASSET_RULES,
   BYTES_PER_MB,
   MIME_EXTENSIONS,
@@ -42,12 +44,16 @@ export const uploadAsset = adminAction(
 
     // addRandomSuffix gives each upload its own URL, so a replaced file is
     // never served stale from the CDN
-    const blob = await put(`profile/${kind}.${MIME_EXTENSIONS[mime]}`, file, {
-      access: "public",
-      addRandomSuffix: true,
-      contentType: mime,
-      token: blobEnv.BLOB_READ_WRITE_TOKEN,
-    });
+    const blob = await put(
+      `${ASSET_FOLDERS[kind]}/${kind}.${MIME_EXTENSIONS[mime]}`,
+      file,
+      {
+        access: "public",
+        addRandomSuffix: true,
+        contentType: mime,
+        token: blobEnv.BLOB_READ_WRITE_TOKEN,
+      },
+    );
 
     return ok({ url: blob.url });
   },
@@ -55,11 +61,17 @@ export const uploadAsset = adminAction(
 );
 
 // Deletes an upload that was never saved (the user uploaded again or pressed
-// Remove). Only files under profile/, and never one a saved row uses.
+// Remove). Only files under profile/ or projects/, and never one a saved row
+// uses.
 export const discardAsset = adminAction(
   z.object({ url: z.string() }),
   async ({ url }) => {
-    if (!isBlobUrl(url) || !new URL(url).pathname.startsWith("/profile/")) {
+    if (
+      !isBlobUrl(url) ||
+      !ASSET_FOLDER_NAMES.some((folder) =>
+        new URL(url).pathname.startsWith(`/${folder}/`),
+      )
+    ) {
       return fail("Not an uploaded file.");
     }
     if (await isReferenced(url)) return fail("That file is in use.");

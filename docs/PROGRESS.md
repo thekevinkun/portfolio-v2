@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-16
-**Current phase / step:** P7.3b
+**Last updated:** 2026-10-19
+**Current phase / step:** P7.4a
 **Mode default:** Build
 
 ---
@@ -18,7 +18,7 @@
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
 | P6    | Polish & finish          | ⬜ Not started |                                             |
-| P7    | Project details          | 🟦 In progress | P7.3a done (D125); next P7.3b               |
+| P7    | Project details          | 🟦 In progress | P7.3b done (D126); next P7.4a               |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
@@ -30,7 +30,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P7.2a Types, limits, Zod schema (`hasDetails` moved to P7.2b, D123)
 - [x] P7.2b Column and migration (dev, then production), `hasDetails`, queries
 - [x] P7.3a Dashboard editor: text, role, timeframe, video id
-- [ ] P7.3b Screenshots: upload, captions, reorder, references
+- [x] P7.3b Screenshots: upload, captions, reorder, references
 - [ ] P7.4a Overlay shell: dialog, animation, history, Stage guard
 - [ ] P7.4b Overlay content and layouts
 - [ ] P7.5 Triggers on cards, YouTube facade, performance pass
@@ -55,7 +55,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
 - D82–D111: see CLAUDE.md §10.
-- D112–D125: see CLAUDE.md §10.
+- D112–D126: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -105,7 +105,7 @@ None. O4 and O5 settled (D73, D74).
 - The project logo (the large image) is stored but shown nowhere until P7 (D104, D106)
 - Categories: hiding one removes its tab only, its projects stay visible (D105); the tabs wrap onto more lines and were fit-checked with eight tabs at the five QA viewports, more than that is untested
 - Tech Stack icons: a brand missing from the installed `react-icons` Simple Icons set falls back to a letter; type a different brand, a lucide name or `lucide:<name>` in the item's icon box (D108)
-- Uploads keep the `profile/` path prefix even for project screenshots (D120); only the name is misleading, and `discardAsset` relies on it
+- Project icons and logos uploaded before P7.3b still sit in `profile/` in the Blob store; new project images go to `projects/` (D126), and `discardAsset` accepts both folders
 - Details editor: edits are lost if you leave the page before saving (no unsaved-changes warning)
 
 ---
@@ -131,6 +131,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-19 — P7.3b
+Done:
+- Screenshots in the details editor: up to 8, added several at once, 16:10 preview, alt text (required) and caption, up/down reorder, remove; upload on Save with progress and rollback
+- New upload kind `screenshot`; project icons, logos and screenshots now go to `projects/` in the Blob store, profile files stay in `profile/`
+- Removed screenshot files deleted after the save; `deleteProject` also deletes them; `isReferenced` checks screenshots inside `details`
+Files created/changed:
+- types/assets.ts; lib/blob/references.ts; lib/dashboard/actions/{assets,project-details,projects}.ts; components/dashboard/{ScreenshotsField,DetailsForm}.tsx; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D126
+Verified (viewports / devices):
+- Typecheck, lint, build; temporary tsx script (not committed) checked `isReferenced` for a saved and an unknown URL; on the Neon dev branch and the dev Blob store: multi-add, 8 limit, size and type errors, reorder, alt check before upload, save and reload, rollback, removal and project-delete cleanup, folders (`projects/` and `profile/`); checked at 1440×900 and 390×844
+Known issues:
+- Older project icons and logos remain in `profile/` (D126); edits are lost if you leave the details editor before saving
+Next step (ID + one-line goal):
+- P7.4a: the overlay shell (`<dialog>`, context, animation, history entry, Stage guard, focus)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: app/(site)/[[...section]]/layout.tsx, page.tsx, components/stage/StageTrack.tsx, StageUrlSync.tsx, StageInputs.tsx, lib/stage/sections.ts, scroll-guard.ts, useStageKeys.ts, useStageWheel.ts, useStageSwipe.ts, types/stage.ts, types/projects.ts, types/details.ts, lib/db/queries.ts, components/panels/ProjectsPanel.tsx, ProjectCard.tsx, FeaturedProjectCard.tsx, index.ts, components/ui/index.ts, Button.tsx, GlassCard.tsx, Pill.tsx, app/globals.css. Phase: P7 — Project details. Step: P7.4a. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the overlay shell (D114–D117): one native `<dialog>` mounted once outside the Stage panels with a context to open it by slug, the open and close animation (`--duration-overlay`, reduced motion), the history entry and Back behavior with the leftover-marker cleanup, `data-stage-locked` with `lib/stage/modal-guard.ts` used by the key, wheel and swipe hooks, focus return, `data-stage-scroll`, a temporary open trigger and placeholder content.
 
 ### Handoff — 2026-10-16 — P7.3a
 Done:
@@ -168,21 +186,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: types/details.ts, types/limits.ts, types/admin.ts, validators/details.ts, validators/shared.ts, lib/db/admin-queries.ts, lib/dashboard/admin-action.ts, lib/dashboard/actions/projects.ts, lib/dashboard/form-data.ts, lib/dashboard/form-errors.ts, lib/dashboard/list.ts, components/dashboard/ProjectForm.tsx, ProjectRow.tsx, TextField.tsx, FormSection.tsx, ui/index.ts, app/dashboard/(admin)/projects/page.tsx, app/dashboard/(admin)/projects/[slug]/page.tsx. Phase: P7 — Project details. Step: P7.3a. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the details editor at /dashboard/projects/<slug>/details with `updateProjectDetails` (adminAction, projectDetailsSchema, detailsOrNull): problem, role, timeframe, features and notes with up/down reorder, a YouTube URL or id field that stores only the id, existing screenshots passed through unchanged, a link from the project form and a "Has details" tag in the list.
   
 ### Handoff — 2026-10-16 — P7.2a
-Done:
-- `ProjectDetails` types, `YOUTUBE_ID_PATTERN`, the D112 limits and `projectDetailsSchema` with `detailsOrNull`; no database change
-- `hasDetails` moved to P7.2b (D123)
-Files created/changed:
-- types/details.ts (new); types/limits.ts; validators/details.ts (new); docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D123
-Verified (viewports / devices):
-- Typecheck, lint, build; a temporary tsx script (not committed) checked valid and invalid details, the 7th feature, the 9th screenshot, a bad video id, an unknown key, a blank and an over-long string, and a `javascript:` screenshot URL
-Known issues:
-- Same as the Known issues list; the details limits are estimates until the P7.4b fit check
-Next step (ID + one-line goal):
-- P7.2b: add the `details` column and migration, `hasDetails` on `Project`, `getProjectDetails()`
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: lib/db/schema.ts, lib/db/queries.ts, lib/db/admin-queries.ts, types/projects.ts, types/admin.ts, types/details.ts, validators/projects.ts, validators/details.ts, data/projects.ts, scripts/seed.ts, drizzle/0002_heavy_roulette.sql, drizzle/meta/_journal.json, drizzle.config.ts. Phase: P7 — Project details. Step: P7.2b. Mode: Build. Follow WORKFLOW.md §11. Goal: Add the nullable `details` jsonb column with a migration (dev, then production), add `hasDetails` to `Project` and fix every file that builds one, and add the cached `getProjectDetails()` query.
+- P7.2a: `ProjectDetails` types, `YOUTUBE_ID_PATTERN`, the D112 limits and `projectDetailsSchema` with `detailsOrNull`; `hasDetails` moved to P7.2b; D123.
 
 ### Handoff — 2026-10-15 — P7.1 (plan chat)
 - P7.1: planned the project details overlay (content model, loading, mount, animation, history, Stage guard, layouts, video, screenshots, editor); split P7.2–P7.5; D112–D122.
