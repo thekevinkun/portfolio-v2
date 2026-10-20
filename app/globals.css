@@ -134,6 +134,18 @@
       opacity: 0;
     }
   }
+
+  /* Slow drift of the background glow (P6.1): transform only, motion-safe */
+  --animate-ambient: ambient-drift 48s ease-in-out infinite alternate;
+
+  @keyframes ambient-drift {
+    0% {
+      transform: translate3d(-3%, -2%, 0) scale(1);
+    }
+    100% {
+      transform: translate3d(3%, 2%, 0) scale(1.04);
+    }
+  }
 }
 
 /* Motion durations (use as duration-(--duration-micro)) */
