@@ -109,6 +109,20 @@ const ProjectDetailsProvider = ({
     clearDetailsMarker();
   }, []);
 
+  // Fetch the overlay's code when the browser is idle: the pages load without
+  // it (R5) and the first open has no wait
+  useEffect(() => {
+    const load = () => void import("./ProjectDetailsContent");
+
+    if (typeof window.requestIdleCallback === "function") {
+      const id = window.requestIdleCallback(load);
+      return () => window.cancelIdleCallback(id);
+    }
+
+    const id = window.setTimeout(load, 2000);
+    return () => window.clearTimeout(id);
+  }, []);
+
   // The dialog follows the phase: opening shows it (after one layout read, so
   // the closed styles are computed first), closed hides it and frees the Stage
   useEffect(() => {
