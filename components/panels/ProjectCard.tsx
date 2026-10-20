@@ -1,5 +1,9 @@
 import Image from "next/image";
 import { ButtonLink, Chip, GlassCard, Pill } from "@/components/ui";
+import {
+  ProjectDetailsButton,
+  ProjectTitleTrigger,
+} from "@/components/details";
 import { PROJECT_STATUS_LABELS } from "@/lib/projects/filters";
 import { MAX_CARD_TECH } from "@/types/limits";
 import type { Project } from "@/types/projects";
@@ -55,7 +59,14 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
           )}
           <div className="min-w-0">
             <h3 className="text-base font-bold tracking-tight text-fg-high">
-              {project.title}
+              {project.hasDetails ? (
+                <ProjectTitleTrigger
+                  slug={project.slug}
+                  title={project.title}
+                />
+              ) : (
+                project.title
+              )}
             </h3>
             <p className="mt-1 text-xs leading-relaxed text-fg-low">
               {project.summary}
@@ -102,6 +113,9 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
             >
               {repo.label} ↗
             </ButtonLink>
+          )}
+          {project.hasDetails && (
+            <ProjectDetailsButton slug={project.slug} title={project.title} />
           )}
         </div>
       </div>
