@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-20
-**Current phase / step:** P6.1
+**Current phase / step:** P6.2
 **Mode default:** Build
 
 ---
@@ -17,7 +17,7 @@
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
-| P6    | Polish & finish          | ⬜ Not started | Next: P6.1                                  |
+| P6    | Polish & finish          | 🟦 In progress | P6.1 done (D130); next: P6.2                |
 | P7    | Project details          | ✅ Done        | Overlay live (D112–D129)                    |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
@@ -26,7 +26,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [ ] P6.1 Remaining animations: Projects counter and filter reflow, clock digits, ambient background
+- [x] P6.1 Remaining animations: rolling counter and clock digits, ambient background (D130)
 - [ ] P6.2 Performance pass: 4× throttle, Lighthouse after P7, LCP image, no unused icons, dashboard code out of public chunks
 - [ ] P6.3 Quick accessibility pass: keyboard, contrast, screen-reader spot check, including the project overlay
 - [ ] P6.4 Final content review (R4), project status check, domain decision (O5), details content for the featured projects
@@ -53,6 +53,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D64–D81: see CLAUDE.md §10.
 - D82–D111: see CLAUDE.md §10.
 - D112–D129: see CLAUDE.md §10.
+- D130: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -71,7 +72,6 @@ None. O4 and O5 settled (D73, D74).
 - Carousel: a swipe that starts on the cards can't turn the page and stops at the last card; the header, controls row, dock and tab bar still turn pages (add edge hand-off only if testing shows people getting stuck)
 - OpenAI, AWS and pgvector items keep their built-in generic icons; the editor can switch any item to a Simple Icons or lucide name (D108)
 - Projects: at 3-up the last page can repeat cards (Full Stack has 5, so page 2 shows cards 3–5)
-- Projects: filter reflow animation (auto-animate) and rolling counter digits (number-flow) wait for P6.1
 - Projects: after a filter click, later visits to Projects start their cards with no wait instead of waiting for the page slide
 - Experience: slide classes target the Learning card by position (`nth-1`), so they assume one Learning item before the Work items; revisit if the dashboard allows several (the editor edits the two existing items only, D92; several Work items arrive with the work timeline, D110, and Learning stays single)
 - Experience: in the wide layout Learning is moved last with CSS order, so reading order differs from visual order there (the cards have no links, so tab order is unaffected)
@@ -110,6 +110,8 @@ None. O4 and O5 settled (D73, D74).
 - Project overlay: a video's cover is YouTube's thumbnail, so opening the overlay on a project with a video makes one request to `i.ytimg.com` (D129)
 - Overview featured cards open the details from the title only; there is no Details button there (D129)
 - Lighthouse was not re-measured after P7 (mobile 90 or more is the P7 acceptance); do it in P6.2
+- Rolling digits: a wrap such as 9 → 0 rolls back up through the column instead of continuing downward (barely visible on the counter and the once-a-minute clock, D130)
+- `cn()` (tailwind-merge) drops a `leading-*` class when `className` has a `text-*` size; put a line height that must survive on an inner element (found in `RollingText`, D130)
 
 ---
 
@@ -134,6 +136,23 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-20 — P6.1
+Done:
+- Rolling digits (`RollingText`) for the Projects counter and the live clock, and a slow ambient drift of the background glow; no new dependencies
+- Alignment fix: the line height moved to an inner span, because `cn()` dropped it
+Files created/changed:
+- components/ui/{RollingText,Carousel,StageBackground,index}.ts(x); components/chrome/LiveClock.tsx; app/globals.css; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D130
+Verified (viewports / devices):
+- Typecheck, lint, build; counter and clock rolling, alignment on the top bar, Get In Touch and counter, background drift, reduced motion, 4× CPU throttle; Safari and Firefox spot-check is left to P6.2
+Known issues:
+- 9 → 0 rolls back up through the column; see the Known issues list
+Next step (ID + one-line goal):
+- P6.2: performance pass (Lighthouse mobile after P7, the LCP image, 4× throttle, no unused icons, dashboard code out of public chunks)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P6 section of ROADMAP.md, package.json, next.config.ts, app/layout.tsx, app/(site)/[[...section]]/layout.tsx, components/panels/OverviewPanel.tsx, components/details/ProjectDetailsProvider.tsx, components/panels/resolve-tech-icon.ts, and the Lighthouse mobile report (JSON or screenshot) for `/` and `/projects` run on the production URL. Phase: P6 — Polish & finish. Step: P6.2. Mode: Build. Follow WORKFLOW.md §11. Goal: Find and fix what holds mobile Lighthouse below 90 (LCP 3.1 s, Speed Index 4.2 s at launch), check whether the Overview portrait fade is the LCP element, confirm no unused icons or dashboard code in the public chunks, and verify the lazy overlay chunk stays out of the landing JS.
 
 ### Handoff — 2026-10-20 — P7.5 (P7 closed)
 Done:
@@ -171,23 +190,9 @@ Next step (ID + one-line goal):
 - P7.5: the Details button and title trigger on the Projects and Overview cards, the YouTube click-to-load video, and the performance pass
 Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/panels/ProjectCard.tsx, FeaturedProjectCard.tsx, ProjectsPanel.tsx, OverviewPanel.tsx, index.ts, components/details/ProjectDetailsContent.tsx, DetailsScreenshots.tsx, DetailsFacts.tsx, ProjectDetailsProvider.tsx, lib/details/details-context.ts, types/projects.ts, types/details.ts, lib/projects/youtube.ts, components/ui/index.ts, next.config.ts, app/globals.css. Phase: P7 — Project details. Step: P7.5. Mode: Build. Follow WORKFLOW.md §11. Goal: Make the overlay reachable and finish it (D114, D119): a Details button and a title trigger on `ProjectCard` and `FeaturedProjectCard` shown only when `hasDetails` (a small client component calling `useProjectDetails().open`), the YouTube click-to-load video block in the overlay (first screenshot or a plain panel as the cover, `youtube-nocookie` embed after the click), then the fit and performance pass at the QA viewports with the Lighthouse mobile check.
-
+  
 ### Handoff — 2026-10-19 — P7.4a
-Done:
-- Overlay shell: one native `<dialog>` mounted once in the site layout by `ProjectDetailsProvider`, opened through `useProjectDetails().open(slug)`, with the open and close animation, the history entry and Back, Esc and Close handling, the Stage lock and focus return; placeholder content showing the saved write-up as plain text
-- `lib/stage/modal-guard.ts` used by the key, wheel and swipe hooks
-Files created/changed:
-- lib/stage/{modal-guard,useStageKeys,useStageWheel,useStageSwipe}.ts; types/overlay.ts; lib/details/{config,motion,history,details-context}.ts; components/details/{ProjectDetailsProvider,ProjectDetailsOverlay,ProjectDetailsContent}.tsx, index.ts; app/globals.css; app/(site)/[[...section]]/layout.tsx; docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D127 (amends D116: the leftover-marker cleanup does not remove the extra history entry after a reload)
-Verified (viewports / devices):
-- Typecheck, lint, build; a temporary trigger (not committed, discarded) on the Neon dev branch: open, close, Esc, Back, Forward, reload while open, fast open and close, Back not disturbing the Stage page, keys, wheel and swipe locked, dock inert, overlay scroll and keyboard scroll, focus in and out, reduced motion, 4× CPU throttle; checked at 1440×900 and 390×844
-Known issues:
-- One Back after a reload while the overlay is open stays on the same page (D127); nothing opens the overlay until P7.5
-Next step (ID + one-line goal):
-- P7.4b: the real overlay content and both layouts (header, two columns from 1024 px, one column below, screenshots, tech, facts), with fit measured at the QA viewports
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/details/ProjectDetailsContent.tsx, ProjectDetailsOverlay.tsx, ProjectDetailsProvider.tsx, types/projects.ts, types/details.ts, lib/projects/filters.ts, components/ui/Carousel.tsx, Chip.tsx, Button.tsx, Pill.tsx, GlassCard.tsx, app/globals.css, next.config.ts. Phase: P7 — Project details. Step: P7.4b. Mode: Build. Follow WORKFLOW.md §11. Goal: Replace the placeholder with the real overlay content (D118): header with logo, kicker, status, title, summary and the Live demo and Repo buttons; from 1024 px two columns (left: problem, what it does as a two-column grid, engineering notes; right: screenshots in the Carousel with a 16:10 frame and captions, an "At a glance" card with status, category, role and timeframe, and all tech chips); one column below 1024 px; sections hidden when empty; next/image for the logo and screenshots; measure the layout at the QA viewports.
+- P7.4a: overlay shell (one native `<dialog>`, open and close animation, history entry, Stage lock, focus return); D127.
 
 ### Handoff — 2026-10-19 — P7.3b
 - P7.3b: screenshots in the details editor (up to 8, alt text, caption, reorder, upload on Save with rollback), `screenshot` upload kind, project images stored under `projects/`, removed files deleted, `isReferenced` checks `details`; D126.
