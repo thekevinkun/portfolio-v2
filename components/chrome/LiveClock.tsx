@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { RollingText } from "@/components/ui";
 import { cn } from "@/lib/cn";
 
 interface LiveClockProps {
@@ -52,9 +53,10 @@ const LiveClock = ({ timeZone, className }: LiveClockProps) => {
   );
 
   return (
-    <span className={cn("font-mono tabular-nums", className)}>
-      {time ?? "--:-- --"}
-    </span>
+    <RollingText
+      value={time ?? "--:-- --"}
+      className={cn("font-mono tabular-nums", className)}
+    />
   );
 };
 
