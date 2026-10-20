@@ -279,7 +279,7 @@ const DetailsForm = ({ project }: { project: AdminProject }) => {
 
       <FormSection
         title="What it does"
-        description={`Up to ${MAX_DETAIL_FEATURES} features. A short title and one or two sentences each.`}
+        description={`Up to ${MAX_DETAIL_SCREENSHOTS}. Shown in a carousel on the project page, and full size when a visitor clicks one.`}
       >
         <TitledRows
           idPrefix="feature"

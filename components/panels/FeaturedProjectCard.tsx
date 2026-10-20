@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ButtonLink, GlassCard } from "@/components/ui";
+import { ProjectTitleTrigger } from "@/components/details";
 import type { Project } from "@/types/projects";
 
 interface FeaturedProjectCardProps {
@@ -71,7 +72,15 @@ const FeaturedProjectCard = ({ project }: FeaturedProjectCardProps) => {
         )}
         <div className="min-w-0">
           <h2 className="text-base font-bold tracking-tight text-fg-high">
-            {project.title}
+            {project.hasDetails ? (
+              <ProjectTitleTrigger
+                slug={project.slug}
+                title={project.title}
+                arrow
+              />
+            ) : (
+              project.title
+            )}
           </h2>
           <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-fg-low">
             {project.summary}

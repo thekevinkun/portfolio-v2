@@ -1,9 +1,13 @@
 import { X } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useId, type RefObject } from "react";
 import { Button } from "@/components/ui";
-import ProjectDetailsContent from "./ProjectDetailsContent";
 import type { OverlayPhase } from "@/types/overlay";
 import type { ProjectDetailsEntry } from "@/types/projects";
+
+// The content (screenshots, viewer, video) is not needed to show the pages, so
+// it loads as its own chunk; the provider fetches it when the browser is idle
+const ProjectDetailsContent = dynamic(() => import("./ProjectDetailsContent"));
 
 interface ProjectDetailsOverlayProps {
   dialogRef: RefObject<HTMLDialogElement | null>;

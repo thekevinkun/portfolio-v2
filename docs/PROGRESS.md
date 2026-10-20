@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-20
-**Current phase / step:** P7.5
+**Current phase / step:** P6.1
 **Mode default:** Build
 
 ---
@@ -17,8 +17,8 @@
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
-| P6    | Polish & finish          | ⬜ Not started |                                             |
-| P7    | Project details          | 🟦 In progress | P7.4b done (D128); next P7.5                |
+| P6    | Polish & finish          | ⬜ Not started | Next: P6.1                                  |
+| P7    | Project details          | ✅ Done        | Overlay live (D112–D129)                    |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
@@ -26,14 +26,11 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 ## Current phase checklist
 
-- [x] P7.1 Plan chat (no code): D112–D122
-- [x] P7.2a Types, limits, Zod schema (`hasDetails` moved to P7.2b, D123)
-- [x] P7.2b Column and migration (dev, then production), `hasDetails`, queries
-- [x] P7.3a Dashboard editor: text, role, timeframe, video id
-- [x] P7.3b Screenshots: upload, captions, reorder, references
-- [x] P7.4a Overlay shell: dialog, animation, history, Stage guard
-- [x] P7.4b Overlay content and layouts
-- [ ] P7.5 Triggers on cards, YouTube facade, performance pass
+- [ ] P6.1 Remaining animations: Projects counter and filter reflow, clock digits, ambient background
+- [ ] P6.2 Performance pass: 4× throttle, Lighthouse after P7, LCP image, no unused icons, dashboard code out of public chunks
+- [ ] P6.3 Quick accessibility pass: keyboard, contrast, screen-reader spot check, including the project overlay
+- [ ] P6.4 Final content review (R4), project status check, domain decision (O5), details content for the featured projects
+- [ ] P6.5 README.md and PROGRESS.md to complete
 
 ---
 
@@ -55,7 +52,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
 - D82–D111: see CLAUDE.md §10.
-- D112–D128: see CLAUDE.md §10.
+- D112–D129: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -102,13 +99,17 @@ None. O4 and O5 settled (D73, D74).
 - Unused files in `public/`: the five default Next SVGs (`file`, `globe`, `next`, `vercel`, `window`) and `placeholder/avatar.svg`; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
 - Content changes go through the dashboard; `data/` is seed input for a fresh database only, and `db:seed --update` needs `--yes-overwrite` (D97, D111)
 - Lighthouse at launch: mobile 92 / 98 / 100 / 100 with LCP 3.1 s and Speed Index 4.2 s red; the Overview portrait fade is the suspect (P6.2); accessibility 98 (P6.3)
-- The project logo (a wide image with the name) shows only at the top right of the project overlay (D128); nothing opens the overlay until P7.5, and a logo with dark text disappears on the dark page, so it needs a light version
+- The project logo (a wide image with the name) shows only at the top right of the project overlay (D128); a logo with dark text disappears on the dark page, so it needs a light version
 - Categories: hiding one removes its tab only, its projects stay visible (D105); the tabs wrap onto more lines and were fit-checked with eight tabs at the five QA viewports, more than that is untested
 - Tech Stack icons: a brand missing from the installed `react-icons` Simple Icons set falls back to a letter; type a different brand, a lucide name or `lucide:<name>` in the item's icon box (D108)
 - Project icons and logos uploaded before P7.3b still sit in `profile/` in the Blob store; new project images go to `projects/` (D126), and `discardAsset` accepts both folders
 - Details editor: edits are lost if you leave the page before saving (no unsaved-changes warning)
 - Project overlay: after a reload while it is open, the history entry it added stays, so one Back goes to the same page (D127); the overlay has no deep link
-- Project overlay: a saved video id shows nothing until the YouTube facade in P7.5; the screenshot viewer loads the original file (up to 2 MB), only after the first click
+- Project overlay: the screenshot viewer loads the original file (up to 2 MB), only after the first click
+- Project overlay: the video keeps playing under the screenshot viewer, and Esc does not close the overlay while focus is inside the YouTube player (click outside it first)
+- Project overlay: a video's cover is YouTube's thumbnail, so opening the overlay on a project with a video makes one request to `i.ytimg.com` (D129)
+- Overview featured cards open the details from the title only; there is no Details button there (D129)
+- Lighthouse was not re-measured after P7 (mobile 90 or more is the P7 acceptance); do it in P6.2
 
 ---
 
@@ -133,6 +134,25 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-20 — P7.5 (P7 closed)
+Done:
+- The overlay is reachable: a title trigger and a secondary Details button on the Projects cards, a title trigger with an arrow on the Overview featured cards, both only when the project has details
+- "Demo video" block: YouTube's own thumbnail as the cover (with `hqdefault` and plain-panel fallbacks), click-to-load `youtube-nocookie` player, stops when the overlay closes, "Watch on YouTube" link
+- The overlay content loads as its own chunk and is fetched when the browser is idle
+- Stale editor hint about the video cover removed
+Files created/changed:
+- components/details/{ProjectDetailsButton,ProjectTitleTrigger,DetailsVideo}.tsx, index.ts, DetailsScreenshots.tsx, ProjectDetailsContent.tsx, ProjectDetailsOverlay.tsx, ProjectDetailsProvider.tsx; lib/details/config.ts; components/panels/{ProjectCard,FeaturedProjectCard}.tsx; components/dashboard/DetailsForm.tsx; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
+Decisions:
+- D129 (amends D119)
+Verified (viewports / devices):
+- Typecheck, lint, build; on the Neon dev branch: triggers on both pages, projects with and without details and with and without a video, no player request before the click, `ytimg` cover with both fallbacks (blocked requests), video stops on close, cover and first screenshot differ; details data measured at 5,014 bytes for two projects; fit slack and Lighthouse numbers were not recorded
+Known issues:
+- Same as the Known issues list; Lighthouse after P7 is to be measured in P6.2
+Next step (ID + one-line goal):
+- P6.1: the remaining animations (Projects counter and filter reflow, clock digits, ambient background)
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P6 section of ROADMAP.md, package.json, components/ui/Carousel.tsx, components/panels/ProjectsPanel.tsx, components/chrome/TopBar.tsx, components/ui/StageBackground.tsx, app/globals.css, lib/reveal.ts. Phase: P6 — Polish & finish. Step: P6.1. Mode: Build. Follow WORKFLOW.md §11. Goal: Add the remaining animations from the catalog (E, F, G): the Projects filter reflow with auto-animate, the rolling digits for the `01 / 04` counter and the clock, and the slow ambient background drift, each CSS-first or tiny, reduced-motion safe and checked at 4× CPU throttle; log new dependencies under R9.
 
 ### Handoff — 2026-10-20 — P7.4b
 Done:
@@ -170,22 +190,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/details/ProjectDetailsContent.tsx, ProjectDetailsOverlay.tsx, ProjectDetailsProvider.tsx, types/projects.ts, types/details.ts, lib/projects/filters.ts, components/ui/Carousel.tsx, Chip.tsx, Button.tsx, Pill.tsx, GlassCard.tsx, app/globals.css, next.config.ts. Phase: P7 — Project details. Step: P7.4b. Mode: Build. Follow WORKFLOW.md §11. Goal: Replace the placeholder with the real overlay content (D118): header with logo, kicker, status, title, summary and the Live demo and Repo buttons; from 1024 px two columns (left: problem, what it does as a two-column grid, engineering notes; right: screenshots in the Carousel with a 16:10 frame and captions, an "At a glance" card with status, category, role and timeframe, and all tech chips); one column below 1024 px; sections hidden when empty; next/image for the logo and screenshots; measure the layout at the QA viewports.
 
 ### Handoff — 2026-10-19 — P7.3b
-Done:
-- Screenshots in the details editor: up to 8, added several at once, 16:10 preview, alt text (required) and caption, up/down reorder, remove; upload on Save with progress and rollback
-- New upload kind `screenshot`; project icons, logos and screenshots now go to `projects/` in the Blob store, profile files stay in `profile/`
-- Removed screenshot files deleted after the save; `deleteProject` also deletes them; `isReferenced` checks screenshots inside `details`
-Files created/changed:
-- types/assets.ts; lib/blob/references.ts; lib/dashboard/actions/{assets,project-details,projects}.ts; components/dashboard/{ScreenshotsField,DetailsForm}.tsx; docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D126
-Verified (viewports / devices):
-- Typecheck, lint, build; temporary tsx script (not committed) checked `isReferenced` for a saved and an unknown URL; on the Neon dev branch and the dev Blob store: multi-add, 8 limit, size and type errors, reorder, alt check before upload, save and reload, rollback, removal and project-delete cleanup, folders (`projects/` and `profile/`); checked at 1440×900 and 390×844
-Known issues:
-- Older project icons and logos remain in `profile/` (D126); edits are lost if you leave the details editor before saving
-Next step (ID + one-line goal):
-- P7.4a: the overlay shell (`<dialog>`, context, animation, history entry, Stage guard, focus)
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: app/(site)/[[...section]]/layout.tsx, page.tsx, components/stage/StageTrack.tsx, StageUrlSync.tsx, StageInputs.tsx, lib/stage/sections.ts, scroll-guard.ts, useStageKeys.ts, useStageWheel.ts, useStageSwipe.ts, types/stage.ts, types/projects.ts, types/details.ts, lib/db/queries.ts, components/panels/ProjectsPanel.tsx, ProjectCard.tsx, FeaturedProjectCard.tsx, index.ts, components/ui/index.ts, Button.tsx, GlassCard.tsx, Pill.tsx, app/globals.css. Phase: P7 — Project details. Step: P7.4a. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the overlay shell (D114–D117): one native `<dialog>` mounted once outside the Stage panels with a context to open it by slug, the open and close animation (`--duration-overlay`, reduced motion), the history entry and Back behavior with the leftover-marker cleanup, `data-stage-locked` with `lib/stage/modal-guard.ts` used by the key, wheel and swipe hooks, focus return, `data-stage-scroll`, a temporary open trigger and placeholder content.
+- P7.3b: screenshots in the details editor (up to 8, alt text, caption, reorder, upload on Save with rollback), `screenshot` upload kind, project images stored under `projects/`, removed files deleted, `isReferenced` checks `details`; D126.
 
 ### Handoff — 2026-10-16 — P7.3a
 - P7.3a: details editor at `/dashboard/projects/<slug>/details` (overview fields, features and notes with reorder, YouTube link or id), `updateProjectDetails`, "Has details" tag and links in the project list; D125.
