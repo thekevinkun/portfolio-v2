@@ -6,3 +6,6 @@ export const OVERLAY_CLOSE_PADDING_MS = 50;
 
 // If history.back() never reports a popstate, the overlay closes anyway
 export const HISTORY_BACK_FALLBACK_MS = 300;
+
+// Used only when --duration-lightbox cannot be read (CSS owns the real value)
+export const DEFAULT_LIGHTBOX_DURATION_MS = 250;

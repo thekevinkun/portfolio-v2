@@ -567,3 +567,28 @@ dialog[data-details-overlay][data-state="open"]::backdrop {
     --overlay-scale: 1;
   }
 }
+
+/* Screenshot viewer (D128): a second native <dialog> above the details
+   overlay. It covers the screen itself, so only the dialog fades. */
+:root {
+  --duration-lightbox: 250ms;
+}
+
+dialog[data-lightbox] {
+  opacity: 0;
+  transition: opacity var(--duration-lightbox) var(--ease-out-expo);
+}
+
+dialog[data-lightbox][data-state="open"] {
+  opacity: 1;
+}
+
+dialog[data-lightbox]::backdrop {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-lightbox: 150ms;
+  }
+}

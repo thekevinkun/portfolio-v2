@@ -334,7 +334,7 @@ const ProjectForm = ({
 
       <FormSection
         title="Images"
-        description="The icon is the small square on the cards; without one, the first letter of the title is used. The logo is the large image for the project details, which arrive later."
+        description="The icon is the small square on the cards; without one, the first letter of the title is used. The logo is the wide image (icon and name) shown at the top right of the project details, straight on the dark page with no box: use a transparent PNG or WebP with light colors."
       >
         {PROJECT_ASSET_KINDS.map((kind) => (
           <AssetField
