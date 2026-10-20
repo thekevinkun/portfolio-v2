@@ -151,7 +151,7 @@ Designed in the P5.6 discussion (D110). No migration: kinds and dates exist.
 | Step | Task |
 |---|---|
 | P6.1 | Remaining animations: carousel counter + filter reflow (E), live clock digits (F), ambient background (G); optional boot intro and portrait parallax. |
-| P6.2 | Perf pass at 4× throttle; confirm `LazyMotion`, no unused icons, dashboard code not in public chunks; image sizes/priority for the LCP image. Launch measurement: mobile LCP 3.1 s, Speed Index 4.2 s; check whether the Overview portrait fade is the LCP element. |
+| P6.2 | Perf pass at 4× throttle; confirm `LazyMotion`, no unused icons, dashboard code not in public chunks; image sizes/priority for the LCP image. Launch measurement: mobile LCP 3.1 s, Speed Index 4.2 s; check whether the Overview portrait fade is the LCP element. Re-run Lighthouse mobile on `/` and `/projects` after P7 (the P7 acceptance asks for 90 or more; it was not measured in P7.5) and confirm the lazy overlay chunk stays out of the landing JS. |
 | P6.3 | Quick a11y pass (keyboard, contrast, screen-reader spot check). |
 | P6.4 | Final content review (R4) and project status check; optional `@vercel/analytics`; domain decision (O5). |
 | P6.5 | Short `README.md`; update `PROGRESS.md` to complete. |
