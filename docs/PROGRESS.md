@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-19
-**Current phase / step:** P7.4b
+**Last updated:** 2026-10-20
+**Current phase / step:** P7.5
 **Mode default:** Build
 
 ---
@@ -18,7 +18,7 @@
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
 | P6    | Polish & finish          | ⬜ Not started |                                             |
-| P7    | Project details          | 🟦 In progress | P7.4a done (D127); next P7.4b               |
+| P7    | Project details          | 🟦 In progress | P7.4b done (D128); next P7.5                |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
@@ -32,7 +32,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P7.3a Dashboard editor: text, role, timeframe, video id
 - [x] P7.3b Screenshots: upload, captions, reorder, references
 - [x] P7.4a Overlay shell: dialog, animation, history, Stage guard
-- [ ] P7.4b Overlay content and layouts
+- [x] P7.4b Overlay content and layouts
 - [ ] P7.5 Triggers on cards, YouTube facade, performance pass
 
 ---
@@ -55,7 +55,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D54–D63: see CLAUDE.md §10.
 - D64–D81: see CLAUDE.md §10.
 - D82–D111: see CLAUDE.md §10.
-- D112–D127: see CLAUDE.md §10.
+- D112–D128: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -102,12 +102,13 @@ None. O4 and O5 settled (D73, D74).
 - Unused files in `public/`: the five default Next SVGs (`file`, `globe`, `next`, `vercel`, `window`) and `placeholder/avatar.svg`; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
 - Content changes go through the dashboard; `data/` is seed input for a fresh database only, and `db:seed --update` needs `--yes-overwrite` (D97, D111)
 - Lighthouse at launch: mobile 92 / 98 / 100 / 100 with LCP 3.1 s and Speed Index 4.2 s red; the Overview portrait fade is the suspect (P6.2); accessibility 98 (P6.3)
-- The project logo (the large image) is stored but shown nowhere until P7 (D104, D106)
+- The project logo (a wide image with the name) shows only at the top right of the project overlay (D128); nothing opens the overlay until P7.5, and a logo with dark text disappears on the dark page, so it needs a light version
 - Categories: hiding one removes its tab only, its projects stay visible (D105); the tabs wrap onto more lines and were fit-checked with eight tabs at the five QA viewports, more than that is untested
 - Tech Stack icons: a brand missing from the installed `react-icons` Simple Icons set falls back to a letter; type a different brand, a lucide name or `lucide:<name>` in the item's icon box (D108)
 - Project icons and logos uploaded before P7.3b still sit in `profile/` in the Blob store; new project images go to `projects/` (D126), and `discardAsset` accepts both folders
 - Details editor: edits are lost if you leave the page before saving (no unsaved-changes warning)
 - Project overlay: after a reload while it is open, the history entry it added stays, so one Back goes to the same page (D127); the overlay has no deep link
+- Project overlay: a saved video id shows nothing until the YouTube facade in P7.5; the screenshot viewer loads the original file (up to 2 MB), only after the first click
 
 ---
 
@@ -132,6 +133,24 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-20 — P7.4b
+Done:
+- Real overlay content: header with kicker, status, category, title, summary and link buttons; written part (problem, what it does, engineering notes); screenshots carousel; at a glance and all tech chips; two columns from 1024 px, one column below, empty blocks hidden
+- Wide logo at the top right of the header (above the title on phones), plain with no box
+- Screenshot viewer: full-screen second dialog with the original image, counter, caption, arrows, keys, swipe and a thumbnail strip; Esc and Close close only the viewer
+Files created/changed:
+- lib/details/{paragraphs,useLightbox,config,motion}.ts; components/details/{DetailsSection,DetailsHeader,DetailsScreenshots,DetailsFacts,DetailsStory,ScreenshotLightbox,ProjectDetailsContent,ProjectDetailsOverlay}.tsx; components/dashboard/ProjectForm.tsx (logo text); app/globals.css; docs (CLAUDE.md, PROGRESS.md)
+Decisions:
+- D128 (amends D104, D118, D120)
+Verified (viewports / devices):
+- Typecheck, lint, build; a temporary trigger (not committed, discarded) on the Neon dev branch; no sideways scroll at 1440×900, 1280×720, 1024×768, 768×1024, 390×844 and 360×640 (`scrollW` equals `clientW`); two-column and one-column layouts, hidden sections, logo sizes and positions, viewer open, close, keys, swipe, thumbnails, focus and carousel return, Stage lock, reduced motion, 4× CPU throttle
+Known issues:
+- A saved video id shows nothing until P7.5; nothing opens the overlay until P7.5; a logo with dark text disappears on the dark page
+Next step (ID + one-line goal):
+- P7.5: the Details button and title trigger on the Projects and Overview cards, the YouTube click-to-load video, and the performance pass
+Prompt for the next chat:
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/panels/ProjectCard.tsx, FeaturedProjectCard.tsx, ProjectsPanel.tsx, OverviewPanel.tsx, index.ts, components/details/ProjectDetailsContent.tsx, DetailsScreenshots.tsx, DetailsFacts.tsx, ProjectDetailsProvider.tsx, lib/details/details-context.ts, types/projects.ts, types/details.ts, lib/projects/youtube.ts, components/ui/index.ts, next.config.ts, app/globals.css. Phase: P7 — Project details. Step: P7.5. Mode: Build. Follow WORKFLOW.md §11. Goal: Make the overlay reachable and finish it (D114, D119): a Details button and a title trigger on `ProjectCard` and `FeaturedProjectCard` shown only when `hasDetails` (a small client component calling `useProjectDetails().open`), the YouTube click-to-load video block in the overlay (first screenshot or a plain panel as the cover, `youtube-nocookie` embed after the click), then the fit and performance pass at the QA viewports with the Lighthouse mobile check.
 
 ### Handoff — 2026-10-19 — P7.4a
 Done:
@@ -169,21 +188,7 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: app/(site)/[[...section]]/layout.tsx, page.tsx, components/stage/StageTrack.tsx, StageUrlSync.tsx, StageInputs.tsx, lib/stage/sections.ts, scroll-guard.ts, useStageKeys.ts, useStageWheel.ts, useStageSwipe.ts, types/stage.ts, types/projects.ts, types/details.ts, lib/db/queries.ts, components/panels/ProjectsPanel.tsx, ProjectCard.tsx, FeaturedProjectCard.tsx, index.ts, components/ui/index.ts, Button.tsx, GlassCard.tsx, Pill.tsx, app/globals.css. Phase: P7 — Project details. Step: P7.4a. Mode: Build. Follow WORKFLOW.md §11. Goal: Build the overlay shell (D114–D117): one native `<dialog>` mounted once outside the Stage panels with a context to open it by slug, the open and close animation (`--duration-overlay`, reduced motion), the history entry and Back behavior with the leftover-marker cleanup, `data-stage-locked` with `lib/stage/modal-guard.ts` used by the key, wheel and swipe hooks, focus return, `data-stage-scroll`, a temporary open trigger and placeholder content.
 
 ### Handoff — 2026-10-16 — P7.3a
-Done:
-- Details editor at `/dashboard/projects/<slug>/details`: overview fields, features and notes with reorder, video link or id, saved screenshots passed through unchanged
-- `updateProjectDetails` action; empty form saves `null`; "Has details" tag and links in the project list and edit page
-Files created/changed:
-- lib/projects/youtube.ts; lib/dashboard/actions/project-details.ts; components/dashboard/{CountedField,TitledRows,DetailsForm}.tsx, ProjectRow.tsx; app/dashboard/(admin)/projects/[slug]/details/page.tsx, [slug]/page.tsx; docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D125
-Verified (viewports / devices):
-- Typecheck, lint, build (guard check passed); a temporary tsx script (not committed) checked the YouTube parser; on the Neon dev branch: save, reload, reorder, limits, half-filled rows, video forms, clear, signed-out redirect and 404; checked at 1440×900 and 390×844
-Known issues:
-- Edits are lost if you leave before saving; nothing shows on the public site yet
-Next step (ID + one-line goal):
-- P7.3b: screenshots in the details editor (upload on Save, captions, alt text, reorder, references)
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/dashboard/DetailsForm.tsx, TitledRows.tsx, CountedField.tsx, AssetField.tsx, lib/dashboard/pending-asset.ts, lib/dashboard/actions/assets.ts, project-details.ts, projects.ts, lib/blob/references.ts, cleanup.ts, types/assets.ts, types/details.ts, types/limits.ts, validators/details.ts, next.config.ts, app/dashboard/(admin)/projects/[slug]/details/page.tsx. Phase: P7 — Project details. Step: P7.3b. Mode: Build. Follow WORKFLOW.md §11. Goal: Add up to 8 screenshots to the details editor: a `screenshot` upload kind (D120), picked files kept in the browser until Save, one upload request each with progress, alt text and caption per image, up/down reorder, rollback on failure, deletion of replaced or removed files after the save, and `isReferenced` checking screenshots inside `details`.
+- P7.3a: details editor at `/dashboard/projects/<slug>/details` (overview fields, features and notes with reorder, YouTube link or id), `updateProjectDetails`, "Has details" tag and links in the project list; D125.
 
 ### Handoff — 2026-10-16 — P7.2b
 - P7.2b: `projects.details` jsonb column (applied to production only after the merge, so the first production build failed until it ran), `StoredProject` base type with `hasDetails` on `Project`, cached `getProjectDetails()`; D124.
