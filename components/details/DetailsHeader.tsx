@@ -10,8 +10,13 @@ interface DetailsHeaderProps {
 
 const pillClass = "px-2 py-0.5 font-mono text-[10px] uppercase";
 
-// Logo, kicker, status, title, summary and the link buttons. Without a logo
-// there is no image at all.
+// The logo is wide (icon and name), shown plain on the page with no box.
+// Height grows with the width; the width is only a cap, so a wider logo
+// shrinks to fit and a squarer one stays at full height.
+const LOGO_BOX = "relative h-10 w-44 shrink-0 md:h-14 md:w-56 lg:h-20 lg:w-64";
+
+// Kicker, status, title and summary on the left; the logo at the top right
+// from 768px and above the title on phones; then the link buttons.
 const DetailsHeader = ({ entry, titleId }: DetailsHeaderProps) => {
   const live = entry.links.find((link) => link.kind === "live");
   const repo = entry.links.find((link) => link.kind === "repo");
@@ -19,19 +24,10 @@ const DetailsHeader = ({ entry, titleId }: DetailsHeaderProps) => {
 
   return (
     <header className="space-y-5">
-      <div className="flex items-start gap-4 md:gap-5">
-        {entry.logoUrl ? (
-          <div className="relative size-16 shrink-0 overflow-hidden rounded-2xl border border-glass-border bg-glass-fill md:size-20">
-            <Image
-              src={entry.logoUrl}
-              alt=""
-              fill
-              sizes="80px"
-              className="object-contain p-1.5"
-            />
-          </div>
-        ) : null}
-        <div className="min-w-0 space-y-3">
+      {/* The logo comes second in the DOM so the title is read first; it is
+          moved above on phones and to the right from md with flex order */}
+      <div className="flex flex-col-reverse gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
+        <div className="min-w-0 flex-1 space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-mono text-[10px] tracking-wider text-fg-low uppercase">
               {entry.kicker}
@@ -55,6 +51,19 @@ const DetailsHeader = ({ entry, titleId }: DetailsHeaderProps) => {
             {entry.summary}
           </p>
         </div>
+
+        {entry.logoUrl ? (
+          // Decorative: the name is already the title
+          <div aria-hidden="true" className={LOGO_BOX}>
+            <Image
+              src={entry.logoUrl}
+              alt=""
+              fill
+              sizes="256px"
+              className="object-contain object-left md:object-right"
+            />
+          </div>
+        ) : null}
       </div>
 
       {live || repo ? (
