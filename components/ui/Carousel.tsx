@@ -1,8 +1,9 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Children, useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import RollingText from "./RollingText";
 import { cn } from "@/lib/cn";
 
 interface CarouselProps {
@@ -178,9 +179,10 @@ const Carousel = ({
         {scrollable && (
           <>
             {indicator === "counter" && (
-              <span className="font-mono text-xs font-semibold tracking-wider text-fg-medium">
-                {pad(view.page + 1)} / {pad(view.pages)}
-              </span>
+              <RollingText
+                value={`${pad(view.page + 1)} / ${pad(view.pages)}`}
+                className="font-mono text-xs font-semibold tracking-wider text-fg-medium"
+              />
             )}
             <button
               type="button"
