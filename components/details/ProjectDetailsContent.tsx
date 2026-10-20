@@ -1,5 +1,8 @@
-import { Pill } from "@/components/ui";
-import { PROJECT_STATUS_LABELS } from "@/lib/projects/filters";
+import DetailsFacts from "./DetailsFacts";
+import DetailsHeader from "./DetailsHeader";
+import DetailsScreenshots from "./DetailsScreenshots";
+import DetailsStory from "./DetailsStory";
+import { cn } from "@/lib/cn";
 import type { ProjectDetailsEntry } from "@/types/projects";
 
 interface ProjectDetailsContentProps {
@@ -7,70 +10,47 @@ interface ProjectDetailsContentProps {
   titleId: string;
 }
 
-// PLACEHOLDER (P7.4a): P7.4b replaces this with the real header, two-column
-// layout, screenshots and video. It only shows that the data arrives.
+// The overlay body (D118). The DOM order is the phone order: header, links,
+// screenshots, at a glance, technologies, then the written part. From 1024px
+// the written part moves to the left column (lg:order) and the rest to the
+// right. Without a written part the right column takes the width on its own.
+// The saved video id is ignored until P7.5.
 const ProjectDetailsContent = ({
   entry,
   titleId,
 }: ProjectDetailsContentProps) => {
   const { details } = entry;
+  const hasStory =
+    Boolean(details.problem) ||
+    details.features.length > 0 ||
+    details.notes.length > 0;
 
   return (
-    <div className="mx-auto w-full max-w-4xl space-y-6">
-      <div className="space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="font-mono text-[10px] tracking-wider text-fg-low uppercase">
-            {entry.kicker}
-          </p>
-          <Pill className="px-2 py-0.5 font-mono text-[10px] uppercase">
-            {PROJECT_STATUS_LABELS[entry.status]}
-          </Pill>
-          <Pill className="px-2 py-0.5 font-mono text-[10px] uppercase">
-            {entry.categoryLabel}
-          </Pill>
-        </div>
-        <h2
-          id={titleId}
-          className="text-3xl font-extrabold tracking-tight text-fg-high"
+    <div className="mx-auto w-full max-w-6xl space-y-8 md:space-y-10">
+      <DetailsHeader entry={entry} titleId={titleId} />
+
+      <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
+        <div
+          className={cn(
+            "min-w-0 space-y-6 lg:order-2",
+            hasStory ? "lg:col-span-5" : "lg:col-span-12 lg:max-w-3xl",
+          )}
         >
-          {entry.title}
-        </h2>
-        <p className="text-base text-fg-medium">{entry.summary}</p>
+          {details.screenshots.length > 0 ? (
+            <DetailsScreenshots
+              title={entry.title}
+              screenshots={details.screenshots}
+            />
+          ) : null}
+          <DetailsFacts entry={entry} />
+        </div>
+
+        {hasStory ? (
+          <div className="min-w-0 space-y-10 lg:order-1 lg:col-span-7">
+            <DetailsStory details={details} />
+          </div>
+        ) : null}
       </div>
-
-      {details.problem ? (
-        <section className="space-y-2">
-          <h3 className="text-sm font-bold text-fg-high">The problem</h3>
-          <p className="text-sm leading-relaxed text-fg-medium">
-            {details.problem}
-          </p>
-        </section>
-      ) : null}
-
-      {details.features.length > 0 ? (
-        <section className="space-y-2">
-          <h3 className="text-sm font-bold text-fg-high">What it does</h3>
-          <ul className="space-y-2">
-            {details.features.map((feature, index) => (
-              <li key={index} className="text-sm leading-relaxed">
-                <span className="font-medium text-fg-high">
-                  {feature.title}.{" "}
-                </span>
-                <span className="text-fg-medium">{feature.text}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      {details.notes.map((note, index) => (
-        <section key={index} className="space-y-2">
-          <h3 className="text-sm font-bold text-fg-high">{note.title}</h3>
-          <p className="text-sm leading-relaxed whitespace-pre-line text-fg-medium">
-            {note.body}
-          </p>
-        </section>
-      ))}
     </div>
   );
 };
