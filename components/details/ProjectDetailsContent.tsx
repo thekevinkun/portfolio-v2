@@ -1,22 +1,24 @@
 import DetailsFacts from "./DetailsFacts";
-import DetailsStory from "./DetailsStory";
 import DetailsHeader from "./DetailsHeader";
 import DetailsScreenshots from "./DetailsScreenshots";
+import DetailsStory from "./DetailsStory";
+import DetailsVideo from "./DetailsVideo";
 import { cn } from "@/lib/cn";
 import type { ProjectDetailsEntry } from "@/types/projects";
 
 interface ProjectDetailsContentProps {
   entry: ProjectDetailsEntry;
   titleId: string;
-  // False while the overlay is closing, so the screenshot viewer closes too
+  // False while the overlay is closing: the video stops and the screenshot
+  // viewer closes with it
   active: boolean;
 }
 
 // The overlay body (D118). The DOM order is the phone order: header, links,
-// screenshots, at a glance, technologies, then the written part. From 1024px
-// the written part moves to the left column (lg:order) and the rest to the
-// right. Without a written part the right column takes the width on its own.
-// The saved video id is ignored until P7.5.
+// video, screenshots, at a glance, technologies, then the written part. From
+// 1024px the written part moves to the left column (lg:order) and the rest to
+// the right. Without a written part the right column takes the width on its
+// own.
 const ProjectDetailsContent = ({
   entry,
   titleId,
@@ -39,6 +41,14 @@ const ProjectDetailsContent = ({
             hasStory ? "lg:col-span-5" : "lg:col-span-12 lg:max-w-3xl",
           )}
         >
+          {details.videoId ? (
+            <DetailsVideo
+              title={entry.title}
+              videoId={details.videoId}
+              posterUrl={details.screenshots[0]?.url}
+              active={active}
+            />
+          ) : null}
           {details.screenshots.length > 0 ? (
             <DetailsScreenshots
               title={entry.title}

@@ -4,6 +4,7 @@ import { Maximize2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useRef } from "react";
 import { Carousel } from "@/components/ui";
+import { DETAILS_IMAGE_SIZES } from "@/lib/details/config";
 import { useLightbox } from "@/lib/details/useLightbox";
 import type { ProjectScreenshot } from "@/types/details";
 import DetailsSection from "./DetailsSection";
@@ -15,8 +16,6 @@ interface DetailsScreenshotsProps {
   // False while the details overlay is closing (the viewer closes with it)
   active: boolean;
 }
-
-const SIZES = "(min-width: 1024px) 40vw, 100vw";
 
 // One screenshot per view in a 16:10 frame cropped from the top (D120). Each
 // frame is a button that opens the full-size viewer. The Carousel shows its
@@ -65,7 +64,7 @@ const DetailsScreenshots = ({
                 src={shot.url}
                 alt=""
                 fill
-                sizes={SIZES}
+                sizes={DETAILS_IMAGE_SIZES}
                 loading={index === 0 ? "eager" : "lazy"}
                 className="object-cover object-top"
               />
