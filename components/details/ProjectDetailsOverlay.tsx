@@ -31,8 +31,10 @@ const ProjectDetailsOverlay = ({
       data-details-overlay
       data-state={phase}
       aria-labelledby={titleId}
-      // Esc goes through our close so the history entry is handled (D116)
+      // Esc goes through our close so the history entry is handled (D116).
+      // A dialog inside this one (the screenshot viewer) handles its own Esc.
       onCancel={(event) => {
+        if (event.target !== event.currentTarget) return;
         event.preventDefault();
         onClose();
       }}
@@ -65,6 +67,7 @@ const ProjectDetailsOverlay = ({
               key={entry.slug}
               entry={entry}
               titleId={titleId}
+              active={phase === "opening" || phase === "open"}
             />
           </div>
         </div>

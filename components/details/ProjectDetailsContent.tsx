@@ -1,13 +1,15 @@
 import DetailsFacts from "./DetailsFacts";
+import DetailsStory from "./DetailsStory";
 import DetailsHeader from "./DetailsHeader";
 import DetailsScreenshots from "./DetailsScreenshots";
-import DetailsStory from "./DetailsStory";
 import { cn } from "@/lib/cn";
 import type { ProjectDetailsEntry } from "@/types/projects";
 
 interface ProjectDetailsContentProps {
   entry: ProjectDetailsEntry;
   titleId: string;
+  // False while the overlay is closing, so the screenshot viewer closes too
+  active: boolean;
 }
 
 // The overlay body (D118). The DOM order is the phone order: header, links,
@@ -18,6 +20,7 @@ interface ProjectDetailsContentProps {
 const ProjectDetailsContent = ({
   entry,
   titleId,
+  active,
 }: ProjectDetailsContentProps) => {
   const { details } = entry;
   const hasStory =
@@ -40,6 +43,7 @@ const ProjectDetailsContent = ({
             <DetailsScreenshots
               title={entry.title}
               screenshots={details.screenshots}
+              active={active}
             />
           ) : null}
           <DetailsFacts entry={entry} />
