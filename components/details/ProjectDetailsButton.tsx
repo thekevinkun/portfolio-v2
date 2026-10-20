@@ -20,6 +20,7 @@ const ProjectDetailsButton = ({ slug, title }: ProjectDetailsButtonProps) => {
       aria-haspopup="dialog"
       aria-label={`Details: ${title}`}
       onClick={() => open(slug)}
+      className="hover:cursor-pointer"
     >
       Details
     </Button>

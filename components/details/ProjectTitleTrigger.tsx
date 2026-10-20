@@ -29,7 +29,7 @@ const ProjectTitleTrigger = ({
       aria-label={`Open details: ${title}`}
       onClick={() => open(slug)}
       className={cn(
-        "group/title inline-flex max-w-full items-center gap-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+        "group/title inline-flex max-w-full items-center gap-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent hover:cursor-pointer",
         className,
       )}
     >
