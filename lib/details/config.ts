@@ -10,6 +10,6 @@ export const HISTORY_BACK_FALLBACK_MS = 300;
 // Used only when --duration-lightbox cannot be read (CSS owns the real value)
 export const DEFAULT_LIGHTBOX_DURATION_MS = 250;
 
-// The overlay's images sit in one column: the video cover and the screenshots
-// share this value, so the cover and the first screenshot are one request
+// The screenshots sit in the right column on desktop (about 40% of the width)
+// and fill the width below 1024px
 export const DETAILS_IMAGE_SIZES = "(min-width: 1024px) 40vw, 100vw";

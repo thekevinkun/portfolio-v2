@@ -45,7 +45,6 @@ const ProjectDetailsContent = ({
             <DetailsVideo
               title={entry.title}
               videoId={details.videoId}
-              posterUrl={details.screenshots[0]?.url}
               active={active}
             />
           ) : null}
