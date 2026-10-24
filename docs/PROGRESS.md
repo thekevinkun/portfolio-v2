@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-24
-**Current phase / step:** P6.3
+**Current phase / step:** P6.4
 **Mode default:** Build
 
 ---
@@ -17,7 +17,7 @@
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
-| P6    | Polish & finish          | 🟦 In progress | P6.1 done (D130); next: P6.2                |
+| P6    | Polish & finish          | 🟦 In progress | P6.1–P6.3 done (D130–D132); next: P6.4      |
 | P7    | Project details          | ✅ Done        | Overlay live (D112–D129)                    |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
@@ -28,7 +28,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 
 - [x] P6.1 Remaining animations: rolling counter and clock digits, ambient background (D130)
 - [x] P6.2 Performance pass: icon sets out of the public JS and guarded (D131); mobile 91 (`/`) and 84 (`/projects`); LCP 3.0 s left as a known trade-off (entrance fade on the first text)
-- [ ] P6.3 Quick accessibility pass: keyboard, contrast, screen-reader spot check, including the project overlay
+- [x] P6.3 Quick accessibility pass: `main` landmark added (D132); keyboard, screen-reader and reduced-motion spot checks passed
 - [ ] P6.4 Final content review (R4), project status check, domain decision (O5), details content for the featured projects
 - [ ] P6.5 README.md and PROGRESS.md to complete
 
@@ -55,6 +55,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D112–D129: see CLAUDE.md §10.
 - D130: see CLAUDE.md §10.
 - D131: see CLAUDE.md §10.
+- D132: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -141,6 +142,9 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-24 — P6.2–P6.3
+- P6.2: the 5 MB icon chunk removed from the landing JS (`ProjectCard` imported by path), `check:client` build guard; mobile 91 (`/`) and 84 (`/projects`), LCP 3.0 s left as a trade-off; D131. P6.3: `main` landmark, other checks passed; D132. Next: P6.4 final content review (R4), project status check, domain decision (O5), details content for the featured projects.
+
 ### Handoff — 2026-10-20 — P6.1
 Done:
 - Rolling digits (`RollingText`) for the Projects counter and the live clock, and a slow ambient drift of the background glow; no new dependencies
@@ -178,23 +182,8 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P6 section of ROADMAP.md, package.json, components/ui/Carousel.tsx, components/panels/ProjectsPanel.tsx, components/chrome/TopBar.tsx, components/ui/StageBackground.tsx, app/globals.css, lib/reveal.ts. Phase: P6 — Polish & finish. Step: P6.1. Mode: Build. Follow WORKFLOW.md §11. Goal: Add the remaining animations from the catalog (E, F, G): the Projects filter reflow with auto-animate, the rolling digits for the `01 / 04` counter and the clock, and the slow ambient background drift, each CSS-first or tiny, reduced-motion safe and checked at 4× CPU throttle; log new dependencies under R9.
 
 ### Handoff — 2026-10-20 — P7.4b
-Done:
-- Real overlay content: header with kicker, status, category, title, summary and link buttons; written part (problem, what it does, engineering notes); screenshots carousel; at a glance and all tech chips; two columns from 1024 px, one column below, empty blocks hidden
-- Wide logo at the top right of the header (above the title on phones), plain with no box
-- Screenshot viewer: full-screen second dialog with the original image, counter, caption, arrows, keys, swipe and a thumbnail strip; Esc and Close close only the viewer
-Files created/changed:
-- lib/details/{paragraphs,useLightbox,config,motion}.ts; components/details/{DetailsSection,DetailsHeader,DetailsScreenshots,DetailsFacts,DetailsStory,ScreenshotLightbox,ProjectDetailsContent,ProjectDetailsOverlay}.tsx; components/dashboard/ProjectForm.tsx (logo text); app/globals.css; docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D128 (amends D104, D118, D120)
-Verified (viewports / devices):
-- Typecheck, lint, build; a temporary trigger (not committed, discarded) on the Neon dev branch; no sideways scroll at 1440×900, 1280×720, 1024×768, 768×1024, 390×844 and 360×640 (`scrollW` equals `clientW`); two-column and one-column layouts, hidden sections, logo sizes and positions, viewer open, close, keys, swipe, thumbnails, focus and carousel return, Stage lock, reduced motion, 4× CPU throttle
-Known issues:
-- A saved video id shows nothing until P7.5; nothing opens the overlay until P7.5; a logo with dark text disappears on the dark page
-Next step (ID + one-line goal):
-- P7.5: the Details button and title trigger on the Projects and Overview cards, the YouTube click-to-load video, and the performance pass
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: components/panels/ProjectCard.tsx, FeaturedProjectCard.tsx, ProjectsPanel.tsx, OverviewPanel.tsx, index.ts, components/details/ProjectDetailsContent.tsx, DetailsScreenshots.tsx, DetailsFacts.tsx, ProjectDetailsProvider.tsx, lib/details/details-context.ts, types/projects.ts, types/details.ts, lib/projects/youtube.ts, components/ui/index.ts, next.config.ts, app/globals.css. Phase: P7 — Project details. Step: P7.5. Mode: Build. Follow WORKFLOW.md §11. Goal: Make the overlay reachable and finish it (D114, D119): a Details button and a title trigger on `ProjectCard` and `FeaturedProjectCard` shown only when `hasDetails` (a small client component calling `useProjectDetails().open`), the YouTube click-to-load video block in the overlay (first screenshot or a plain panel as the cover, `youtube-nocookie` embed after the click), then the fit and performance pass at the QA viewports with the Lighthouse mobile check.
-  
+- Built the project details overlay content, responsive layouts, wide logo placement, and full-screen screenshot viewer with keyboard, swipe, and thumbnail navigation. D128 (amends D104, D118, D120). Passed typecheck, lint, build, and viewport/interaction QA. Remaining: video support, card triggers (P7.5), and dark-text logo visibility on dark backgrounds.
+
 ### Handoff — 2026-10-19 — P7.4a
 - P7.4a: overlay shell (one native `<dialog>`, open and close animation, history entry, Stage lock, focus return); D127.
 
