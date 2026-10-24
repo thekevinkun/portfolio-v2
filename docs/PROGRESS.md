@@ -2,7 +2,7 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-20
+**Last updated:** 2026-10-24
 **Current phase / step:** P6.2
 **Mode default:** Build
 
@@ -27,7 +27,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Current phase checklist
 
 - [x] P6.1 Remaining animations: rolling counter and clock digits, ambient background (D130)
-- [ ] P6.2 Performance pass: 4× throttle, Lighthouse after P7, LCP image, no unused icons, dashboard code out of public chunks
+- [ ] P6.2 Performance pass: icon sets out of the public JS and guarded (D131); open: LCP (text delayed by its entrance), `/projects` TBT re-check, overlay chunk check, 4× throttle
 - [ ] P6.3 Quick accessibility pass: keyboard, contrast, screen-reader spot check, including the project overlay
 - [ ] P6.4 Final content review (R4), project status check, domain decision (O5), details content for the featured projects
 - [ ] P6.5 README.md and PROGRESS.md to complete
@@ -54,6 +54,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D82–D111: see CLAUDE.md §10.
 - D112–D129: see CLAUDE.md §10.
 - D130: see CLAUDE.md §10.
+- D131: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -109,7 +110,10 @@ None. O4 and O5 settled (D73, D74).
 - Project overlay: the video keeps playing under the screenshot viewer, and Esc does not close the overlay while focus is inside the YouTube player (click outside it first)
 - Project overlay: a video's cover is YouTube's thumbnail, so opening the overlay on a project with a video makes one request to `i.ytimg.com` (D129)
 - Overview featured cards open the details from the title only; there is no Details button there (D129)
-- Lighthouse was not re-measured after P7 (mobile 90 or more is the P7 acceptance); do it in P6.2
+- Lighthouse mobile after the P6.2 icon fix: `/` 91, `/projects` 84 (TBT 190 and 410 ms, LCP 3.0 s on both); the `/projects` TBT may be run noise, re-check
+- Mobile LCP is a text paragraph (Overview intro, Projects subtitle) with an element render delay of 1.84 s and 1.21 s and no download, so its entrance animation is the suspect; to be confirmed and decided in P6.2
+- `check:client` reads source text and follows no chains; if the main chunk grows again, run `npx next experimental-analyze` (D131)
+- Lighthouse flags 14 KiB of legacy JS, 77 KiB of unused JS and 14.9 KiB of render-blocking CSS in framework chunks; left as is
 - Rolling digits: a wrap such as 9 → 0 rolls back up through the column instead of continuing downward (barely visible on the counter and the once-a-minute clock, D130)
 - `cn()` (tailwind-merge) drops a `leading-*` class when `className` has a `text-*` size; put a line height that must survive on an inner element (found in `RollingText`, D130)
 
