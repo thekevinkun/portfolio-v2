@@ -43,7 +43,7 @@ export default async function SiteLayout({
         <div className="flex h-dvh flex-col overflow-hidden">
           <TopBar profile={profile} />
           <Dock />
-          <div className="relative min-h-0 flex-1">{children}</div>
+          <main className="relative min-h-0 flex-1">{children}</main>
           <StatusFooter profile={profile} />
           <TabBar />
         </div>
