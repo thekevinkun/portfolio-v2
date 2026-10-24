@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run check:actions && next build",
+    "build": "npm run check:actions && npm run check:client && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx scripts/seed.ts",
-    "check:actions": "tsx scripts/check-actions.ts"
+    "check:actions": "tsx scripts/check-actions.ts",
+    "check:client": "tsx scripts/check-client-graph.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
