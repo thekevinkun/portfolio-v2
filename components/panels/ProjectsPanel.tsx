@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button, Carousel, SectionHeader } from "@/components/ui";
-import { ProjectCard } from "./";
+import ProjectCard from "./ProjectCard";
 import { cn } from "@/lib/cn";
 import { reveal } from "@/lib/reveal";
 import type { Project, ProjectCategory } from "@/types/projects";
