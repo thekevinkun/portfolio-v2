@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-10-24
-**Current phase / step:** P6.2
+**Current phase / step:** P6.3
 **Mode default:** Build
 
 ---
@@ -27,7 +27,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 ## Current phase checklist
 
 - [x] P6.1 Remaining animations: rolling counter and clock digits, ambient background (D130)
-- [ ] P6.2 Performance pass: icon sets out of the public JS and guarded (D131); open: LCP (text delayed by its entrance), `/projects` TBT re-check, overlay chunk check, 4× throttle
+- [x] P6.2 Performance pass: icon sets out of the public JS and guarded (D131); mobile 91 (`/`) and 84 (`/projects`); LCP 3.0 s left as a known trade-off (entrance fade on the first text)
 - [ ] P6.3 Quick accessibility pass: keyboard, contrast, screen-reader spot check, including the project overlay
 - [ ] P6.4 Final content review (R4), project status check, domain decision (O5), details content for the featured projects
 - [ ] P6.5 README.md and PROGRESS.md to complete
