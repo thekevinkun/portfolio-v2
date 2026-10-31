@@ -24,7 +24,7 @@ interface OverviewPanelProps {
 // portrait 2 (slow fade), featured cards in their own slow one-by-one sequence.
 const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
   <div className="tier-container h-full">
-    <div className="flex h-full flex-col px-5 pt-3 pb-4 md:px-12">
+    <div className="flex h-full flex-col px-5 pt-2 pb-4 md:px-12">
       <div className="flex min-h-0 flex-1 flex-col gap-4 md:max-lg:my-auto md:max-lg:flex-none tier-roomy:gap-6 tier-spacious:gap-7">
         <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1fr)] items-center gap-8 md:max-lg:flex-none lg:grid-cols-12">
           <div className="flex flex-col gap-3 lg:col-span-7 tier-roomy:gap-3 tier-spacious:gap-4">
@@ -74,17 +74,6 @@ const OverviewPanel = ({ profile, featured }: OverviewPanelProps) => (
                 </Pill>
               ))}
             </div>
-            {profile.resumeUrl && (
-              <div {...reveal("rise", 6)} className="pt-1">
-                <ButtonLink
-                  href={profile.resumeUrl}
-                  download
-                  className="py-2.5 tier-roomy:py-3.5"
-                >
-                  Download Resume ↗
-                </ButtonLink>
-              </div>
-            )}
           </div>
 
           {profile.portraitUrl && (

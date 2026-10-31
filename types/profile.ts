@@ -1,4 +1,5 @@
-export const SOCIAL_KINDS = ["linkedin", "github"] as const;
+// The order is the display order on Get In Touch (D135)
+export const SOCIAL_KINDS = ["linkedin", "upwork", "github"] as const;
 export type SocialKind = (typeof SOCIAL_KINDS)[number];
 
 export interface SocialLink {
