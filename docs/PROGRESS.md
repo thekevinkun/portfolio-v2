@@ -31,6 +31,8 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P6.3 Quick accessibility pass: `main` landmark added (D132); keyboard, screen-reader and reduced-motion spot checks passed
 - [ ] P6.4 Final content review (R4), project status check, domain decision (O5), details content for the featured projects
 - [ ] P6.5 README.md and PROGRESS.md to complete
+- [x] I1 Top bar clock follows the visitor's time zone, Contact keeps the owner's (D133)
+- [ ] I2 One page per wheel gesture, even for a very hard swipe (planned, measuring first)
 
 ---
 
@@ -56,6 +58,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D130: see CLAUDE.md §10.
 - D131: see CLAUDE.md §10.
 - D132: see CLAUDE.md §10.
+- D133: see CLAUDE.md §10.
 
 ## Open questions
 
