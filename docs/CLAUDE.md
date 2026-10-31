@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P4 done (launched); P5 (dashboard) done (D82–D111); P7 (project details) done (D112–D129); P6 (polish) is in progress (P6.1–P6.4 done, improvements I1–I3 done, D130–D136; P6.5 is next).**
+> Status: **P1–P4 done (launched); P5 (dashboard) done (D82–D111); P7 (project details) done (D112–D129); P6 (polish) done (D130–D136); improvements I1–I3 done (D133–D135); I4 (project details write-ups) waits for Kevin's content.**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 

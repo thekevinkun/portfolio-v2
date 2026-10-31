@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-31
-**Current phase / step:** P6.5
+**Last updated:** 2026-11-1
+**Current phase / step:** none open (P1–P7 done); next is I4
 **Mode default:** Build
 
 ---
@@ -17,7 +17,7 @@
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
-| P6    | Polish & finish          | 🟦 In progress | P6.1–P6.4 done (D130–D136); next: P6.5      |
+| P6    | Polish & finish          | ✅ Done        | D130–D136; improvements I1–I3 followed      |
 | P7    | Project details          | ✅ Done        | Overlay live (D112–D129)                    |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
@@ -30,7 +30,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P6.2 Performance pass: icon sets out of the public JS and guarded (D131); mobile 91 (`/`) and 84 (`/projects`); LCP 3.0 s left as a known trade-off (entrance fade on the first text)
 - [x] P6.3 Quick accessibility pass: `main` landmark added (D132); keyboard, screen-reader and reduced-motion spot checks passed
 - [x] P6.4 Final content review (R4), project status check, domain decision (O5) done (D136); details write-ups moved to an improvement
-- [ ] P6.5 README.md and PROGRESS.md to complete
+- [x] P6.5 README.md and PROGRESS.md to complete
 - [x] I1 Top bar clock follows the visitor's time zone, Contact keeps the owner's (D133)
 - [x] I2 One page per wheel burst, however hard the swipe (D134)
 - [x] I3 Get In Touch: Upwork card, no Email card (D135)
@@ -104,7 +104,7 @@ None. O4 and O5 settled (D73, D74).
 - The login page and the signed-in placeholder are unstyled stand-ins until P5.2
 - Experience: the Shipped card says "Padel Court" while the project title is "Padel Batu Alam Permai" (D75, left as is)
 - A bad row in Neon (for example a live project with no live link) fails the build; whether a failed hourly regeneration keeps serving the last good page was not tested (check before launch, P4.6)
-- Unused files in `public/`: the five default Next SVGs (`file`, `globe`, `next`, `vercel`, `window`) and `placeholder/avatar.svg`; delete in P6; `logo.png` is not in the repo yet (added with the feature that shows it)
+- `logo.png` is not in the repo yet (added with the feature that shows it); the unused default files in `public/` are gone
 - Content changes go through the dashboard; `data/` is seed input for a fresh database only, and `db:seed --update` needs `--yes-overwrite` (D97, D111)
 - Lighthouse at launch: mobile 92 / 98 / 100 / 100 with LCP 3.1 s and Speed Index 4.2 s red; the Overview portrait fade is the suspect (P6.2); accessibility 98 (P6.3)
 - The project logo (a wide image with the name) shows only at the top right of the project overlay (D128); a logo with dark text disappears on the dark page, so it needs a light version
@@ -152,6 +152,11 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-10-31 — P6.5 (P6 closed)
+- P6.5: project README (what it is, stack, setup, scripts, dashboard, deploying, docs table) replaces the starter one; unused placeholder removed; the tracker is complete. Open: I4 (details write-ups for Kundesk, Padel Batu Alam Permai and Kun Bookshop, written by Kun), the Kundesk testimonial in its own project, and the Bookshop `http` link (a domain would fix it).
+Prompt for the next chat (I4):
+  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Goal: Format the details write-ups for <project> to the D112 limits (problem ≤ 700, role ≤ 40, timeframe ≤ 30, features ≤ 6 with title ≤ 50 and text ≤ 220, notes ≤ 3 with title ≤ 60 and body ≤ 900, screenshots ≤ 8 with alt ≤ 140 and caption ≤ 140, video id), using only claims already true and supported by my facts (R4). I will paste the dashboard text myself.
 
 ### Handoff — 2026-10-31 — I3, P6.4
 - I3: Get In Touch shows LinkedIn, Upwork and GitHub (Upwork optional, fixed order) and no Email card; D135. P6.4: content review closed; Tech Stack highlight updated, Bookshop on EC2, testimonial and Padel notes logged; D136. Next: P6.5 (README, close the tracker), then I4 (details write-ups) in a new chat.
