@@ -60,7 +60,6 @@ export function useStageWheel(): void {
         dx,
         dy,
         time,
-        discrete: e.deltaMode !== 0,
         canAct: phaseRef.current === "idle",
         settledAt: settledAtRef.current,
       });

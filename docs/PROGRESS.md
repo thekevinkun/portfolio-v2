@@ -32,7 +32,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [ ] P6.4 Final content review (R4), project status check, domain decision (O5), details content for the featured projects
 - [ ] P6.5 README.md and PROGRESS.md to complete
 - [x] I1 Top bar clock follows the visitor's time zone, Contact keeps the owner's (D133)
-- [ ] I2 One page per wheel gesture, even for a very hard swipe (planned, measuring first)
+- [x] I2 One page per wheel burst, however hard the swipe (D134)
 
 ---
 
@@ -120,6 +120,7 @@ None. O4 and O5 settled (D73, D74).
 - Lighthouse flags 14 KiB of legacy JS, 77 KiB of unused JS and 14.9 KiB of render-blocking CSS in framework chunks; left as is
 - Rolling digits: a wrap such as 9 → 0 rolls back up through the column instead of continuing downward (barely visible on the counter and the once-a-minute clock, D130)
 - `cn()` (tailwind-merge) drops a `leading-*` class when `className` has a `text-*` size; put a line height that must survive on an inner element (found in `RollingText`, D130)
+- Wheel: the 350 ms quiet time (D134) was measured on one laptop trackpad only and the mouse is untested; if a device still double-turns, raise `WHEEL_RELEASE_QUIET_MS` in `lib/stage/config.ts`; flicks chained faster than that are ignored on purpose
 
 ---
 
@@ -145,6 +146,9 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-31 — I1–I2
+- I1: the top bar clock follows the visitor's time zone, Contact keeps the owner's (D133). I2: one page turn per wheel burst, however hard the swipe, with a 350 ms quiet rule for trackpads and mice (D134). P6.4 content review done in chat (Bookshop on EC2 with Docker, Kundesk testimonial to fix in its own repo, Padel is a demo); details write-ups for Kundesk, Padel and Bookshop come later as an improvement. Next: P6.4 and P6.5 closing docs, then the next items.
+
 ### Handoff — 2026-10-24 — P6.2–P6.3
 - P6.2: the 5 MB icon chunk removed from the landing JS (`ProjectCard` imported by path), `check:client` build guard; mobile 91 (`/`) and 84 (`/projects`), LCP 3.0 s left as a trade-off; D131. P6.3: `main` landmark, other checks passed; D132. Next: P6.4 final content review (R4), project status check, domain decision (O5), details content for the featured projects.
 
@@ -166,26 +170,10 @@ Prompt for the next chat:
   Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P6 section of ROADMAP.md, package.json, next.config.ts, app/layout.tsx, app/(site)/[[...section]]/layout.tsx, components/panels/OverviewPanel.tsx, components/details/ProjectDetailsProvider.tsx, components/panels/resolve-tech-icon.ts, and the Lighthouse mobile report (JSON or screenshot) for `/` and `/projects` run on the production URL. Phase: P6 — Polish & finish. Step: P6.2. Mode: Build. Follow WORKFLOW.md §11. Goal: Find and fix what holds mobile Lighthouse below 90 (LCP 3.1 s, Speed Index 4.2 s at launch), check whether the Overview portrait fade is the LCP element, confirm no unused icons or dashboard code in the public chunks, and verify the lazy overlay chunk stays out of the landing JS.
 
 ### Handoff — 2026-10-20 — P7.5 (P7 closed)
-Done:
-- The overlay is reachable: a title trigger and a secondary Details button on the Projects cards, a title trigger with an arrow on the Overview featured cards, both only when the project has details
-- "Demo video" block: YouTube's own thumbnail as the cover (with `hqdefault` and plain-panel fallbacks), click-to-load `youtube-nocookie` player, stops when the overlay closes, "Watch on YouTube" link
-- The overlay content loads as its own chunk and is fetched when the browser is idle
-- Stale editor hint about the video cover removed
-Files created/changed:
-- components/details/{ProjectDetailsButton,ProjectTitleTrigger,DetailsVideo}.tsx, index.ts, DetailsScreenshots.tsx, ProjectDetailsContent.tsx, ProjectDetailsOverlay.tsx, ProjectDetailsProvider.tsx; lib/details/config.ts; components/panels/{ProjectCard,FeaturedProjectCard}.tsx; components/dashboard/DetailsForm.tsx; docs (CLAUDE.md, ROADMAP.md, PROGRESS.md)
-Decisions:
-- D129 (amends D119)
-Verified (viewports / devices):
-- Typecheck, lint, build; on the Neon dev branch: triggers on both pages, projects with and without details and with and without a video, no player request before the click, `ytimg` cover with both fallbacks (blocked requests), video stops on close, cover and first screenshot differ; details data measured at 5,014 bytes for two projects; fit slack and Lighthouse numbers were not recorded
-Known issues:
-- Same as the Known issues list; Lighthouse after P7 is to be measured in P6.2
-Next step (ID + one-line goal):
-- P6.1: the remaining animations (Projects counter and filter reflow, clock digits, ambient background)
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P6 section of ROADMAP.md, package.json, components/ui/Carousel.tsx, components/panels/ProjectsPanel.tsx, components/chrome/TopBar.tsx, components/ui/StageBackground.tsx, app/globals.css, lib/reveal.ts. Phase: P6 — Polish & finish. Step: P6.1. Mode: Build. Follow WORKFLOW.md §11. Goal: Add the remaining animations from the catalog (E, F, G): the Projects filter reflow with auto-animate, the rolling digits for the `01 / 04` counter and the clock, and the slow ambient background drift, each CSS-first or tiny, reduced-motion safe and checked at 4× CPU throttle; log new dependencies under R9.
+- P7.5: Completed the project details flow: conditional title and Details triggers, click-to-load YouTube embeds with fallbacks, and idle-loaded overlay chunk. D129 (amends D119). Passed typecheck, lint, build, and functional checks on the Neon dev branch. Lighthouse and fit-slack measurements remain outstanding (P6.2).
 
 ### Handoff — 2026-10-20 — P7.4b
-- Built the project details overlay content, responsive layouts, wide logo placement, and full-screen screenshot viewer with keyboard, swipe, and thumbnail navigation. D128 (amends D104, D118, D120). Passed typecheck, lint, build, and viewport/interaction QA. Remaining: video support, card triggers (P7.5), and dark-text logo visibility on dark backgrounds.
+- P7.4b: Built the project details overlay content, responsive layouts, wide logo placement, and full-screen screenshot viewer with keyboard, swipe, and thumbnail navigation. D128 (amends D104, D118, D120). Passed typecheck, lint, build, and viewport/interaction QA. Remaining: video support, card triggers (P7.5), and dark-text logo visibility on dark backgrounds.
 
 ### Handoff — 2026-10-19 — P7.4a
 - P7.4a: overlay shell (one native `<dialog>`, open and close animation, history entry, Stage lock, focus return); D127.
