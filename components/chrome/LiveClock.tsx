@@ -5,11 +5,12 @@ import { RollingText } from "@/components/ui";
 import { cn } from "@/lib/cn";
 
 interface LiveClockProps {
-  timeZone: string;
+  /** IANA zone to show; leave it out to follow the visitor's own zone (D133) */
+  timeZone?: string;
   className?: string;
 }
 
-const formatTime = (timeZone: string) =>
+const formatTime = (timeZone?: string) =>
   new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "2-digit",
@@ -45,7 +46,8 @@ const subscribe = (onChange: () => void) => {
 };
 
 const LiveClock = ({ timeZone, className }: LiveClockProps) => {
-  // Server snapshot is null, so server and first client render match (no hydration mismatch)
+  // Server snapshot is null, so server and first client render match (no hydration mismatch).
+  // With no timeZone the time is the visitor's own, known only in the browser.
   const time = useSyncExternalStore(
     subscribe,
     () => formatTime(timeZone),

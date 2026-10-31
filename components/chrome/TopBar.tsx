@@ -28,10 +28,7 @@ const TopBar = ({ profile }: TopBarProps) => {
       </div>
 
       <div className="flex items-center gap-6">
-        <LiveClock
-          timeZone={profile.timezone}
-          className="text-sm font-semibold tracking-wider text-fg-medium"
-        />
+        <LiveClock className="text-sm font-semibold tracking-wider text-fg-medium" />
         <ProfileBadge profile={profile} />
       </div>
     </header>
