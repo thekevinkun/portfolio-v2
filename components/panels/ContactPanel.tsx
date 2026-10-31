@@ -3,7 +3,7 @@ import { ButtonLink, GlassCard, Pill } from "@/components/ui";
 import { ContactLinkCard } from "./";
 import { reveal } from "@/lib/reveal";
 import { displayUrl, utcOffsetLabel } from "@/lib/contact/format";
-import type { Profile } from "@/types/profile";
+import { SOCIAL_KINDS, type Profile } from "@/types/profile";
 
 interface ContactPanelProps {
   profile: Profile;
@@ -62,16 +62,11 @@ const ContactPanel = ({ profile }: ContactPanelProps) => (
         </div>
 
         <div className="flex flex-col gap-2 lg:col-span-5 tier-regular:gap-3">
-          <div {...reveal("drop", 3)} className="grid">
-            <ContactLinkCard
-              href={`mailto:${profile.email}`}
-              iconKey="email"
-              label="Email"
-              value={profile.email}
-            />
-          </div>
-          {profile.socials.map((social, i) => (
-            <div key={social.kind} {...reveal("drop", 4 + i)} className="grid">
+          {/* Fixed order, whatever order the row was saved in (D135) */}
+          {SOCIAL_KINDS.flatMap((kind) =>
+            profile.socials.filter((social) => social.kind === kind),
+          ).map((social, i) => (
+            <div key={social.kind} {...reveal("drop", 3 + i)} className="grid">
               <ContactLinkCard
                 href={social.url}
                 iconKey={social.kind}
@@ -81,7 +76,7 @@ const ContactPanel = ({ profile }: ContactPanelProps) => (
               />
             </div>
           ))}
-          <div {...reveal("drop", 4 + profile.socials.length)} className="grid">
+          <div {...reveal("drop", 3 + profile.socials.length)} className="grid">
             <GlassCard className="grid grid-cols-2 gap-3 p-2.5 tier-regular:p-3 tier-spacious:p-4">
               <div>
                 <p className="font-mono text-[10px] tracking-wider text-fg-low uppercase">
