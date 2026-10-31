@@ -24,15 +24,14 @@ export const WHEEL_NOISE = 2;
 export const WHEEL_RESET_MS = 100;
 // Accumulated |dy| that fires one page turn
 export const WHEEL_TRIGGER = 40;
-// A gesture-starting event this big is a mouse notch, not a trackpad stream
-export const WHEEL_NOTCH_MIN = 80;
-// A locked trackpad stream is released after this much silence
+// A new gesture starts after this much silence (the inner-scroll exemption is decided then)
 export const WHEEL_QUIET_MS = 120;
-// A bigger delta after the transition is a new flick, not inertia
-export const WHEEL_NEW_GESTURE_MIN = 30;
-export const WHEEL_NEW_GESTURE_RATIO = 1.3;
-// A lock never outlives this, even if the stream never goes quiet
-export const WHEEL_LOCK_CAP_MS = 2000;
+// After a page turn the wheel is ignored until it has been silent this long,
+// however hard the swipe (D134). Estimate: the longest pause inside one hard
+// trackpad swipe measured 276 ms
+export const WHEEL_RELEASE_QUIET_MS = 350;
+// A lock never outlives this, even if the wheel never goes quiet
+export const WHEEL_LOCK_CAP_MS = 4000;
 
 // --- Touch swipe (spec §4.2.1) ---
 // Finger travel before the gesture is called horizontal or vertical
