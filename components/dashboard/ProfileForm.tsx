@@ -26,8 +26,12 @@ import {
 
 const SOCIAL_LABELS: Record<SocialKind, string> = {
   linkedin: "LinkedIn",
+  upwork: "Upwork",
   github: "GitHub",
 };
+
+// Get In Touch needs these two (D57); the other links are optional (D135)
+const REQUIRED_SOCIALS: readonly SocialKind[] = ["linkedin", "github"];
 
 const ASSET_LABELS: Record<AssetKind, string> = {
   avatar: "Avatar",
@@ -35,11 +39,12 @@ const ASSET_LABELS: Record<AssetKind, string> = {
   resume: "Resume (PDF)",
 };
 
-// Server paths ("socials.1.url", "chips.2") to the control that shows them
-function renameKey(key: string): string {
+// Server paths ("socials.1.url", "chips.2") to the control that shows them.
+// kinds = the links that were sent, in order (an empty optional link is left out)
+function renameKey(key: string, kinds: readonly SocialKind[]): string {
   const social = /^socials\.(\d+)\.(url|label)$/.exec(key);
   if (social) {
-    const kind = SOCIAL_KINDS[Number(social[1])];
+    const kind = kinds[Number(social[1])];
     return kind ? `social.${kind}.${social[2]}` : "socials";
   }
   const list = /^(chips|focusAreas)\.\d+$/.exec(key);
@@ -71,8 +76,10 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
     const data = new FormData(event.currentTarget);
     const text = (name: string) => readText(data, name);
 
-    // Get In Touch shows both links (D57), so neither may be empty
-    const missing = SOCIAL_KINDS.filter((kind) => !text(`social.${kind}.url`));
+    // Get In Touch shows LinkedIn and GitHub (D57), so neither may be empty
+    const missing = REQUIRED_SOCIALS.filter(
+      (kind) => !text(`social.${kind}.url`),
+    );
     if (missing.length > 0) {
       setErrors(
         Object.fromEntries(
@@ -86,6 +93,9 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
       return;
     }
 
+    // An empty optional link (Upwork) is left out of the saved row
+    const sent = SOCIAL_KINDS.filter((kind) => text(`social.${kind}.url`));
+
     const textInput = {
       name: text("name"),
       username: text("username"),
@@ -98,7 +108,7 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
       contactHeadline: text("contactHeadline"),
       contactIntro: text("contactIntro"),
       email: text("email"),
-      socials: SOCIAL_KINDS.map((kind) => ({
+      socials: sent.map((kind) => ({
         kind,
         label: text(`social.${kind}.label`),
         url: text(`social.${kind}.url`),
@@ -150,7 +160,9 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
         if (!result.ok) {
           // The database was not changed, so the new files must not stay
           await rollbackUploads(uploaded);
-          setErrors(toFormErrors(result.fieldErrors, renameKey));
+          setErrors(
+            toFormErrors(result.fieldErrors, (key) => renameKey(key, sent)),
+          );
           toast.error(result.error);
           return;
         }
@@ -206,6 +218,11 @@ const ProfileForm = ({ profile }: { profile: Profile }) => {
               <TextField
                 name={`social.${kind}.url`}
                 label={`${SOCIAL_LABELS[kind]} URL`}
+                hint={
+                  REQUIRED_SOCIALS.includes(kind)
+                    ? undefined
+                    : "Optional. Leave empty to hide this link."
+                }
                 defaultValue={social?.url ?? ""}
                 error={errors[`social.${kind}.url`]}
               />

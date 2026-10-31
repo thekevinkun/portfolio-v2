@@ -16,7 +16,7 @@ export const profile: Profile = {
     "Self-taught full stack developer building production-grade web apps, with a focus on payments, booking flows and backend reliability. Mainly Next.js, React, TypeScript and PostgreSQL.",
   contactHeadline: "Let's work together.",
   contactIntro:
-    "Open to freelance projects and full-time roles. Email is the best way to reach me; you'll also find me on LinkedIn and GitHub, and my resume is one click away.",
+    "Open to freelance projects and full-time roles. Email is the best way to reach me; you'll also find me on LinkedIn, Upwork and GitHub, and my resume is one click away.",
   email: "kevinmahendra.idn@gmail.com",
   portraitUrl: "/images/profile-picture.png",
   resumeUrl: "/resume/Kevin_Mahendra_FullStackDeveloper_Resume.pdf",
@@ -25,6 +25,11 @@ export const profile: Profile = {
       kind: "linkedin",
       label: "LinkedIn",
       url: "https://www.linkedin.com/in/kevinmahendra1997/",
+    },
+    {
+      kind: "upwork",
+      label: "Upwork",
+      url: "https://www.upwork.com/freelancers/~012c528ffdd2626786",
     },
     {
       kind: "github",
