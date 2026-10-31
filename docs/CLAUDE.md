@@ -2,7 +2,7 @@
 
 > **How to use.** Stable context for every chat. At the start of a chat, attach this file + `PROGRESS.md`, and paste only the phase you're working on from `ROADMAP.md`. When a decision changes, update Section 10 in the same chat.
 >
-> Status: **P1–P4 done (launched); P5 (dashboard) done (D82–D111); P7 (project details) done (D112–D129); P6 (polish) is in progress (P6.1–P6.3 done, D130–D132).**
+> Status: **P1–P4 done (launched); P5 (dashboard) done (D82–D111); P7 (project details) done (D112–D129); P6 (polish) is in progress (P6.1–P6.4 done, improvements I1–I3 done, D130–D136; P6.5 is next).**
 >
 > Working method: follow `docs/WORKFLOW.md` for how every step is delivered (branch, commits, verify, docs, PR).
 
@@ -18,7 +18,7 @@ A personal portfolio for Kevin Mahendra (Kun) that feels like a console UI (PS5-
 - A 5-tile dock at the top shows the active page and is also the navigation.
 - Content lives in **Neon Postgres**, managed from a private **Dashboard**. No redeploy needed to change content.
 - Animations feel premium but cost almost nothing at runtime.
-- **Get In Touch has no form** — just email, LinkedIn, GitHub, resume download, and availability.
+- **Get In Touch has no form** — just the "Email me" button, LinkedIn, Upwork and GitHub cards, resume download, and availability (D135).
 
 **Audience:** recruiters, hiring managers, potential clients who give the site 30–60 seconds.
 
@@ -457,6 +457,8 @@ Goal: <one sentence>
 | D132 | P6.3 accessibility pass: Lighthouse accessibility was 98 on `/` and `/projects` with one failure, no `main` landmark; the wrapper around the Stage in `app/(site)/[[...section]]/layout.tsx` is now a `<main>` (the panels stay `<section aria-labelledby>`, the overlay and screenshot dialogs stay outside it); keyboard, screen-reader and reduced-motion spot checks found nothing else to fix; no skip link, since the dock is a few tab stops |
 | D133 | I1 top bar clock follows the visitor (amends D17 and D41): `LiveClock`'s `timeZone` prop is optional and an empty one means the visitor's own zone (`Intl.DateTimeFormat` default); `TopBar` no longer passes `profile.timezone`, and the Get In Touch info card passes its zone explicitly, so it still shows the owner's time (Samarinda); the page is static, so the visitor's zone is known only after mount and the `null` server snapshot (placeholder) keeps server and first client render equal; the format stays 12-hour `en-US` for every visitor |
 | D134 | I2 one page per wheel burst (amends D25 and D39): a hard trackpad swipe turned two pages because the lock released on a pause over 120 ms or on any "new gesture" delta, and one swipe had pauses of 253 to 276 ms with deltas of 169 and 80; the lock now releases only when the stage is idle and the wheel has been silent `WHEEL_RELEASE_QUIET_MS` (350 ms, an estimate from one laptop trackpad trace whose longest in-swipe pause was 276 ms), or after `WHEEL_LOCK_CAP_MS` (4000 ms), for trackpads and mice alike; the notch/stream distinction, `WHEEL_NOTCH_MIN`, `WHEEL_NEW_GESTURE_MIN`, `WHEEL_NEW_GESTURE_RATIO` and the `discrete` input are gone; `WHEEL_QUIET_MS` (120 ms) stays for the inner-scroll decision; keyboard, dock and touch are unchanged |
+| D135 | I3 Get In Touch links (amends D57 and D41): the Email card is gone (the "Email me" button stays); the cards are LinkedIn, Upwork and GitHub, then the Location card; `SOCIAL_KINDS` is `["linkedin", "upwork", "github"]` and its order is the display order, so the page never depends on the saved order; LinkedIn and GitHub stay required and Upwork is optional (an empty URL is left out of the saved row, so the existing production row stayed valid); the profile form builds `socials` from the filled links only, and error keys map back through that list; the Upwork URL is stored without the Share tracking parameter; the Upwork logo is `SiUpwork` (checked in the installed `react-icons`); `sameAs` in the JSON-LD includes the link automatically; Instagram, Threads and X are deliberately not shown (personal accounts); rollout: merge the code first, then add the URL and the intro wording in the production dashboard; no migration (JSON column, D66) and no new dependency |
+| D136 | P6.4 final content review (R4), done by reading the live site and opening the demo links: every Experience and Tech Stack claim matched the project facts; the Tech Stack highlight "Docker; Railway + Vercel deploys" became "Docker; AWS EC2 + Vercel deploys" because Kun Bookshop now runs on an AWS EC2 server with Docker and is `live` again; the Bookshop link is plain `http` on a raw EC2 hostname, so browsers show "Not secure" (accepted for now; a custom domain with a subdomain would allow HTTPS); Padel Batu Alam Permai is a demo and keeps its status; the testimonial and the "19+ / Ribuan" numbers on the Kundesk landing page are not real and are to be fixed in the Kundesk project, not here; O5 stays settled: `kevinmahendra.vercel.app` (D74), a custom domain returns when there is a reason (a client, a job, or HTTPS for the Bookshop), and it needs no schema change; details write-ups for Kundesk, Padel and Bookshop are written by Kun later (D122) and are an improvement, not a phase |
 
 ### Open
 

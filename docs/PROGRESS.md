@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-10-24
-**Current phase / step:** P6.4
+**Last updated:** 2026-10-31
+**Current phase / step:** P6.5
 **Mode default:** Build
 
 ---
@@ -17,7 +17,7 @@
 | P3    | Five pages (static data) | ✅ Done        | Fit QA passed at all eight viewports (P3.9) |
 | P4    | Neon data → LAUNCH       | ✅ Done        | Launched on kevinmahendra.vercel.app        |
 | P5    | Dashboard                | ✅ Done        | Dashboard live (D82–D111)
-| P6    | Polish & finish          | 🟦 In progress | P6.1–P6.3 done (D130–D132); next: P6.4      |
+| P6    | Polish & finish          | 🟦 In progress | P6.1–P6.4 done (D130–D136); next: P6.5      |
 | P7    | Project details          | ✅ Done        | Overlay live (D112–D129)                    |
 
 Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
@@ -29,10 +29,12 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] P6.1 Remaining animations: rolling counter and clock digits, ambient background (D130)
 - [x] P6.2 Performance pass: icon sets out of the public JS and guarded (D131); mobile 91 (`/`) and 84 (`/projects`); LCP 3.0 s left as a known trade-off (entrance fade on the first text)
 - [x] P6.3 Quick accessibility pass: `main` landmark added (D132); keyboard, screen-reader and reduced-motion spot checks passed
-- [ ] P6.4 Final content review (R4), project status check, domain decision (O5), details content for the featured projects
+- [x] P6.4 Final content review (R4), project status check, domain decision (O5) done (D136); details write-ups moved to an improvement
 - [ ] P6.5 README.md and PROGRESS.md to complete
 - [x] I1 Top bar clock follows the visitor's time zone, Contact keeps the owner's (D133)
 - [x] I2 One page per wheel burst, however hard the swipe (D134)
+- [x] I3 Get In Touch: Upwork card, no Email card (D135)
+- [ ] I4 Details write-ups for Kundesk, Padel Batu Alam Permai and Kun Bookshop (written by Kun, formatted in a later chat)
 
 ---
 
@@ -59,6 +61,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D131: see CLAUDE.md §10.
 - D132: see CLAUDE.md §10.
 - D133: see CLAUDE.md §10.
+- D134–D136: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -93,7 +96,7 @@ None. O4 and O5 settled (D73, D74).
 - Tech Stack: full cards (7 items, 5 highlights) were fit-checked at the QA viewports in P5.5 (D107); 360×640 is 4 px taller than its area, absorbed by the gap and padding, and 1024×768 has 7 px of slack and is the tightest; re-check both if the card spacing changes
 - Dashboard sign-in works only on localhost and the production domain (two OAuth apps, D85); preview URLs cannot sign in
 - Dashboard: the open `Select` list is drawn by the browser, so its look can differ between browsers (options carry their own colors, D99); spot-check in P5.4b where the selects are used
-- Profile editor: socials are always exactly LinkedIn and GitHub, both required (D57); adding another kind needs a form and layout change
+- Profile editor: LinkedIn and GitHub are required, Upwork is optional (D135); another kind needs the tuple, an icon, the form and a layout check
 - A tab closed during the few seconds of a profile save can leave one orphan file in the Blob store; a failed save uploads the new files and deletes them again (validating the text fields on the server first would avoid that)
 - P5.4b must add project logos to `lib/blob/references.ts`, so `discardAsset` never deletes a logo a saved project uses
 - The Vercel Blob list can lag after a delete; confirm a delete with `curl -sI "<url>?check=1"` (404 = gone)
@@ -121,6 +124,10 @@ None. O4 and O5 settled (D73, D74).
 - Rolling digits: a wrap such as 9 → 0 rolls back up through the column instead of continuing downward (barely visible on the counter and the once-a-minute clock, D130)
 - `cn()` (tailwind-merge) drops a `leading-*` class when `className` has a `text-*` size; put a line height that must survive on an inner element (found in `RollingText`, D130)
 - Wheel: the 350 ms quiet time (D134) was measured on one laptop trackpad only and the mouse is untested; if a device still double-turns, raise `WHEEL_RELEASE_QUIET_MS` in `lib/stage/config.ts`; flicks chained faster than that are ignored on purpose
+- The Kundesk landing page shows a made-up testimonial and "19+ / Ribuan" numbers; to be fixed in the Kundesk project (R4, D136)
+- Padel Batu Alam Permai is a demo; its demo site has placeholder text ("#1 Padel Club", "500+ Happy Players", "Bali" for a Samarinda club, a sample phone number)
+- The Kun Bookshop demo link is `http` on an EC2 hostname, so browsers warn "Not secure"; fixable with a custom domain (D136); the hostname also changes if the server's IP does
+- Contact: the email address is no longer shown as text, only behind "Email me" (D135)
 
 ---
 
@@ -146,6 +153,9 @@ Prompt for the next chat:
 
 ## Handoff log
 
+### Handoff — 2026-10-31 — I3, P6.4
+- I3: Get In Touch shows LinkedIn, Upwork and GitHub (Upwork optional, fixed order) and no Email card; D135. P6.4: content review closed; Tech Stack highlight updated, Bookshop on EC2, testimonial and Padel notes logged; D136. Next: P6.5 (README, close the tracker), then I4 (details write-ups) in a new chat.
+
 ### Handoff — 2026-10-31 — I1–I2
 - I1: the top bar clock follows the visitor's time zone, Contact keeps the owner's (D133). I2: one page turn per wheel burst, however hard the swipe, with a 350 ms quiet rule for trackpads and mice (D134). P6.4 content review done in chat (Bookshop on EC2 with Docker, Kundesk testimonial to fix in its own repo, Padel is a demo); details write-ups for Kundesk, Padel and Bookshop come later as an improvement. Next: P6.4 and P6.5 closing docs, then the next items.
 
@@ -153,21 +163,7 @@ Prompt for the next chat:
 - P6.2: the 5 MB icon chunk removed from the landing JS (`ProjectCard` imported by path), `check:client` build guard; mobile 91 (`/`) and 84 (`/projects`), LCP 3.0 s left as a trade-off; D131. P6.3: `main` landmark, other checks passed; D132. Next: P6.4 final content review (R4), project status check, domain decision (O5), details content for the featured projects.
 
 ### Handoff — 2026-10-20 — P6.1
-Done:
-- Rolling digits (`RollingText`) for the Projects counter and the live clock, and a slow ambient drift of the background glow; no new dependencies
-- Alignment fix: the line height moved to an inner span, because `cn()` dropped it
-Files created/changed:
-- components/ui/{RollingText,Carousel,StageBackground,index}.ts(x); components/chrome/LiveClock.tsx; app/globals.css; docs (CLAUDE.md, PROGRESS.md)
-Decisions:
-- D130
-Verified (viewports / devices):
-- Typecheck, lint, build; counter and clock rolling, alignment on the top bar, Get In Touch and counter, background drift, reduced motion, 4× CPU throttle; Safari and Firefox spot-check is left to P6.2
-Known issues:
-- 9 → 0 rolls back up through the column; see the Known issues list
-Next step (ID + one-line goal):
-- P6.2: performance pass (Lighthouse mobile after P7, the LCP image, 4× throttle, no unused icons, dashboard code out of public chunks)
-Prompt for the next chat:
-  Attached: WORKFLOW.md, CLAUDE.md, PROGRESS.md. Repo files: <git ls-files output>. Also pasted: the P6 section of ROADMAP.md, package.json, next.config.ts, app/layout.tsx, app/(site)/[[...section]]/layout.tsx, components/panels/OverviewPanel.tsx, components/details/ProjectDetailsProvider.tsx, components/panels/resolve-tech-icon.ts, and the Lighthouse mobile report (JSON or screenshot) for `/` and `/projects` run on the production URL. Phase: P6 — Polish & finish. Step: P6.2. Mode: Build. Follow WORKFLOW.md §11. Goal: Find and fix what holds mobile Lighthouse below 90 (LCP 3.1 s, Speed Index 4.2 s at launch), check whether the Overview portrait fade is the LCP element, confirm no unused icons or dashboard code in the public chunks, and verify the lazy overlay chunk stays out of the landing JS.
+- P6.1: Added rolling digits for the Projects counter and live clock, plus slow ambient background drift; no new dependencies. Fixed line-height alignment with an inner span. D130. Passed typecheck, lint, build, animation, reduced-motion, and 4× CPU-throttle checks. Safari and Firefox spot-checks remain for P6.2; known issue: 9 → 0 rolls backward through the column.
 
 ### Handoff — 2026-10-20 — P7.5 (P7 closed)
 - P7.5: Completed the project details flow: conditional title and Details triggers, click-to-load YouTube embeds with fallbacks, and idle-loaded overlay chunk. D129 (amends D119). Passed typecheck, lint, build, and functional checks on the Neon dev branch. Lighthouse and fit-slack measurements remain outstanding (P6.2).
