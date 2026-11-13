@@ -67,7 +67,11 @@ const ContactPanel = ({ profile }: ContactPanelProps) => (
           {SOCIAL_KINDS.flatMap((kind) =>
             profile.socials.filter((social) => social.kind === kind),
           ).map((social, i) => (
-            <div key={social.kind} {...reveal("drop", 3 + i)} className="grid">
+            <div
+              key={social.kind}
+              {...reveal("drop", 3 + i)}
+              className="grid grid-cols-1"
+            >
               <ContactLinkCard
                 href={social.url}
                 iconKey={social.kind}
@@ -77,7 +81,10 @@ const ContactPanel = ({ profile }: ContactPanelProps) => (
               />
             </div>
           ))}
-          <div {...reveal("drop", 3 + profile.socials.length)} className="grid">
+          <div
+            {...reveal("drop", 3 + profile.socials.length)}
+            className="grid grid-cols-1"
+          >
             <GlassCard className="grid grid-cols-2 gap-3 p-2.5 tier-regular:p-3 tier-spacious:p-4">
               <div>
                 <p className="font-mono text-[10px] tracking-wider text-fg-low uppercase">
