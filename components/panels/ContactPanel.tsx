@@ -17,7 +17,8 @@ interface ContactPanelProps {
 const ContactPanel = ({ profile }: ContactPanelProps) => (
   <div className="tier-container h-full">
     <div className="flex h-full flex-col justify-center px-5 pt-2 pb-4 md:px-12">
-      <div className="grid gap-4 tier-regular:gap-5 lg:grid-cols-12 lg:gap-10">
+      {/* grid-cols-1 lets the column shrink; a long link can't widen it */}
+      <div className="grid grid-cols-1 gap-4 tier-regular:gap-5 lg:grid-cols-12 lg:gap-10">
         <div className="flex flex-col gap-3 lg:gap-4 lg:col-span-7 tier-spacious:gap-4">
           <h2
             id="heading-contact"
