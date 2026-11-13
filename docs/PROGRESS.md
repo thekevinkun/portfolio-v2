@@ -3,7 +3,7 @@
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
 **Last updated:** 2026-11-13
-**Current phase / step:** none open (P1–P7 and I1–I4 done)
+**Current phase / step:** none open (P1–P7 and I1–I5 done)
 **Mode default:** Build
 
 ---
@@ -35,6 +35,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] I2 One page per wheel burst, however hard the swipe (D134)
 - [x] I3 Get In Touch: Upwork card, no Email card (D135)
 - [x] I4 Details write-ups for Kundesk, Padel Batu Alam Permai and Kun Bookshop, formatted to the D112 limits and saved in the dashboard (D137)
+- [x] I5 Get In Touch: a long link (Upwork) no longer widens the card column on phones (D138)
 
 ---
 
@@ -63,6 +64,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D133: see CLAUDE.md §10.
 - D134–D136: see CLAUDE.md §10.
 - D137: see CLAUDE.md §10.
+- D138: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -157,6 +159,9 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-11-13 — I5
+- I5: on phones the Get In Touch cards were wider than the screen (434 px at 390 px) after Upwork was added; the outer grid and each card wrapper had one implicit `auto` column, which can't shrink below the unwrapped link text, so `truncate` never took effect; `grid-cols-1` on both fixes it; checked on a phone; D138. Next: nothing open; see the loose ends (Bookshop token and domain, Kundesk testimonial, `/projects` Lighthouse).
 
 ### Handoff — 2026-11-13 — I4
 - I4: details write-ups written for Kundesk, Padel Batu Alam Permai and Kun Bookshop from each project's own handoff documents, each field checked against the D112 limits, and saved in the dashboard by Kun; D137. Next: nothing open; optional later work is the work timeline (D110) and the Bookshop domain (D136).
