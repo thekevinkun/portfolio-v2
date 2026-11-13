@@ -2,8 +2,8 @@
 
 > Update at the **end of every chat**. Attach with `CLAUDE.md` at the start of the next one. Keep it short — a handoff, not a diary.
 
-**Last updated:** 2026-11-1
-**Current phase / step:** none open (P1–P7 done); next is I4
+**Last updated:** 2026-11-13
+**Current phase / step:** none open (P1–P7 and I1–I4 done)
 **Mode default:** Build
 
 ---
@@ -34,7 +34,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - [x] I1 Top bar clock follows the visitor's time zone, Contact keeps the owner's (D133)
 - [x] I2 One page per wheel burst, however hard the swipe (D134)
 - [x] I3 Get In Touch: Upwork card, no Email card (D135)
-- [ ] I4 Details write-ups for Kundesk, Padel Batu Alam Permai and Kun Bookshop (written by Kun, formatted in a later chat)
+- [x] I4 Details write-ups for Kundesk, Padel Batu Alam Permai and Kun Bookshop, formatted to the D112 limits and saved in the dashboard (D137)
 
 ---
 
@@ -62,6 +62,7 @@ Legend: ⬜ not started · 🟦 in progress · ✅ done · ⛔ blocked
 - D132: see CLAUDE.md §10.
 - D133: see CLAUDE.md §10.
 - D134–D136: see CLAUDE.md §10.
+- D137: see CLAUDE.md §10.
 
 ## Open questions
 
@@ -128,6 +129,10 @@ None. O4 and O5 settled (D73, D74).
 - Padel Batu Alam Permai is a demo; its demo site has placeholder text ("#1 Padel Club", "500+ Happy Players", "Bali" for a Samarinda club, a sample phone number)
 - The Kun Bookshop demo link is `http` on an EC2 hostname, so browsers warn "Not secure"; fixable with a custom domain (D136); the hostname also changes if the server's IP does
 - Contact: the email address is no longer shown as text, only behind "Email me" (D135)
+- Details write-ups say "sandbox" (Kundesk, Padel) and "Stripe test mode" (Kun Bookshop); update the texts when real payments go live (D137)
+- Kun Bookshop: its README and Phase 12 notes still describe Railway while it runs on AWS EC2 (D136); the nginx prerender rule still rewrites to the Railway URL, so re-check social link previews on EC2
+- Kun Bookshop: the prerender.io token is in `client/nginx.conf` in a public repo; rotate it and move it to an environment variable
+- Kun Bookshop: order emails go only to `RESEND_TEST_EMAIL` until a sending domain is verified on Resend
 
 ---
 
@@ -152,6 +157,9 @@ Prompt for the next chat:
 ```
 
 ## Handoff log
+
+### Handoff — 2026-11-13 — I4
+- I4: details write-ups written for Kundesk, Padel Batu Alam Permai and Kun Bookshop from each project's own handoff documents, each field checked against the D112 limits, and saved in the dashboard by Kun; D137. Next: nothing open; optional later work is the work timeline (D110) and the Bookshop domain (D136).
 
 ### Handoff — 2026-10-31 — P6.5 (P6 closed)
 - P6.5: project README (what it is, stack, setup, scripts, dashboard, deploying, docs table) replaces the starter one; unused placeholder removed; the tracker is complete. Open: I4 (details write-ups for Kundesk, Padel Batu Alam Permai and Kun Bookshop, written by Kun), the Kundesk testimonial in its own project, and the Bookshop `http` link (a domain would fix it).
